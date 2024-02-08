@@ -29,24 +29,24 @@ const Slider = () => {
                     <h1 className='font-bold '>Slider section</h1>
                     <span className='text-purple-400 font-bold  mt-1 hover:cursor-pointer' onClick={() => navigate('/homePage/create-slider-section')}>Create New</span>
                 </div>
-                <div className='gird grid-cols-3'>
+                {/* <div className='grid  grid-cols-3'> */}
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3'>
 
                     {apiData && apiData.map((item) => (
-                        <div key={item._id} style={{ marginBottom: '20px', position: "relative" }} className='col-span-3 border'>
+                        // <div key={item._id} style={{ marginBottom: '20px', position: "relative" }} className='col-span-3 border'>
+                        <div key={item._id} style={{ marginBottom: '20px', position: "relative" }} className='border mx-auto'>  
                             <img src={item.imgSrc} alt="Product" style={{ maxWidth: '100%', width: "400px", height: "200px" }} />
                             {item.circles && item.circles[0] && item.circles[0].circles && item.circles[0].circles.map((circle) => (
                                 <div
                                     key={circle._id}
                                     style={{
-                                        position: 'absolute',
                                         top: `${circle.topPosition}%`,
-                                        left: `${circle.leftPosition}%`,
-                                        transform: 'translate(-50%, -50%)',
-                                        background: 'red',
-                                        color: 'white',
-                                        padding: '5px',
-                                        borderRadius: '50%',
+                                        left: `${circle.leftPosition}%`,                                    
+                                        color: 'black',
+                                        padding: '5px', 
+                                        paddingLeft: '12px'                                     
                                     }}
+                                    
                                 >
                                     <p>{circle.productTitle}</p>
                                     <p>{circle.productCategory}</p>
@@ -56,7 +56,7 @@ const Slider = () => {
                             ))}
                              <button
                                         type="button"
-                                        className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
+                                        className="ml-2 mb-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
                                         onClick={() => handleDelete(item._id)}
                                     >
                                         Delete

@@ -27,6 +27,16 @@ import CatDescription from './components/homepage/catDescription/catDescription'
 import ImageChanger from './components/homepage/imgChanger/Imagechanger';
 import Review from './components/homepage/review/Review';
 
+import ProductDisplay from './components/product/ProductDisplay';
+import OrderDetails from './components/dashboard/OrderDetails';
+import TransactionPage from './components/dashboard/TransactionPage';
+import InStoreOrder from './components/dashboard/InStoreOrder';
+import FreeSampling from './components/dashboard/FreeSampling';
+import FreeDesign from './components/dashboard/FreeDesign';
+import BuyNow from './components/dashboard/BuyNow';
+
+
+
 export default function App() {
 
   const [width, setWidth] = useState(window.innerWidth);
@@ -51,7 +61,7 @@ export default function App() {
         <Route exact path="/admin" element={
           <Protected>
             <AdminPanel currentWidth={width} />
-          </Protected>
+         </Protected>
         }>
         </Route>
         <Route exact path="/create-product" element={
@@ -96,7 +106,7 @@ export default function App() {
         <Route exact path='/update-home-page/team-memebers' element={
           <Protected>
             <TeamMembers />
-          </Protected>
+         </Protected>
         }></Route>
 
         <Route exact path='/update-home-page/image-grid' element={
@@ -108,7 +118,7 @@ export default function App() {
         <Route exact path='/update-home-page/map-detail' element={
           <Protected>
             <MapDetails />
-          </Protected>
+         </Protected>
         }></Route>
 
         <Route exact path='/update-home-page/category-description' element={
@@ -153,7 +163,7 @@ export default function App() {
         <Route exact path='/homePage/create-image-section' element={
           <Protected>
             <ImageSectionForm />
-          </Protected>
+           </Protected>
         }></Route>
 
         <Route exact path='/homePage/create-team-members-section' element={
@@ -185,6 +195,50 @@ export default function App() {
             <ImagechangerForm />
           </Protected>
         }></Route>
+
+        {/* Dashboard routes */}
+
+        <Route exact path='/product-display' element={
+          <Protected>
+            <ProductDisplay />
+          </Protected>
+        }></Route>
+
+        <Route exact path='/orderdetails' element={
+          <Protected>
+            <OrderDetails />
+          </Protected>
+        }></Route>
+        <Route exact path='/transaction' element={
+          <Protected>
+            <TransactionPage />
+          </Protected>
+        }></Route>
+        <Route exact path='/store-order' element={
+          <Protected>
+            <InStoreOrder />
+          </Protected>
+        }></Route>
+        <Route exact path='/free-sampling' element={
+          <Protected>
+            <FreeSampling />
+          </Protected>
+        }></Route>
+        <Route exact path='/free-design' element={
+          <Protected>
+            <FreeDesign />
+          </Protected>
+        }></Route>
+        <Route exact path='/buy-now' element={
+          <Protected>
+            <BuyNow />
+          </Protected>
+        }></Route>
+
+        
+
+
+        
 
 
       </Routes>
