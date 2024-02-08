@@ -12,7 +12,7 @@ function HeaderInfoForm() {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      const response = await fetch(`${BASE_URL}/api/createHeaderInfoSection1`, {
+      const response = await fetch(`${BASE_URL}/api/createHeaderInfoSection`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
