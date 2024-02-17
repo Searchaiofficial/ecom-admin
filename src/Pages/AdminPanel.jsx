@@ -1,7 +1,7 @@
 import React from 'react'
 // import AdminProductList from '../components/AdminProductList'
 import ProductDisplay from '../components/product/ProductDisplay'
-import Dashboard from '../components/dashboard/Dashboard'
+import Dashboard from '../components/dashboard/DashBoard'
 
 
 const AdminPanel = ({ currentWidth }) => {

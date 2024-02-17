@@ -1,6 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+// import Review from '../homepage/review/Review';
 import {
   Button,
 } from "@material-tailwind/react";
@@ -95,6 +96,8 @@ function ProductForm() {
   };
 
   const availablePurchaseMode = ['Only Online', 'Buy online with in-store request', 'In-store request Only']
+  const typeofprice = ['Special Price','Discounted Price'];
+  const demandtype = ['Best Seller','Most Rated','Trending']
 
   // --
 
@@ -102,16 +105,32 @@ function ProductForm() {
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [selectedColors, setSelectedColors] = useState([]);
   const [availableColors, setAvailableColors] = useState([]);
+  const [price , setPrice] = useState([]);
   const [images, setImages] = useState([]);
+  const [demand,setDemand] = useState('');
+  const [priceType, setPriceType] = useState('');
   const [selectedPurchaseMode, setSelectedPurchaseMode] = useState([]);
-  // const [pdf, setPdf] = useState('');
+  const [pdf, setPdf] = useState('');
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
     setSelectedSubcategory('');
   };
+  const handleProductChange = (e) =>{
+    const demandtyp = e.target.value;
+    console.log(demandtyp)
+    setDemand(demandtyp)
+    // setProduct('');
+  }
+  const handlePriceChange=(e)=>{
+    setPriceType(e.target.value);
+    const price = e.target.value;
+    console.log(price)
+    setPrice(price);
+    setPrice('')
 
+  }
   const handleSubcategoryChange = (e) => {
     const subcategory = e.target.value;
     setSelectedSubcategory(subcategory);
@@ -180,13 +199,14 @@ function ProductForm() {
     }
   };
 
-  // const handlePDFchange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const pdfUrl = URL.createObjectURL(file);
-  //     setPdf(pdfUrl);
-  //   }
-  // };
+  const handlePDFchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const pdfUrl = URL.createObjectURL(file);
+      console.log(pdfUrl)
+      setPdf(pdfUrl);
+    }
+  };
   
 
   return (
@@ -207,13 +227,16 @@ function ProductForm() {
         formData.append('room', data.room);
         formData.append('designStyle', data.designStyle);
         formData.append('category', selectedCategory);
+        formData.append('demandtype',demand)
         formData.append('subCategory', selectedSubcategory);
         formData.append('collection', data.collection);
         formData.append('color', selectedColors);
         formData.append('units', data.units);
         formData.append('unitType', data.unitType);
         formData.append('totalPricePerUnit', data.totalPricePerUnit);
+        formData.append('discountedprice',data.discountedprice)
         formData.append('perUnitType', data.perUnitType);
+        formData.append('specialprice',data.specialprice);
         formData.append('perUnitPrice', parseFloat(data.perUnitPrice));
         // Convert dimensions to FormData
         formData.append('dimensions[length][value]', parseFloat(dimensions.length.value));
@@ -245,7 +268,7 @@ function ProductForm() {
         });
 
          // add PDF to FormData
-        //  formData.append('pdf', data.pdf[0]);
+         formData.append('pdf', data.pdf[0]);
 
          formData.append('maintainanceDetails',data.maintainanceDetails);
 
@@ -523,6 +546,25 @@ function ProductForm() {
                 </div>
               </div>
             </div>
+            <div className="sm:col-span-3 my-6">
+              <label label htmlFor="typeofprice">Price:</label>
+                  <select id="typeofprice" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handlePriceChange}>
+              <option value="">-- Type of Price --</option>
+                    {typeofprice.map((priceType, index) => (
+                  <option key={index} value={priceType}>{priceType}</option>
+                    ))}
+                    </select>
+                    </div>
+                    <div className="sm:col-span-3 my-6">
+              <label htmlFor="demandtype">Demand Type:</label>
+              <select id="demandtype" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handleProductChange} >
+                <option value="">-- Select Demand Type--</option>
+                {demandtype.map((demandtype, index) => (
+                  <option key={index} value={demandtype}>{demandtype}</option>
+                ))}
+              </select>
+            </div>
+
             <div className="sm:col-span-2">
               <label
                 htmlFor="price"
@@ -530,6 +572,7 @@ function ProductForm() {
               >
                 Total Price
               </label>
+              
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
@@ -543,6 +586,64 @@ function ProductForm() {
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
+
+
+                
+              </div>
+            </div>
+            <div className="sm:col-span-2" style={{ display: priceType === 'Discounted Price' ? 'block' : 'none' }}>
+              <label
+                htmlFor="discountedprice"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Discounted Price
+              </label>
+              
+              
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="number"
+                    {...register('discountedprice', {
+                      min: 1,
+                      max: 10000,
+                    })}
+                    id="discountedprice"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+
+
+                
+              </div>
+            </div>
+
+
+            <div className="sm:col-span-2" style={{ display: priceType === 'Special Price' ? 'block' : 'none' }}>
+              <label
+                htmlFor="Special Price"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Special Price
+              </label>
+              
+              
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="number"
+                    {...register('specialprice', {
+                      
+                      min: 1,
+                      max: 10000,
+                    })}
+                    id="specialprice"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+
+
+                
               </div>
             </div>
           </div>
@@ -830,10 +931,15 @@ function ProductForm() {
                 </div>
               </div>
             </div>
+
+
+            
+            
             {/* <div className="sm:col-span-3">
               <label
                 htmlFor="pdf"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+                // name="pdf"
               >
                 Product Description PDF
               </label>
