@@ -34,6 +34,7 @@ import InStoreOrder from './components/dashboard/InStoreOrder';
 import FreeSampling from './components/dashboard/FreeSampling';
 import FreeDesign from './components/dashboard/FreeDesign';
 import BuyNow from './components/dashboard/BuyNow';
+import RoomForm from './components/homepage/room/RoomForm';
 
 
 
@@ -148,6 +149,12 @@ export default function App() {
           </Protected>
         }></Route>
 
+        <Route exact path='/homePage/create-room-section/:roomType' element={
+          <Protected>
+            <RoomForm />
+          </Protected>
+        }></Route>
+
         <Route exact path='/homePage/create-mid-info-section' element={
           <Protected>
             <ImageChangerForm />
@@ -234,13 +241,6 @@ export default function App() {
             <BuyNow />
           </Protected>
         }></Route>
-
-        
-
-
-        
-
-
       </Routes>
     </>
   )

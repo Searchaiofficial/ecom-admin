@@ -1,6 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+
 // import Review from '../homepage/review/Review';
 import {
   Button,
@@ -59,7 +60,6 @@ const PurchaseModeCheckBox = ({ purchaseMode, isChecked, onChange }) => {
 };
 
 function ProductForm() {
-
   // form related 
   const {
     register,
@@ -96,8 +96,8 @@ function ProductForm() {
   };
 
   const availablePurchaseMode = ['Only Online', 'Buy online with in-store request', 'In-store request Only']
-  const typeofprice = ['Special Price','Discounted Price'];
-  const demandtype = ['Best Seller','Most Rated','Trending']
+  const typeofprice = ['Special Price', 'Discounted Price'];
+  const demandtype = ['Best Seller', 'Most Rated', 'Trending']
 
   // --
 
@@ -105,28 +105,28 @@ function ProductForm() {
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [selectedColors, setSelectedColors] = useState([]);
   const [availableColors, setAvailableColors] = useState([]);
-  const [price , setPrice] = useState([]);
+  const [price, setPrice] = useState([]);
   const [images, setImages] = useState([]);
-  const [demand,setDemand] = useState('');
+  const [demand, setDemand] = useState('');
   const [priceType, setPriceType] = useState('');
   const [selectedPurchaseMode, setSelectedPurchaseMode] = useState([]);
   const [pdf, setPdf] = useState('');
+  const [roomMultipleSelector, setRoomMultipleSelector] = useState([]);
+
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
     setSelectedSubcategory('');
   };
-  const handleProductChange = (e) =>{
+  const handleProductChange = (e) => {
     const demandtyp = e.target.value;
-    console.log(demandtyp)
     setDemand(demandtyp)
     // setProduct('');
   }
-  const handlePriceChange=(e)=>{
+  const handlePriceChange = (e) => {
     setPriceType(e.target.value);
     const price = e.target.value;
-    console.log(price)
     setPrice(price);
     setPrice('')
 
@@ -207,7 +207,15 @@ function ProductForm() {
       setPdf(pdfUrl);
     }
   };
-  
+
+  const handleMultipleSelector = (e) => {
+    const { options } = e.target;
+    if (options) {
+      setRoomMultipleSelector(Array.from(options)
+        .filter(option => option.selected)
+        .map(option => option.value));
+    }
+  };
 
   return (
     <form
@@ -215,28 +223,27 @@ function ProductForm() {
 
       // submit method of the form 💥
       onSubmit={handleSubmit(async (data) => {
-
         const formData = new FormData();
 
         const coreValuesData = getValues('coreValues');
         const featuresData = getValues('features');
-
         // normal text data
         formData.append('title', data.title);
         formData.append('patternNumber', data.patternNumber);
         formData.append('room', data.room);
+
         formData.append('designStyle', data.designStyle);
         formData.append('category', selectedCategory);
-        formData.append('demandtype',demand)
+        formData.append('demandtype', demand)
         formData.append('subCategory', selectedSubcategory);
         formData.append('collection', data.collection);
         formData.append('color', selectedColors);
         formData.append('units', data.units);
         formData.append('unitType', data.unitType);
         formData.append('totalPricePerUnit', data.totalPricePerUnit);
-        formData.append('discountedprice',data.discountedprice)
+        formData.append('discountedprice', data.discountedprice)
         formData.append('perUnitType', data.perUnitType);
-        formData.append('specialprice',data.specialprice);
+        formData.append('specialprice', data.specialprice);
         formData.append('perUnitPrice', parseFloat(data.perUnitPrice));
         // Convert dimensions to FormData
         formData.append('dimensions[length][value]', parseFloat(dimensions.length.value));
@@ -245,6 +252,7 @@ function ProductForm() {
         formData.append('dimensions[width][unit]', dimensions.width.unit)
         formData.append('dimensions[thickness][value]', parseFloat(dimensions.thickness.value));
         formData.append('dimensions[thickness][unit]', dimensions.thickness.unit)
+
         // Add images to FormData
         for (let i = 1; i <= 4; i++) {
           const fileInput = document.getElementById(`img${i}`);
@@ -253,7 +261,7 @@ function ProductForm() {
             formData.append(`image`, file);
           }
         }
-       
+
 
         formData.append('purchaseMode', selectedPurchaseMode);
         formData.append('productDescription', data.productDescription);
@@ -267,20 +275,15 @@ function ProductForm() {
           formData.append(`features[${index}][feature]`, feature?.feature || '');
         });
 
-         // add PDF to FormData
-         formData.append('pdf', data.pdf[0]);
-
-         formData.append('maintainanceDetails',data.maintainanceDetails);
-
+        // //  add PDF to FormData
+        // formData.append('pdf', data.pdf[0]);
+        formData.append('maintainanceDetails', data.maintainanceDetails);
 
         // --------- 💥 api call 💥 -------
         try {
           const response = await fetch(`${BASE_URL}/api/createProduct`, {
             method: "POST",
-            headers: {
-              // 'Content-Type': 'multipart/form-data',
-            },
-            body: formData
+            body: formData,
           });
           const responseData = await response.json();
           window.alert(responseData.message)
@@ -355,12 +358,16 @@ function ProductForm() {
               <label htmlFor="room" className="block text-sm font-medium leading-6 text-gray-900">
                 Room
               </label>
-              <select {...register('room')} id="room" className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded">
-                <option value="">-- Select Room --</option>
+              <select {...register('room')} id="room" className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded" multiple onChange={handleMultipleSelector}>
                 {roomOptions.map((room, index) => (
                   <option key={index} value={room}>{room}</option>
                 ))}
               </select>
+              {roomMultipleSelector.length > 0 && <div style={{ display: 'flex', gap: '7px', alignItems: 'center', marginTop: '10px' }}>
+                {roomMultipleSelector.map((room, index) => {
+                  return (<button onClick={() => navigate(`/homePage/create-room-section/${room}`)} style={{ border: '1px solid black', padding: '2px', borderRadius: '3px' }} key={index}>{room}</button>)
+                })}
+              </div>}
             </div>
 
             <div className="sm:col-span-3">
@@ -548,14 +555,14 @@ function ProductForm() {
             </div>
             <div className="sm:col-span-3 my-6">
               <label label htmlFor="typeofprice">Price:</label>
-                  <select id="typeofprice" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handlePriceChange}>
-              <option value="">-- Type of Price --</option>
-                    {typeofprice.map((priceType, index) => (
+              <select id="typeofprice" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handlePriceChange}>
+                <option value="">-- Type of Price --</option>
+                {typeofprice.map((priceType, index) => (
                   <option key={index} value={priceType}>{priceType}</option>
-                    ))}
-                    </select>
-                    </div>
-                    <div className="sm:col-span-3 my-6">
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-3 my-6">
               <label htmlFor="demandtype">Demand Type:</label>
               <select id="demandtype" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handleProductChange} >
                 <option value="">-- Select Demand Type--</option>
@@ -572,7 +579,7 @@ function ProductForm() {
               >
                 Total Price
               </label>
-              
+
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
@@ -588,7 +595,7 @@ function ProductForm() {
                 </div>
 
 
-                
+
               </div>
             </div>
             <div className="sm:col-span-2" style={{ display: priceType === 'Discounted Price' ? 'block' : 'none' }}>
@@ -598,8 +605,8 @@ function ProductForm() {
               >
                 Discounted Price
               </label>
-              
-              
+
+
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
@@ -614,7 +621,7 @@ function ProductForm() {
                 </div>
 
 
-                
+
               </div>
             </div>
 
@@ -626,14 +633,14 @@ function ProductForm() {
               >
                 Special Price
               </label>
-              
-              
+
+
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="number"
                     {...register('specialprice', {
-                      
+
                       min: 1,
                       max: 10000,
                     })}
@@ -643,7 +650,7 @@ function ProductForm() {
                 </div>
 
 
-                
+
               </div>
             </div>
           </div>
@@ -933,8 +940,8 @@ function ProductForm() {
             </div>
 
 
-            
-            
+
+
             {/* <div className="sm:col-span-3">
               <label
                 htmlFor="pdf"
