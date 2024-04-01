@@ -51,7 +51,7 @@ const ProductDisplay = () => {
                   <p><b>Collection Name:</b> {product.collectionName}</p>
                   {expandedProduct === product._id ? (
                     <>
-                      <p><b>Room Category:</b> {product.roomCategory}</p>
+                      <p><b>Room Category:</b> {product.roomCategory.join(',')}</p>
                       <p><b>Style:</b> {product.style}</p>
                       <p><b>Dimensions:</b> {product.dimensions.length.value} mm x {product.dimensions.width.value} mm x {product.dimensions.thickness.value} mm</p>
                       <p><b>Colors:</b> {product.colors.join(', ')}</p>

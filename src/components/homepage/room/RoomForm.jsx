@@ -4,35 +4,42 @@ import AdminNavbar from '../../AdminNavbar';
 import { useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL } from '../../../../config';
 
-const floorOptions = ["Ground", "First", "Second", "Third", "Fourth", "Fifth"];
 function RoomForm() {
-    const { handleSubmit, register, reset } = useForm();
+    const { handleSubmit, control, register } = useForm();
     const navigate = useNavigate();
     const params = useParams();
 
     const onSubmit = async (data) => {
         try {
             const formData = new FormData();
+            data.circles.forEach((circle, index) => {
+                formData.append(`circles[${index}].productTitle`, circle.productTitle);
+                formData.append(`circles[${index}].productCategory`, circle.productCategory);
+                formData.append(`circles[${index}].productPrice`, Number(circle.productPrice));
+                formData.append(`circles[${index}].topPosition`, Number(circle.topPosition));
+                formData.append(`circles[${index}].leftPosition`, Number(circle.leftPosition));
+                formData.append(`circles[${index}].productLink`, circle.productLink);
+            });
+
             // image
             const fileInput = document.getElementById(`image`);
             const file = fileInput?.files[0];
             formData.append(`image`, file);
-            formData.append('roomTitle', data.roomTitle);
-            formData.append('floor', data.floor);
             formData.append('roomType', params.roomType);
-           
+
             const response = await fetch(`${BASE_URL}/api/createRoom`, {
                 method: 'POST',
+                headers: {
+                },
                 body: formData,
             });
 
             const responseData = await response.json();
             window.alert(responseData.message);
-            navigate('/homePage')
+            navigate('/homePage');
         } catch (error) {
             console.log(error)
         }
-        reset();
     };
 
     return (
@@ -43,7 +50,7 @@ function RoomForm() {
 
                     <label
                         htmlFor="image"
-                        className="block text-sm leading-6 text-gray-900 font-bold"
+                        className="block text-sm font-medium leading-6 text-gray-900 font-bold"
                     >
                         Image Source
                     </label>
@@ -57,41 +64,149 @@ function RoomForm() {
                                 id="image"
                                 className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                                 accept="image/*"
+                            // onChange={(e) => handleImageChange(e, 1)}
                             />
                         </div>
                     </div>
 
-                    <label
-                        htmlFor="roomTitle"
-                        className="block text-sm leading-6 text-gray-900 font-bold"
-                    >
-                        Room Title
-                    </label>
-                    <div className="mt-2">
-                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                            <input
-                                type="text"
-                                {...register('roomTitle', {
-                                    required: 'roomTitle is required',
-                                })}
-                                id="roomTitle"
-                                className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    <label className="block text-sm font-medium leading-5 text-gray-700 mt-4">Childs</label>
+                    <Controller
+                        name={`circles`}
+                        control={control}
+                        defaultValue={[{
+                            productTitle: '',
+                            productCategory: '',
+                            productPrice: 0,
+                            topPosition: 0,
+                            leftPosition: 0,
+                            productLink: '',
+                        }]}
+                        render={({ field }) => (
+                            <div>
+                                {field.value.map((circle, index) => (
 
-                            />
-                        </div>
-                    </div>
-                    <label
-                        htmlFor="floor"
-                        className="block text-sm leading-6 text-gray-900 font-bold"
-                    >
-                        Floor
-                    </label>
-                    <select {...register('floor')} id="floor" className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded">
-                        <option value={''}>-- Select Floor --</option>
-                        {floorOptions.map((floor, index) => (
-                            <option key={index} value={floor}>{floor}</option>
-                        ))}
-                    </select>
+                                    <div key={index} className="mt-4">
+
+                                        <label htmlFor={`circles[${index}].productTitle`} className="block text-sm font-medium leading-5 text-gray-700">
+                                            Child {index + 1} Product Title
+                                        </label>
+                                        <Controller
+                                            name={`circles[${index}].productTitle`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="text"
+                                                    className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                                                />
+                                            )}
+                                        />
+
+
+                                        <label htmlFor={`circles[${index}].productCategory`} className="block text-sm font-medium leading-5 text-gray-700 mt-4">
+                                            Child {index + 1} Product Category
+                                        </label>
+                                        <Controller
+                                            name={`circles[${index}].productCategory`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="text"
+                                                    className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                                                />
+                                            )}
+                                        />
+
+
+                                        <label htmlFor={`circles[${index}].productPrice`} className="block text-sm font-medium leading-5 text-gray-700 mt-4">
+                                            Child {index + 1} Product Price
+                                        </label>
+                                        <Controller
+                                            name={`circles[${index}].productPrice`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="number"
+                                                    className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                                                />
+                                            )}
+                                        />
+
+                                        <label htmlFor={`circles[${index}].topPosition`} className="block text-sm font-medium leading-5 text-gray-700 mt-4">
+                                            Child {index + 1} Top Position
+                                        </label>
+                                        <Controller
+                                            name={`circles[${index}].topPosition`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="number"
+                                                    className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                                                />
+                                            )}
+                                        />
+
+                                        <label htmlFor={`circles[${index}].leftPosition`} className="block text-sm font-medium leading-5 text-gray-700 mt-4">
+                                            Child {index + 1} Left Position
+                                        </label>
+                                        <Controller
+                                            name={`circles[${index}].leftPosition`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="number"
+                                                    className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                                                />
+                                            )}
+                                        />
+
+                                        <label htmlFor={`circles[${index}].productLink`} className="block text-sm font-medium leading-5 text-gray-700 mt-4">
+                                            Child {index + 1} Product Link
+                                        </label>
+                                        <Controller
+                                            name={`circles[${index}].productLink`}
+                                            control={control}
+                                            defaultValue=""
+                                            render={({ field }) => (
+                                                <input
+                                                    {...field}
+                                                    type="text"
+                                                    className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                                                />
+                                            )}
+                                        />
+                                    </div>
+                                ))}
+                                <button type="button"
+                                    onClick={() => {
+                                        const newCircles = [
+                                            ...field.value,
+                                            {
+                                                productTitle: '',
+                                                productCategory: '',
+                                                productPrice: 0,
+                                                topPosition: 0,
+                                                leftPosition: 0,
+                                                productLink: '',
+                                            },
+                                        ];
+                                        field.onChange(newCircles);
+                                    }}
+                                    className="text-indigo-600 hover:text-indigo-900 mt-4">
+                                    Add Child
+                                </button>
+                            </div>
+                        )}
+                    />
                 </div>
 
                 <div className="mt-8">
