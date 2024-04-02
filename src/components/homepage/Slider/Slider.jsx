@@ -36,7 +36,7 @@ const Slider = () => {
                         // <div key={item._id} style={{ marginBottom: '20px', position: "relative" }} className='col-span-3 border'>
                         <div key={item._id} style={{ marginBottom: '20px', position: "relative" }} className='border mx-auto'>  
                             <img src={item.imgSrc} alt="Product" style={{ maxWidth: '100%', width: "400px", height: "200px" }} />
-                            {item.circles && item.circles[0] && item.circles[0].circles && item.circles[0].circles.map((circle) => (
+                            {item.circles.length>0 && item.circles.map((circle) => (
                                 <div
                                     key={circle._id}
                                     style={{
@@ -50,7 +50,7 @@ const Slider = () => {
                                 >
                                     <p>{circle.productTitle}</p>
                                     <p>{circle.productCategory}</p>
-                                    <p>${circle.price?.toFixed(2)}</p>
+                                    <p>${circle.productPrice?.toFixed(2)}</p>
                                    
                                 </div>
                             ))}
