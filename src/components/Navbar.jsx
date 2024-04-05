@@ -37,12 +37,12 @@ const Navbar = () => {
         <img className='inline-block ml-4 float-left' src="/Images/package.png" alt="package" width={20} height={20} />
         
           <div  className="inline-block ml-4 " >
-          <Link to='/product-display' className="inline-block " onClick={handleProductClick}>
+          <Link to='#' className="inline-block " onClick={handleProductClick}>
             Product 
             {isProductListExtended && (
               <ul>
                 <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
-                  <Link to='/view-product'>View Product</Link>
+                  <Link to='/product-display'>View Product</Link>
                 </li>
                 <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
                   <Link to='/create-product'>Create Product</Link>

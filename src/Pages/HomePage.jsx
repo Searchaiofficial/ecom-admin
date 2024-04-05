@@ -10,6 +10,7 @@ import MapDetails from '../components/homepage/MapSection/MapDetails'
 import CatDescription from '../components/homepage/catDescription/catDescription'
 import Review from '../components/homepage/review/Review'
 import ImageChanger from '../components/homepage/imgChanger/Imagechanger'
+import NewProduct from '../components/homepage/NewProduct/NewProduct';
 
 const HomePage = () => {
   return (
@@ -25,6 +26,7 @@ const HomePage = () => {
         <CatDescription/>
         <ImageChanger/>
         <Review/>
+        <NewProduct />
     </div>
   )
 }

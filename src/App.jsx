@@ -35,6 +35,8 @@ import FreeSampling from './components/dashboard/FreeSampling';
 import FreeDesign from './components/dashboard/FreeDesign';
 import BuyNow from './components/dashboard/BuyNow';
 import RoomForm from './components/homepage/room/RoomForm';
+import NewProduct from './components/homepage/NewProduct/NewProduct';
+import NewProductForm from './components/homepage/NewProduct/NewProductForm';
 
 
 
@@ -140,6 +142,12 @@ export default function App() {
           </Protected>
         }></Route>
 
+        <Route exact path='/update-home-page/new-product' element={
+          <Protected>
+            <NewProduct />
+          </Protected>
+        }></Route>
+
 
         {/* ---------🎈🎈🎈🎈 Forms -------------- 🎈🎈🎈🎈 */}
 
@@ -170,6 +178,12 @@ export default function App() {
         <Route exact path='/homePage/create-image-section' element={
           <Protected>
             <ImageSectionForm />
+           </Protected>
+        }></Route>
+
+        <Route exact path='/homePage/create-new-product-section' element={
+          <Protected>
+            <NewProductForm />
            </Protected>
         }></Route>
 
