@@ -1,12 +1,10 @@
-import { useForm, Controller } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 // import Review from '../homepage/review/Review';
-import {
-  Button,
-} from "@material-tailwind/react";
-import { BASE_URL } from '../../../config';
+import { Button } from "@material-tailwind/react";
+import { BASE_URL } from "../../../config";
 
 const DimensionInput = ({ label, value, unit, onChange }) => {
   return (
@@ -16,9 +14,12 @@ const DimensionInput = ({ label, value, unit, onChange }) => {
         type="number"
         value={value}
         onChange={(e) => onChange({ value: e.target.value, unit })}
-        className='ml-2 border bg-transparent p-2 border-gray-400 rounded'
+        className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
       />
-      <select value={unit} onChange={(e) => onChange({ value, unit: e.target.value })}>
+      <select
+        value={unit}
+        onChange={(e) => onChange({ value, unit: e.target.value })}
+      >
         <option value="mm">mm</option>
         <option value="cm">cm</option>
         <option value="m">m</option>
@@ -60,7 +61,7 @@ const PurchaseModeCheckBox = ({ purchaseMode, isChecked, onChange }) => {
 };
 
 function ProductForm() {
-  // form related 
+  // form related
   const {
     register,
     handleSubmit,
@@ -71,66 +72,120 @@ function ProductForm() {
   } = useForm();
   const navigate = useNavigate();
 
+  const {
+    fields: coreValues,
+    append: appendCoreValue,
+    remove: removeCoreValue,
+  } = useFieldArray({
+    control,
+    name: "coreValues",
+  });
+  const {
+    fields: features,
+    append: appendFeature,
+    remove: removeFeature,
+  } = useFieldArray({
+    control,
+    name: "features",
+  });
+
   // -------------------------------------------------
 
-  const roomOptions = ["Living Room", "Bedroom", "Dining Room", "Bathroom", "Balcony", "Office Room", "Guest Room", "Pooja Room", "Kids Room", "Kitchen"];
+  const roomOptions = [
+    "Living Room",
+    "Bedroom",
+    "Dining Room",
+    "Bathroom",
+    "Balcony",
+    "Office Room",
+    "Guest Room",
+    "Pooja Room",
+    "Kids Room",
+    "Kitchen",
+  ];
 
   const categoryOptions = {
-    "Wallpaper": [
-      "3D", "Abstract", "Animals & Birds", "Flock & Luxury", "Brick & Stone", "Customize",
-      "Striped", "Flower & Trees", "Vintage", "Art Deco", "Geometric", "Kid", "Modern",
-      "Plain & Texture", "Traditional", "Wood"
+    Wallpaper: [
+      "3D",
+      "Abstract",
+      "Animals & Birds",
+      "Flock & Luxury",
+      "Brick & Stone",
+      "Customize",
+      "Striped",
+      "Flower & Trees",
+      "Vintage",
+      "Art Deco",
+      "Geometric",
+      "Kid",
+      "Modern",
+      "Plain & Texture",
+      "Traditional",
+      "Wood",
     ],
-    "Flooring": [
-      "Carpet", "Carpet Tiles", "Vinyl Floor", "Luxury Vinyl Plank", "Laminate", "Wooden Floor", "Deck Wood"
+    Flooring: [
+      "Carpet",
+      "Carpet Tiles",
+      "Vinyl Floor",
+      "Luxury Vinyl Plank",
+      "Laminate",
+      "Wooden Floor",
+      "Deck Wood",
     ],
-    "Blinds": [
-      "Vertical Blinds", "Roller Blinds", "Zebra Blinds", "Shutter Blinds", "Wooden Blinds"
+    Blinds: [
+      "Vertical Blinds",
+      "Roller Blinds",
+      "Zebra Blinds",
+      "Shutter Blinds",
+      "Wooden Blinds",
     ],
-    "Curtains": [
-      "Abstract", "Geometric", "Plains & Textures", "Leave", "Floral"
-    ],
+    Curtains: ["Abstract", "Geometric", "Plains & Textures", "Leave", "Floral"],
     "Sport & Gym Flooring": [
-      "Artificial Grass", "Interlocking Mat", "Rubber Tiles", "Vinyl Sports Floors"
-    ]
+      "Artificial Grass",
+      "Interlocking Mat",
+      "Rubber Tiles",
+      "Vinyl Sports Floors",
+    ],
   };
 
-  const availablePurchaseMode = ['Only Online', 'Buy online with in-store request', 'In-store request Only']
-  const typeofprice = ['Special Price', 'Discounted Price'];
-  const demandtype = ['Best Seller', 'Most Rated', 'Trending']
+  const availablePurchaseMode = [
+    "Only Online",
+    "Buy online with in-store request",
+    "In-store request Only",
+  ];
+  const typeofprice = ["Special Price", "Discounted Price"];
+  const demandtype = ["Best Seller", "Most Rated", "Trending"];
 
   // --
 
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [selectedColors, setSelectedColors] = useState([]);
   const [availableColors, setAvailableColors] = useState([]);
   const [price, setPrice] = useState([]);
   const [images, setImages] = useState([]);
-  const [demand, setDemand] = useState('');
-  const [priceType, setPriceType] = useState('');
+  const [demand, setDemand] = useState("");
+  const [priceType, setPriceType] = useState("");
   const [selectedPurchaseMode, setSelectedPurchaseMode] = useState([]);
-  const [pdf, setPdf] = useState('');
+  const [pdf, setPdf] = useState("");
   const [roomMultipleSelector, setRoomMultipleSelector] = useState([]);
-
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
-    setSelectedSubcategory('');
+    setSelectedSubcategory("");
   };
   const handleProductChange = (e) => {
     const demandtyp = e.target.value;
-    setDemand(demandtyp)
+    setDemand(demandtyp);
     // setProduct('');
-  }
+  };
   const handlePriceChange = (e) => {
     setPriceType(e.target.value);
     const price = e.target.value;
     setPrice(price);
-    setPrice('')
-
-  }
+    setPrice("");
+  };
   const handleSubcategoryChange = (e) => {
     const subcategory = e.target.value;
     setSelectedSubcategory(subcategory);
@@ -139,9 +194,9 @@ function ProductForm() {
   // --
 
   const [dimensions, setDimensions] = useState({
-    length: { value: '', unit: 'mm' },
-    width: { value: '', unit: 'mm' },
-    thickness: { value: '', unit: 'mm' },
+    length: { value: "", unit: "mm" },
+    width: { value: "", unit: "mm" },
+    thickness: { value: "", unit: "mm" },
   });
 
   const handleDimensionChange = (dimension, newValue) => {
@@ -153,7 +208,8 @@ function ProductForm() {
 
   // --
 
-  useEffect(() => {  // Fetch colors based on the selected category
+  useEffect(() => {
+    // Fetch colors based on the selected category
     if (selectedCategory) {
       const colorsForCategory = getColorsForCategory(selectedCategory);
       setAvailableColors(colorsForCategory);
@@ -164,10 +220,16 @@ function ProductForm() {
 
   const getColorsForCategory = (category) => {
     switch (category) {
-      case 'Flooring':
-        return ['Oak Brown', 'Maple Red', 'Cherry Blossom', 'Walnut', 'Teak'];
-      case 'Wallpaper':
-        return ['Sky Blue', 'Forest Green', 'Sunset Orange', 'Rose Pink', 'Charcoal Gray'];
+      case "Flooring":
+        return ["Oak Brown", "Maple Red", "Cherry Blossom", "Walnut", "Teak"];
+      case "Wallpaper":
+        return [
+          "Sky Blue",
+          "Forest Green",
+          "Sunset Orange",
+          "Rose Pink",
+          "Charcoal Gray",
+        ];
       default:
         return [];
     }
@@ -182,18 +244,32 @@ function ProductForm() {
     }
   };
 
-  const handleImageChange = (e, index) => {
+  const handleImageChange = (e, index, section) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImages(`img${index}`, imageUrl);
+    if (section === "features") {
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setImages(`features${index}`, imageUrl);
+      }
+    } else if (section === "coreValues") {
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setImages(`coreValues${index}`, imageUrl);
+      }
+    } else {
+      if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setImages(`img${index}`, imageUrl);
+      }
     }
   };
 
   const handlePurchaseModeChange = (e) => {
     const purchaseMode = e.target.value;
     if (selectedPurchaseMode.includes(purchaseMode)) {
-      setSelectedPurchaseMode((prevMode) => prevMode.filter((c) => c !== purchaseMode));
+      setSelectedPurchaseMode((prevMode) =>
+        prevMode.filter((c) => c !== purchaseMode)
+      );
     } else {
       setSelectedPurchaseMode((prevMode) => [...prevMode, purchaseMode]);
     }
@@ -203,7 +279,7 @@ function ProductForm() {
     const file = e.target.files[0];
     if (file) {
       const pdfUrl = URL.createObjectURL(file);
-      console.log(pdfUrl)
+      console.log(pdfUrl);
       setPdf(pdfUrl);
     }
   };
@@ -211,47 +287,65 @@ function ProductForm() {
   const handleMultipleSelector = (e) => {
     const { options } = e.target;
     if (options) {
-      setRoomMultipleSelector(Array.from(options)
-        .filter(option => option.selected)
-        .map(option => option.value));
+      setRoomMultipleSelector(
+        Array.from(options)
+          .filter((option) => option.selected)
+          .map((option) => option.value)
+      );
     }
   };
+
+  console.log("images", images);
 
   return (
     <form
       noValidate
-
       // submit method of the form 💥
       onSubmit={handleSubmit(async (data) => {
         const formData = new FormData();
+        console.log("Form-Data:", data);
+        const coreValuesData = getValues("coreValues");
+        const featuresData = getValues("features");
 
-        const coreValuesData = getValues('coreValues');
-        const featuresData = getValues('features');
+        console.log("coreValuesData", coreValuesData);
+        console.log("featuresData", featuresData);
         // normal text data
-        formData.append('title', data.title);
-        formData.append('patternNumber', data.patternNumber);
-        formData.append('room', data.room);
+        formData.append("title", data.title);
+        formData.append("patternNumber", data.patternNumber);
+        formData.append("room", data.room);
 
-        formData.append('designStyle', data.designStyle);
-        formData.append('category', selectedCategory);
-        formData.append('demandtype', demand)
-        formData.append('subCategory', selectedSubcategory);
-        formData.append('collection', data.collection);
-        formData.append('color', selectedColors);
-        formData.append('units', data.units);
-        formData.append('unitType', data.unitType);
-        formData.append('totalPricePerUnit', data.totalPricePerUnit);
-        formData.append('discountedprice', data.discountedprice)
-        formData.append('perUnitType', data.perUnitType);
-        formData.append('specialprice', data.specialprice);
-        formData.append('perUnitPrice', parseFloat(data.perUnitPrice));
+        formData.append("designStyle", data.designStyle);
+        formData.append("category", selectedCategory);
+        formData.append("demandtype", demand);
+        formData.append("subCategory", selectedSubcategory);
+        formData.append("collection", data.collection);
+        formData.append("color", selectedColors);
+        formData.append("units", data.units);
+        formData.append("unitType", data.unitType);
+        formData.append("totalPricePerUnit", data.totalPricePerUnit);
+        formData.append("discountedprice", data.discountedprice);
+        formData.append("perUnitType", data.perUnitType);
+        formData.append("specialprice", data.specialprice);
+        formData.append("perUnitPrice", parseFloat(data.perUnitPrice));
         // Convert dimensions to FormData
-        formData.append('dimensions[length][value]', parseFloat(dimensions.length.value));
-        formData.append('dimensions[length][unit]', dimensions.length.unit);
-        formData.append('dimensions[width][value]', parseFloat(dimensions.width.value));
-        formData.append('dimensions[width][unit]', dimensions.width.unit)
-        formData.append('dimensions[thickness][value]', parseFloat(dimensions.thickness.value));
-        formData.append('dimensions[thickness][unit]', dimensions.thickness.unit)
+        formData.append(
+          "dimensions[length][value]",
+          parseFloat(dimensions.length.value)
+        );
+        formData.append("dimensions[length][unit]", dimensions.length.unit);
+        formData.append(
+          "dimensions[width][value]",
+          parseFloat(dimensions.width.value)
+        );
+        formData.append("dimensions[width][unit]", dimensions.width.unit);
+        formData.append(
+          "dimensions[thickness][value]",
+          parseFloat(dimensions.thickness.value)
+        );
+        formData.append(
+          "dimensions[thickness][unit]",
+          dimensions.thickness.unit
+        );
 
         // Add images to FormData
         for (let i = 1; i <= 4; i++) {
@@ -262,22 +356,40 @@ function ProductForm() {
           }
         }
 
-
-        formData.append('purchaseMode', selectedPurchaseMode);
-        formData.append('productDescription', data.productDescription);
+        formData.append("purchaseMode", selectedPurchaseMode);
+        formData.append("productDescription", data.productDescription);
 
         coreValuesData.forEach((coreValue, index) => {
-          formData.append(`coreValues[${index}][heading]`, coreValue?.heading || '');
-          formData.append(`coreValues[${index}][text]`, coreValue?.text || '');
+          formData.append(
+            `coreValues[${index}][heading]`,
+            coreValue?.heading || ""
+          );
+          formData.append(
+            `coreValues[${index}][subheading]`,
+            coreValue?.subheading || ""
+          );
+
+          if (coreValue.image && coreValue.image.length > 0) {
+            formData.append(`coreValues[${index}][image]`, coreValue.image[0]);
+          }
         });
 
         featuresData.forEach((feature, index) => {
-          formData.append(`features[${index}][feature]`, feature?.feature || '');
+          formData.append(
+            `features[${index}][feature]`,
+            feature?.feature || ""
+          );
+          if (featuresData.image && featuresData.image.length > 0) {
+            formData.append(
+              `coreValues[${index}][image]`,
+              featuresData.image[0]
+            );
+          }
         });
 
         // //  add PDF to FormData
         // formData.append('pdf', data.pdf[0]);
-        formData.append('maintainanceDetails', data.maintainanceDetails);
+        formData.append("maintainanceDetails", data.maintainanceDetails);
 
         // --------- 💥 api call 💥 -------
         try {
@@ -286,15 +398,15 @@ function ProductForm() {
             body: formData,
           });
           const responseData = await response.json();
-          window.alert(responseData.message)
-          navigate('/admin');
+          window.alert(responseData.message);
+          navigate("/admin");
         } catch (error) {
-          console.error('Error uploading images:', error);
+          console.error("Error uploading images:", error);
         }
 
         reset();
-        setSelectedColors([])
-        setSelectedPurchaseMode([])
+        setSelectedColors([]);
+        setSelectedPurchaseMode([]);
       })}
     >
       {/* ➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡ ➡➡➡➡➡➡➡➡*/}
@@ -304,7 +416,6 @@ function ProductForm() {
           <h2 className="text-2xl font-bold leading-7 text-gray-900 text-center">
             Add New Product
           </h2>
-
 
           <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">
             General Information:
@@ -321,8 +432,8 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register('title', {
-                      required: 'name is required',
+                    {...register("title", {
+                      required: "name is required",
                     })}
                     id="title"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -342,8 +453,8 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register('patternNumber', {
-                      required: 'patternNumber is required',
+                    {...register("patternNumber", {
+                      required: "patternNumber is required",
                     })}
                     id="patternNumber"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -355,19 +466,53 @@ function ProductForm() {
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
-              <label htmlFor="room" className="block text-sm font-medium leading-6 text-gray-900">
+              <label
+                htmlFor="room"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
                 Room
               </label>
-              <select {...register('room')} id="room" className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded" multiple onChange={handleMultipleSelector}>
+              <select
+                {...register("room")}
+                id="room"
+                className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded"
+                multiple
+                onChange={handleMultipleSelector}
+              >
                 {roomOptions.map((room, index) => (
-                  <option key={index} value={room}>{room}</option>
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
                 ))}
               </select>
-              {roomMultipleSelector.length > 0 && <div style={{ display: 'flex', gap: '7px', alignItems: 'center', marginTop: '10px' }}>
-                {roomMultipleSelector.map((room, index) => {
-                  return (<button onClick={() => navigate(`/homePage/create-room-section/${room}`)} style={{ border: '1px solid black', padding: '2px', borderRadius: '3px' }} key={index}>{room}</button>)
-                })}
-              </div>}
+              {roomMultipleSelector.length > 0 && (
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "7px",
+                    alignItems: "center",
+                    marginTop: "10px",
+                  }}
+                >
+                  {roomMultipleSelector.map((room, index) => {
+                    return (
+                      <button
+                        onClick={() =>
+                          navigate(`/homePage/create-room-section/${room}`)
+                        }
+                        style={{
+                          border: "1px solid black",
+                          padding: "2px",
+                          borderRadius: "3px",
+                        }}
+                        key={index}
+                      >
+                        {room}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="sm:col-span-3">
@@ -381,8 +526,8 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register('collection', {
-                      required: 'name is required',
+                    {...register("collection", {
+                      required: "name is required",
                     })}
                     id="collection"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -395,10 +540,17 @@ function ProductForm() {
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3 my-6">
               <label htmlFor="category">Category:</label>
-              <select id="category" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handleCategoryChange} value={selectedCategory}>
+              <select
+                id="category"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={handleCategoryChange}
+                value={selectedCategory}
+              >
                 <option value="">-- Select Category --</option>
                 {Object.keys(categoryOptions).map((category, index) => (
-                  <option key={index} value={category}>{category}</option>
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
                 ))}
               </select>
             </div>
@@ -407,11 +559,20 @@ function ProductForm() {
               {selectedCategory && (
                 <>
                   <label htmlFor="subcategory">Subcategory:</label>
-                  <select id="subcategory" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handleSubcategoryChange} value={selectedSubcategory}>
+                  <select
+                    id="subcategory"
+                    className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                    onChange={handleSubcategoryChange}
+                    value={selectedSubcategory}
+                  >
                     <option value="">-- Select Subcategory --</option>
-                    {categoryOptions[selectedCategory].map((subcategory, index) => (
-                      <option key={index} value={subcategory}>{subcategory}</option>
-                    ))}
+                    {categoryOptions[selectedCategory].map(
+                      (subcategory, index) => (
+                        <option key={index} value={subcategory}>
+                          {subcategory}
+                        </option>
+                      )
+                    )}
                   </select>
                 </>
               )}
@@ -419,7 +580,6 @@ function ProductForm() {
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
             {selectedCategory && availableColors.length > 0 && (
               <div className="sm:col-span-3">
                 <label htmlFor="colors">Colors:</label>
@@ -437,33 +597,42 @@ function ProductForm() {
             )}
           </div>
 
-
-
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <DimensionInput
               label="Length"
               value={dimensions.length.value}
               unit={dimensions.length.unit}
-              onChange={(newValue) => handleDimensionChange('length', newValue)}
+              onChange={(newValue) => handleDimensionChange("length", newValue)}
             />
             <DimensionInput
               label="Width"
               value={dimensions.width.value}
               unit={dimensions.width.unit}
-              onChange={(newValue) => handleDimensionChange('width', newValue)}
+              onChange={(newValue) => handleDimensionChange("width", newValue)}
             />
             <DimensionInput
               label="Thickness"
               value={dimensions.thickness.value}
               unit={dimensions.thickness.unit}
-              onChange={(newValue) => handleDimensionChange('thickness', newValue)}
+              onChange={(newValue) =>
+                handleDimensionChange("thickness", newValue)
+              }
             />
 
-            <div className='mb-4'>
-              <p className='bold'>Selected Dimensions:</p>
-              <p><b className='mr-1'>Length:</b> {dimensions.length.value} {dimensions.length.unit}</p>
-              <p><b className='mr-1'>Width:</b> {dimensions.width.value} {dimensions.width.unit}</p>
-              <p><b className='mr-1'>Thickness: </b>{dimensions.thickness.value} {dimensions.thickness.unit}</p>
+            <div className="mb-4">
+              <p className="bold">Selected Dimensions:</p>
+              <p>
+                <b className="mr-1">Length:</b> {dimensions.length.value}{" "}
+                {dimensions.length.unit}
+              </p>
+              <p>
+                <b className="mr-1">Width:</b> {dimensions.width.value}{" "}
+                {dimensions.width.unit}
+              </p>
+              <p>
+                <b className="mr-1">Thickness: </b>
+                {dimensions.thickness.value} {dimensions.thickness.unit}
+              </p>
             </div>
           </div>
 
@@ -472,13 +641,13 @@ function ProductForm() {
               <label htmlFor="unitType">Unit Type</label>
               <select
                 id="unitType"
-                {...register('unitType', {
-                  required: 'Unit Type is required',
+                {...register("unitType", {
+                  required: "Unit Type is required",
                 })}
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
               >
                 <option value="">--Select Unit Type--</option>
-                {['sqft', 'box', 'pcs', 'mtr'].map((type, index) => (
+                {["sqft", "box", "pcs", "mtr"].map((type, index) => (
                   <option key={index} value={type}>
                     {type}
                   </option>
@@ -491,8 +660,8 @@ function ProductForm() {
               <input
                 type="number"
                 id="units"
-                {...register('units', {
-                  required: 'Units are required',
+                {...register("units", {
+                  required: "Units are required",
                   min: 1,
                 })}
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
@@ -505,13 +674,13 @@ function ProductForm() {
               <label htmlFor="perUnitType">Per Unit Type</label>
               <select
                 id="perUnitType"
-                {...register('perUnitType', {
-                  required: 'Per Unit Type is required',
+                {...register("perUnitType", {
+                  required: "Per Unit Type is required",
                 })}
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
               >
                 <option value="">--Select Per Unit Type--</option>
-                {['sqft', 'box', 'pcs', 'mtr'].map((type, index) => (
+                {["sqft", "box", "pcs", "mtr"].map((type, index) => (
                   <option key={index} value={type}>
                     {type}
                   </option>
@@ -524,8 +693,8 @@ function ProductForm() {
               <input
                 type="number"
                 id="perUnitPrice"
-                {...register('perUnitPrice', {
-                  required: 'Per Unit Price is required',
+                {...register("perUnitPrice", {
+                  required: "Per Unit Price is required",
                   min: 0,
                 })}
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
@@ -544,8 +713,8 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register('designStyle', {
-                      required: 'designStyle is required',
+                    {...register("designStyle", {
+                      required: "designStyle is required",
                     })}
                     id="designStyle"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -554,20 +723,34 @@ function ProductForm() {
               </div>
             </div>
             <div className="sm:col-span-3 my-6">
-              <label label htmlFor="typeofprice">Price:</label>
-              <select id="typeofprice" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handlePriceChange}>
+              <label label htmlFor="typeofprice">
+                Price:
+              </label>
+              <select
+                id="typeofprice"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={handlePriceChange}
+              >
                 <option value="">-- Type of Price --</option>
                 {typeofprice.map((priceType, index) => (
-                  <option key={index} value={priceType}>{priceType}</option>
+                  <option key={index} value={priceType}>
+                    {priceType}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="sm:col-span-3 my-6">
               <label htmlFor="demandtype">Demand Type:</label>
-              <select id="demandtype" className='ml-2 border bg-transparent p-2 border-gray-400 rounded' onChange={handleProductChange} >
+              <select
+                id="demandtype"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={handleProductChange}
+              >
                 <option value="">-- Select Demand Type--</option>
                 {demandtype.map((demandtype, index) => (
-                  <option key={index} value={demandtype}>{demandtype}</option>
+                  <option key={index} value={demandtype}>
+                    {demandtype}
+                  </option>
                 ))}
               </select>
             </div>
@@ -584,8 +767,8 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="number"
-                    {...register('totalPricePerUnit', {
-                      required: 'totalPricePerUnit is required',
+                    {...register("totalPricePerUnit", {
+                      required: "totalPricePerUnit is required",
                       min: 1,
                       max: 10000,
                     })}
@@ -593,12 +776,14 @@ function ProductForm() {
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
-
-
-
               </div>
             </div>
-            <div className="sm:col-span-2" style={{ display: priceType === 'Discounted Price' ? 'block' : 'none' }}>
+            <div
+              className="sm:col-span-2"
+              style={{
+                display: priceType === "Discounted Price" ? "block" : "none",
+              }}
+            >
               <label
                 htmlFor="discountedprice"
                 className="block text-sm font-medium leading-6 text-gray-900"
@@ -606,12 +791,11 @@ function ProductForm() {
                 Discounted Price
               </label>
 
-
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="number"
-                    {...register('discountedprice', {
+                    {...register("discountedprice", {
                       min: 1,
                       max: 10000,
                     })}
@@ -619,14 +803,15 @@ function ProductForm() {
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
-
-
-
               </div>
             </div>
 
-
-            <div className="sm:col-span-2" style={{ display: priceType === 'Special Price' ? 'block' : 'none' }}>
+            <div
+              className="sm:col-span-2"
+              style={{
+                display: priceType === "Special Price" ? "block" : "none",
+              }}
+            >
               <label
                 htmlFor="Special Price"
                 className="block text-sm font-medium leading-6 text-gray-900"
@@ -634,13 +819,11 @@ function ProductForm() {
                 Special Price
               </label>
 
-
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="number"
-                    {...register('specialprice', {
-
+                    {...register("specialprice", {
                       min: 1,
                       max: 10000,
                     })}
@@ -648,9 +831,6 @@ function ProductForm() {
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
-
-
-
               </div>
             </div>
           </div>
@@ -667,13 +847,13 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="file"
-                    {...register('img1', {
-                      required: 'name is required',
+                    {...register("img1", {
+                      required: "name is required",
                     })}
                     id="img1"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     accept="image/*"
-                    onChange={(e) => handleImageChange(e, 1)}
+                    onChange={(e) => handleImageChange(e, 1, "")}
                   />
                 </div>
               </div>
@@ -689,13 +869,13 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="file"
-                    {...register('img2', {
-                      required: 'name is required',
+                    {...register("img2", {
+                      required: "name is required",
                     })}
                     id="img2"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     accept="image/*"
-                    onChange={(e) => handleImageChange(e, 2)}
+                    onChange={(e) => handleImageChange(e, 2, "")}
                   />
                 </div>
               </div>
@@ -714,13 +894,13 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="file"
-                    {...register('img3', {
-                      required: 'name is required',
+                    {...register("img3", {
+                      required: "name is required",
                     })}
                     id="img3"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     accept="image/*"
-                    onChange={(e) => handleImageChange(e, 3)}
+                    onChange={(e) => handleImageChange(e, 3, "")}
                   />
                 </div>
               </div>
@@ -736,13 +916,13 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="file"
-                    {...register('img4', {
-                      required: 'name is required',
+                    {...register("img4", {
+                      required: "name is required",
                     })}
                     id="img4"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     accept="image/*"
-                    onChange={(e) => handleImageChange(e, 4)}
+                    onChange={(e) => handleImageChange(e, 4, "")}
                   />
                 </div>
               </div>
@@ -793,8 +973,8 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <textarea
                     type="text"
-                    {...register('productDescription', {
-                      required: 'Description is required',
+                    {...register("productDescription", {
+                      required: "Description is required",
                     })}
                     id="productDescription"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -805,108 +985,118 @@ function ProductForm() {
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">Core Values:</label>
-            <Controller
-              name={`coreValues`}
-              control={control}
-              defaultValue={[{ heading: '', text: '' }]}
-              render={({ field }) => (
-                <div>
-                  {field.value.map((coreValue, index) => (
-                    <div key={index} className="mt-4">
-                      <label htmlFor={`coreValues[${index}].heading`} className="block text-sm font-medium leading-5 text-gray-700">
-                        Core value {index + 1} - Heading
-                      </label>
-                      <Controller
-                        name={`coreValues[${index}].heading`}
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            type="text"
-                            className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
-                          />
-                        )}
-                      />
+            <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
+              Core Values:
+            </label>
 
-                      <label htmlFor={`coreValues[${index}].text`} className="block text-sm font-medium leading-5 text-gray-700 mt-4">
-                        Core value {index + 1} - Text
-                      </label>
-                      <Controller
-                        name={`coreValues[${index}].text`}
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            type="text"
-                            className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
-                          />
-                        )}
-                      />
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const newCoreValues = [...field.value, { heading: '', text: '' }];
-                      field.onChange(newCoreValues);
-                    }}
-                    className="text-indigo-600 hover:text-indigo-900 mt-4"
+            <div className=" w-[200px] ">
+              {coreValues.map((coreValue, index) => (
+                <div className=" w-[200px] " key={coreValue.id}>
+                  <label
+                    htmlFor={`coreValues[${index}].heading`}
+                    className="block text-sm font-medium leading-5 text-gray-700"
                   >
-                    Add Core Value
+                    Core value {index + 1} - Heading
+                  </label>
+                  <input
+                    className="mt-1 p-2 mb-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                    type="text"
+                    {...register(`coreValues.${index}.heading`)}
+                  />
+                  <label
+                    htmlFor={`coreValues[${index}].heading`}
+                    className="block text-sm font-medium leading-5 text-gray-700"
+                  >
+                    Core value {index + 1} - Sub-heading
+                  </label>
+                  <input
+                    className="mt-1 p-2 mb-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                    type="text"
+                    {...register(`coreValues.${index}.subheading`)}
+                  />
+                  <label
+                    htmlFor={`coreValues[${index}].heading`}
+                    className="block text-sm font-medium leading-5 text-gray-700"
+                  >
+                    Core value {index + 1} - Icon
+                  </label>
+                  <input
+                    className="mt-1 p-2 mb-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                    type="file"
+                    onChange={(e) => {
+                      handleImageChange(e, index, "coreValues");
+                    }}
+                  />
+                  <button
+                    className="bg-red-600  my-2 px-2 rounded-md"
+                    type="button"
+                    onClick={() => removeCoreValue(index)}
+                  >
+                    Remove
                   </button>
-
                 </div>
-              )}
-            />
+              ))}
 
+              <button
+                className="bg-blue-600 h-[2rem] w-[8rem] mt-2 rounded-md"
+                type="button"
+                onClick={() => appendCoreValue({})}
+              >
+                Add Core Value
+              </button>
+            </div>
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">Product Features:</label>
-            <Controller
-              name={`features`}
-              control={control}
-              defaultValue={[{ feature: '' }]}
-              render={({ field }) => (
-                <div>
-                  {field.value.map((feature, index) => (
-                    <div key={index} className="mt-4">
-                      <label htmlFor={`features[${index}].feature`} className="block text-sm font-medium leading-5 text-gray-700">
-                        Feature {index + 1}
-                      </label>
-                      <Controller
-                        name={`features[${index}].feature`}
-                        control={control}
-                        defaultValue=""
-                        render={({ field }) => (
-                          <input
-                            {...field}
-                            type="text"
-                            className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
-                          />
-                        )}
-                      />
+            <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
+              Product Features:
+            </label>
 
-                    </div>
-                  ))}
+            <div>
+              {features.map((feature, index) => (
+                <div className="" key={feature.id}>
+                  <label
+                    htmlFor={`features[${index}].feature`}
+                    className="block text-sm font-medium leading-5 text-gray-700"
+                  >
+                    Feature {index + 1} Heading
+                  </label>
+                  <input
+                    className="mt-1 p-2 mb-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                    type="text"
+                    {...register(`features.${index}.heading`)}
+                  />
+                  <label
+                    htmlFor={`features[${index}].feature`}
+                    className="block text-sm font-medium leading-5 text-gray-700"
+                  >
+                    Feature {index + 1} Icon
+                  </label>
+                  <input
+                    className="mt-1 p-2 mb-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                    type="file"
+                    onChange={(e) => {
+                      handleImageChange(e, index, "features");
+                    }}
+                  />
                   <button
                     type="button"
-                    onClick={() => {
-                      const newFeature = [...field.value, { feature: '' }];
-                      field.onChange(newFeature);
-                    }}
-                    className="text-indigo-600 hover:text-indigo-900 mt-4"
+                    className="bg-red-600 my-2 px-2 rounded-md"
+                    onClick={() => removeFeature(index)}
                   >
-                    Add Feature
+                    Remove
                   </button>
-
                 </div>
-              )}
-            />
+              ))}
 
+              <button
+                type="button"
+                className="bg-blue-600 h-[2rem] w-[8rem] mt-2 rounded-md"
+                onClick={() => appendFeature({})}
+              >
+                Add Feature
+              </button>
+            </div>
           </div>
         </div>
 
@@ -929,8 +1119,8 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <textarea
                     type="text"
-                    {...register('maintainanceDetails', {
-                      required: 'maintainance Description is required',
+                    {...register("maintainanceDetails", {
+                      required: "maintainance Description is required",
                     })}
                     id="maintainanceDetails"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -938,9 +1128,6 @@ function ProductForm() {
                 </div>
               </div>
             </div>
-
-
-
 
             {/* <div className="sm:col-span-3">
               <label
@@ -976,7 +1163,6 @@ function ProductForm() {
           Cancel
         </button>
 
-
         <Button
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
@@ -984,7 +1170,6 @@ function ProductForm() {
           Add product
         </Button>
       </div>
-
     </form>
   );
 }
