@@ -251,10 +251,10 @@ function ProductForm() {
         const imageUrl = URL.createObjectURL(file);
         setImages(`features${index}`, imageUrl);
       }
-    } else if (section === "coreValues") {
+    } else if (section === "corevalues") {
       if (file) {
         const imageUrl = URL.createObjectURL(file);
-        setImages(`coreValues${index}`, imageUrl);
+        setImages(`corevalues${index}`, imageUrl);
       }
     } else {
       if (file) {
@@ -311,10 +311,12 @@ function ProductForm() {
         console.log("featuresData", featuresData);
         // normal text data
         formData.append("title", data.title);
+        console.log(data.patternNumber);
         formData.append("patternNumber", data.patternNumber);
         formData.append("room", data.room);
 
         formData.append("designStyle", data.designStyle);
+        console.log(selectedCategory);
         formData.append("category", selectedCategory);
         formData.append("demandtype", demand);
         formData.append("subCategory", selectedSubcategory);
@@ -356,6 +358,23 @@ function ProductForm() {
           }
         }
 
+        for (let i = 1; i <= featuresData.length; i++) {
+          const fileInput = document.getElementById(`features${i}`);
+          const file = fileInput?.files[0];
+          console.log(file);
+          if (file) {
+            formData.append(`features`, file);
+          }
+        }
+        for (let i = 1; i <= coreValuesData.length; i++) {
+          const fileInput = document.getElementById(`corevalues${i}`);
+          const file = fileInput?.files[0];
+          console.log(file);
+          if (file) {
+            formData.append(`corevalues`, file);
+          }
+        }
+
         formData.append("purchaseMode", selectedPurchaseMode);
         formData.append("productDescription", data.productDescription);
 
@@ -368,29 +387,21 @@ function ProductForm() {
             `coreValues[${index}][subheading]`,
             coreValue?.subheading || ""
           );
-
-          if (coreValue.image && coreValue.image.length > 0) {
-            formData.append(`coreValues[${index}][image]`, coreValue.image[0]);
-          }
         });
 
         featuresData.forEach((feature, index) => {
+          console.log(feature.heading);
           formData.append(
-            `features[${index}][feature]`,
-            feature?.feature || ""
+            `features[${index}][heading]`,
+            feature?.heading || ""
           );
-          if (featuresData.image && featuresData.image.length > 0) {
-            formData.append(
-              `coreValues[${index}][image]`,
-              featuresData.image[0]
-            );
-          }
         });
 
         // //  add PDF to FormData
         // formData.append('pdf', data.pdf[0]);
         formData.append("maintainanceDetails", data.maintainanceDetails);
 
+        console.log(formData);
         // --------- 💥 api call 💥 -------
         try {
           const response = await fetch(`${BASE_URL}/api/createProduct`, {
@@ -1004,7 +1015,7 @@ function ProductForm() {
                     {...register(`coreValues.${index}.heading`)}
                   />
                   <label
-                    htmlFor={`coreValues[${index}].heading`}
+                    htmlFor={`coreValues[${index}].subheading`}
                     className="block text-sm font-medium leading-5 text-gray-700"
                   >
                     Core value {index + 1} - Sub-heading
@@ -1023,8 +1034,10 @@ function ProductForm() {
                   <input
                     className="mt-1 p-2 mb-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
                     type="file"
+                    name={`corevalues${index + 1}`}
+                    id={`corevalues${index + 1}`}
                     onChange={(e) => {
-                      handleImageChange(e, index, "coreValues");
+                      handleImageChange(e, index, "corevalues");
                     }}
                   />
                   <button
@@ -1056,7 +1069,7 @@ function ProductForm() {
               {features.map((feature, index) => (
                 <div className="" key={feature.id}>
                   <label
-                    htmlFor={`features[${index}].feature`}
+                    htmlFor={`features[${index}].heading`}
                     className="block text-sm font-medium leading-5 text-gray-700"
                   >
                     Feature {index + 1} Heading
@@ -1075,6 +1088,8 @@ function ProductForm() {
                   <input
                     className="mt-1 p-2 mb-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
                     type="file"
+                    name={`features${index + 1}`}
+                    id={`features${index + 1}`}
                     onChange={(e) => {
                       handleImageChange(e, index, "features");
                     }}
