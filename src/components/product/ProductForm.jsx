@@ -230,6 +230,10 @@ function ProductForm() {
           "Rose Pink",
           "Charcoal Gray",
         ];
+      case "Curtains":
+        return ["Cream", "Biege", "Sunset Orange", "Rose Pink", "light Gray"];
+      case "Blinds":
+        return ["Sky Blue", "Green", "Orange", "Peral white", "Gray"];
       default:
         return [];
     }
