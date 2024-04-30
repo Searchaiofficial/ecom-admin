@@ -7,14 +7,14 @@ import { BASE_URL } from "../../../../config";
 function NewProductForm() {
   const { handleSubmit, register } = useForm();
   const navigate = useNavigate();
-  const [mode, setMode] = useState("normal");
+  const [mode, setMode] = useState("room");
 
   const onSubmit = async (data) => {
     const formData = new FormData();
 
     try {
       formData.append("type", mode);
-      if (mode === "normal") {
+      if (mode === "room") {
         const fileInput = document.getElementById(`image`);
         const file = fileInput?.files[0];
         formData.append(`image`, file);
@@ -54,11 +54,11 @@ function NewProductForm() {
               <input
                 type="radio"
                 className="form-radio"
-                value="normal"
-                checked={mode === "normal"}
-                onChange={() => setMode("normal")}
+                value="room"
+                checked={mode === "room"}
+                onChange={() => setMode("room")}
               />
-              <span className="ml-2">Normal</span>
+              <span className="ml-2">Room</span>
             </label>
             <label className="inline-flex items-center ml-6">
               <input
@@ -72,7 +72,7 @@ function NewProductForm() {
             </label>
           </div>
 
-          {mode === "normal" ? (
+          {mode === "room" ? (
             <>
               <label
                 htmlFor="image"

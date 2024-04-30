@@ -88,6 +88,14 @@ function ProductForm() {
     control,
     name: "features",
   });
+  const {
+    fields: colors,
+    append: appendColors,
+    remove: removeColors,
+  } = useFieldArray({
+    control,
+    name: "colors",
+  });
 
   // -------------------------------------------------
 
@@ -161,6 +169,7 @@ function ProductForm() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [selectedColors, setSelectedColors] = useState([]);
+  const [color, setColor] = useState([]);
   const [availableColors, setAvailableColors] = useState([]);
   const [price, setPrice] = useState([]);
   const [images, setImages] = useState([]);
@@ -239,15 +248,6 @@ function ProductForm() {
     }
   };
 
-  const handleColorChange = (e) => {
-    const color = e.target.value;
-    if (selectedColors.includes(color)) {
-      setSelectedColors((prevColors) => prevColors.filter((c) => c !== color));
-    } else {
-      setSelectedColors((prevColors) => [...prevColors, color]);
-    }
-  };
-
   const handleImageChange = (e, index, section) => {
     const file = e.target.files[0];
     if (section === "features") {
@@ -310,7 +310,15 @@ function ProductForm() {
         console.log("Form-Data:", data);
         const coreValuesData = getValues("coreValues");
         const featuresData = getValues("features");
-
+        const colorsData = getValues("colors");
+        console.log("colorsData", colorsData);
+        console.log("selectedColor", selectedColors);
+        colors.forEach((color, index) => {
+          formData.append(`colors[${index}]`, color.color);
+          color.images.forEach((image) => {
+            formData.append(`colors`, image[0]);
+          });
+        });
         console.log("coreValuesData", coreValuesData);
         console.log("featuresData", featuresData);
         // normal text data
@@ -325,7 +333,7 @@ function ProductForm() {
         formData.append("demandtype", demand);
         formData.append("subCategory", selectedSubcategory);
         formData.append("collection", data.collection);
-        formData.append("color", selectedColors);
+        formData.append("color", color);
         formData.append("units", data.units);
         formData.append("unitType", data.unitType);
         formData.append("totalPricePerUnit", data.totalPricePerUnit);
@@ -595,24 +603,6 @@ function ProductForm() {
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            {selectedCategory && availableColors.length > 0 && (
-              <div className="sm:col-span-3">
-                <label htmlFor="colors">Colors:</label>
-                <div>
-                  {availableColors.map((color) => (
-                    <ColorCheckbox
-                      key={color}
-                      color={color}
-                      isChecked={selectedColors.includes(color)}
-                      onChange={handleColorChange}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <DimensionInput
               label="Length"
               value={dimensions.length.value}
@@ -850,6 +840,22 @@ function ProductForm() {
             </div>
           </div>
 
+          <select
+            className="w-full my-2 border border-gray-400 rounded-md p-1"
+            onChange={(e) => {
+              const color = e.target.value;
+              setColor(color);
+            }}
+          >
+            <option value="">Select Color</option>
+            {getColorsForCategory(selectedCategory)
+              .filter((color) => !selectedColors.includes(color))
+              .map((color, colorIndex) => (
+                <option key={colorIndex} value={color}>
+                  {color}
+                </option>
+              ))}
+          </select>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
@@ -943,6 +949,57 @@ function ProductForm() {
               </div>
             </div>
           </div>
+          <div className="flex w-full my-8">
+            {colors.map((field, index) => (
+              <div className="w-full m-2" key={field.id}>
+                <select
+                  className="w-full my-2 border border-gray-400 rounded-md p-1"
+                  value={field.color}
+                  onChange={(e) => {
+                    const updatedColors = [...colors];
+                    updatedColors[index].color = e.target.value;
+                    setSelectedColors((prev) => [...prev, ...updatedColors]);
+                  }}
+                >
+                  <option value="">Select Color</option>
+                  {getColorsForCategory(selectedCategory)
+                    .filter((color) => !selectedColors.includes(color))
+                    .map((color, colorIndex) => (
+                      <option key={colorIndex} value={color}>
+                        {color}
+                      </option>
+                    ))}
+                </select>
+                {field.images.map((image, imageIndex) => (
+                  <input
+                    className="w-full my-2 border border-gray-400 rounded-md p-1"
+                    key={`${field.id}-${imageIndex}`}
+                    type="file"
+                    {...register(`colors.${index}.images.${imageIndex}`)}
+                  />
+                ))}
+
+                <button
+                  className="bg-red-400 rounded-md p-2"
+                  type="button"
+                  onClick={() => removeColors(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+          {colors.length < 4 && (
+            <button
+              className="bg-blue-500 rounded-md p-2 mx-2"
+              type="button"
+              onClick={() =>
+                appendColors({ color: "", images: [{}, {}, {}, {}] })
+              }
+            >
+              Add More Colors
+            </button>
+          )}
         </div>
 
         {/* 💢💢💢💢💢 purchase mode 💢💢💢💢💢💢💢 */}
