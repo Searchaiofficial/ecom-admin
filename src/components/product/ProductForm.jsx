@@ -520,9 +520,9 @@ function ProductForm() {
                   {roomMultipleSelector.map((room, index) => {
                     return (
                       <button
-                        onClick={() =>
-                          navigate(`/homePage/create-room-section/${room}`)
-                        }
+                        // onClick={() =>
+                        //   navigate(`/homePage/create-room-section/${room}`)
+                        // }
                         style={{
                           border: "1px solid black",
                           padding: "2px",
