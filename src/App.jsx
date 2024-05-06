@@ -39,6 +39,10 @@ import NewProduct from "./components/homepage/NewProduct/NewProduct";
 import NewProductForm from "./components/homepage/NewProduct/NewProductForm";
 import Banner from "./components/homepage/Banner/Banner";
 import BannerForm from "./components/homepage/Banner/BannerForm";
+import NewSuggestion from "./components/homepage/NewSuggestion/NewSuggestion";
+import CreateNewSuggestion from "./components/homepage/NewSuggestion/CreateNewSuggestion";
+import RoomDisplay from "./components/rooms/RoomDisplay";
+import RoomPageForm from "./components/rooms/RoomPageForm";
 
 export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -199,6 +203,25 @@ export default function App() {
             </Protected>
           }
         ></Route>
+        
+        <Route
+          exact
+          path="/update-home-page/new-suggestion"
+          element={
+            <Protected>
+              <NewSuggestion />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/update-home-page/create-new-suggestion-section"
+          element={
+            <Protected>
+              <CreateNewSuggestion />
+            </Protected>
+          }
+        ></Route>
 
         <Route
           exact
@@ -340,6 +363,26 @@ export default function App() {
           element={
             <Protected>
               <ProductDisplay />
+            </Protected>
+          }
+        ></Route>
+
+        <Route
+          exact
+          path="/room-page-display"
+          element={
+            <Protected>
+              <RoomDisplay />
+            </Protected>
+          }
+        ></Route>
+
+        <Route
+          exact
+          path="/create-room-page"
+          element={
+            <Protected>
+              <RoomPageForm />
             </Protected>
           }
         ></Route>

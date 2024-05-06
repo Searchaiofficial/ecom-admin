@@ -7,6 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isProductListExtended, setIsProductListExtended] = useState(false);
   const [isOrderListExtended, setisOrderListExtended] = useState(false)
+  const [isRoomListExtended, setIsRoomListExtended] = useState(false)
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -16,6 +17,11 @@ const Navbar = () => {
   const handleProductClick = () => {
     setIsProductListExtended(!isProductListExtended);
   };
+
+  const handleRoomClick = () => {
+    setIsRoomListExtended(!isRoomListExtended);
+  };
+
   const handleOrderClick = () => {
     setisOrderListExtended(!isOrderListExtended);
   };
@@ -46,6 +52,26 @@ const Navbar = () => {
                 </li>
                 <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
                   <Link to='/create-product'>Create Product</Link>
+                </li>
+              </ul>
+            )}
+            </Link>
+          </div>
+        </li>
+
+        <li className='pl-3 pt-1.5 pb-1.5 text-lg  rounded-full'>
+        <img className='inline-block ml-4 float-left' src="/Images/package.png" alt="package" width={20} height={20} />
+        
+          <div  className="inline-block ml-4 " >
+          <Link to='#' className="inline-block " onClick={handleRoomClick}>
+            Rooms
+            {isRoomListExtended && (
+              <ul>
+                <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
+                  <Link to='/room-page-display'>View Room</Link>
+                </li>
+                <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
+                  <Link to='/create-room-page'>Create Room Page</Link>
                 </li>
               </ul>
             )}

@@ -46,8 +46,7 @@ function RoomForm() {
         <>
             <AdminNavbar />
             <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-6 border rounded-md shadow-md mt-10">
-                <div className="mt-6">
-
+             <div className="mt-6">
                     <label
                         htmlFor="image"
                         className="block text-sm font-medium leading-6 text-gray-900 font-bold"

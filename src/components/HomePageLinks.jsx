@@ -17,6 +17,7 @@ const HomePageLinks = () => {
     "Reviews",
     "New Product",
     "Banner",
+    "New Suggestion",
   ];
 
   return (
