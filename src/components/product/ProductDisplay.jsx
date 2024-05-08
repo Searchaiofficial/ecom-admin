@@ -2,8 +2,21 @@ import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../../config";
 import Navbar from "../Navbar";
 import { useNavigate } from "react-router-dom";
+import UpdateProduct from "./UpdateProduct";
 
 const ProductDisplay = () => {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
+  };
+
+  const [productID, setProductID] = useState({}); // [1
+  const handleUpdate = (productId) => () => {
+    setProductID(productId);
+    toggleModal();
+  };
+
   const [productData, setProductData] = useState([]);
   const [expandedProduct, setExpandedProduct] = useState(null);
   const navigate = useNavigate();
@@ -33,6 +46,7 @@ const ProductDisplay = () => {
   const handleToggleReadMore = (productId) => {
     setExpandedProduct((prev) => (prev === productId ? null : productId));
   };
+
   console.log(productData);
   return (
     <>
@@ -46,13 +60,13 @@ const ProductDisplay = () => {
             <h2 className="pb-6 pt-1 font-bold text-center text-xl">
               Product Information
             </h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className=" grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {productData &&
                 productData.map((product) => (
                   <div
                     key={product._id}
                     style={{ marginBottom: "30px" }}
-                    className="p-2 border rounded"
+                    className="relative pb-10 p-2 border rounded"
                   >
                     <img
                       key={product._id}
@@ -158,19 +172,34 @@ const ProductDisplay = () => {
                         Read More
                       </p>
                     )}
-                    <button
-                      type="button"
-                      className="mt-4 ml-1 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
-                      onClick={() => handleDelete(product._id)}
-                    >
-                      Delete
-                    </button>
+                    <div className="flex justify-around w-full gap-4">
+                      <button
+                        type="button"
+                        className="mt-4 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1"
+                        onClick={handleUpdate(product._id)}
+                      >
+                        Update
+                      </button>
+                      <button
+                        type="button"
+                        className="mt-4 w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
+                        onClick={() => handleDelete(product._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 ))}
             </div>
           </div>
         </div>
       </div>
+      {modalOpen && (
+        <UpdateProduct
+          toggleModal={toggleModal}
+          productId={productID}
+        />
+      )}
     </>
   );
 };

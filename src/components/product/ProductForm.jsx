@@ -112,49 +112,49 @@ function ProductForm() {
     "Kitchen",
   ];
 
-  const categoryOptions = {
-    Wallpaper: [
-      "3D",
-      "Abstract",
-      "Animals & Birds",
-      "Flock & Luxury",
-      "Brick & Stone",
-      "Customize",
-      "Striped",
-      "Flower & Trees",
-      "Vintage",
-      "Art Deco",
-      "Geometric",
-      "Kid",
-      "Modern",
-      "Plain & Texture",
-      "Traditional",
-      "Wood",
-    ],
-    Flooring: [
-      "Carpet",
-      "Carpet Tiles",
-      "Vinyl Floor",
-      "Luxury Vinyl Plank",
-      "Laminate",
-      "Wooden Floor",
-      "Deck Wood",
-    ],
-    Blinds: [
-      "Vertical Blinds",
-      "Roller Blinds",
-      "Zebra Blinds",
-      "Shutter Blinds",
-      "Wooden Blinds",
-    ],
-    Curtains: ["Abstract", "Geometric", "Plains & Textures", "Leave", "Floral"],
-    "Sport & Gym Flooring": [
-      "Artificial Grass",
-      "Interlocking Mat",
-      "Rubber Tiles",
-      "Vinyl Sports Floors",
-    ],
-  };
+  // const categoryOptions = {
+  //   Wallpaper: [
+  //     "3D",
+  //     "Abstract",
+  //     "Animals & Birds",
+  //     "Flock & Luxury",
+  //     "Brick & Stone",
+  //     "Customize",
+  //     "Striped",
+  //     "Flower & Trees",
+  //     "Vintage",
+  //     "Art Deco",
+  //     "Geometric",
+  //     "Kid",
+  //     "Modern",
+  //     "Plain & Texture",
+  //     "Traditional",
+  //     "Wood",
+  //   ],
+  //   Flooring: [
+  //     "Carpet",
+  //     "Carpet Tiles",
+  //     "Vinyl Floor",
+  //     "Luxury Vinyl Plank",
+  //     "Laminate",
+  //     "Wooden Floor",
+  //     "Deck Wood",
+  //   ],
+  //   Blinds: [
+  //     "Vertical Blinds",
+  //     "Roller Blinds",
+  //     "Zebra Blinds",
+  //     "Shutter Blinds",
+  //     "Wooden Blinds",
+  //   ],
+  //   Curtains: ["Abstract", "Geometric", "Plains & Textures", "Leave", "Floral"],
+  //   "Sport & Gym Flooring": [
+  //     "Artificial Grass",
+  //     "Interlocking Mat",
+  //     "Rubber Tiles",
+  //     "Vinyl Sports Floors",
+  //   ],
+  // };
 
   const availablePurchaseMode = [
     "Only Online",
@@ -165,6 +165,9 @@ function ProductForm() {
   const demandtype = ["Best Seller", "Most Rated", "Trending"];
 
   // --
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [subCategoryOptions, setSubCategoryOptions] = useState([]);
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
@@ -217,19 +220,47 @@ function ProductForm() {
 
   // --
 
+  const fetchSubCategories = async () => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/getSubCategories/${selectedCategory}`
+      );
+      const responseData = await response.json();
+      setSubCategoryOptions(
+        responseData.map((subCategory) => subCategory.name)
+      );
+    } catch (error) {
+      console.error("Error fetching subcategories:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/categories`);
+      const responseData = await response.json();
+      setCategoryOptions(responseData.map((category) => category.name));
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
   useEffect(() => {
-    // Fetch colors based on the selected category
+    if (categoryOptions.length === 0) {
+      fetchCategories();
+    }
     if (selectedCategory) {
+      fetchSubCategories();
       const colorsForCategory = getColorsForCategory(selectedCategory);
       setAvailableColors(colorsForCategory);
     } else {
       setAvailableColors([]);
     }
-  }, [selectedCategory]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, categoryOptions]);
 
   const getColorsForCategory = (category) => {
     switch (category) {
-      case "Flooring":
+      case "Decor":
         return ["Oak Brown", "Maple Red", "Cherry Blossom", "Walnut", "Teak"];
       case "Wallpaper":
         return [
@@ -241,10 +272,10 @@ function ProductForm() {
         ];
       case "Curtains":
         return ["Cream", "Biege", "Sunset Orange", "Rose Pink", "light Gray"];
-      case "Blinds":
+      case "Bed and Dining":
         return ["Sky Blue", "Green", "Orange", "Peral white", "Gray"];
       default:
-        return [];
+        return ["Oak Brown", "Maple Red", "Cherry Blossom", "Walnut", "Teak"];
     }
   };
 
@@ -298,8 +329,6 @@ function ProductForm() {
       );
     }
   };
-
-  console.log("images", images);
 
   return (
     <form
@@ -570,7 +599,7 @@ function ProductForm() {
                 value={selectedCategory}
               >
                 <option value="">-- Select Category --</option>
-                {Object.keys(categoryOptions).map((category, index) => (
+                {categoryOptions.map((category, index) => (
                   <option key={index} value={category}>
                     {category}
                   </option>
@@ -589,7 +618,7 @@ function ProductForm() {
                     value={selectedSubcategory}
                   >
                     <option value="">-- Select Subcategory --</option>
-                    {categoryOptions[selectedCategory].map(
+                    {subCategoryOptions.map(
                       (subcategory, index) => (
                         <option key={index} value={subcategory}>
                           {subcategory}

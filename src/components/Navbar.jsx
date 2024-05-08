@@ -8,6 +8,7 @@ const Navbar = () => {
   const [isProductListExtended, setIsProductListExtended] = useState(false);
   const [isOrderListExtended, setisOrderListExtended] = useState(false)
   const [isRoomListExtended, setIsRoomListExtended] = useState(false)
+  const [isCategoryListExtended, setIsCategoryListExtended] = useState(false)
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -20,6 +21,10 @@ const Navbar = () => {
 
   const handleRoomClick = () => {
     setIsRoomListExtended(!isRoomListExtended);
+  };
+
+  const handleCategoryClick = () => {
+    setIsCategoryListExtended(!isCategoryListExtended);
   };
 
   const handleOrderClick = () => {
@@ -52,6 +57,26 @@ const Navbar = () => {
                 </li>
                 <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
                   <Link to='/create-product'>Create Product</Link>
+                </li>
+              </ul>
+            )}
+            </Link>
+          </div>
+        </li>
+
+        <li className='pl-3 pt-1.5 pb-1.5 text-lg  rounded-full'>
+        <img className='inline-block ml-4 float-left' src="/Images/package.png" alt="package" width={20} height={20} />
+        
+          <div  className="inline-block ml-4 " >
+          <Link to='#' className="inline-block " onClick={handleCategoryClick}>
+            Category
+            {isCategoryListExtended && (
+              <ul>
+                <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
+                  <Link to='/category-display'>View Category</Link>
+                </li>
+                <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
+                  <Link to='/create-category'>Create Category</Link>
                 </li>
               </ul>
             )}

@@ -43,6 +43,8 @@ import NewSuggestion from "./components/homepage/NewSuggestion/NewSuggestion";
 import CreateNewSuggestion from "./components/homepage/NewSuggestion/CreateNewSuggestion";
 import RoomDisplay from "./components/rooms/RoomDisplay";
 import RoomPageForm from "./components/rooms/RoomPageForm";
+import CreateCategory from "./components/category/CreateCategory";
+import CategoryDisplay from "./components/category/CategoryDisplay";
 
 export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -369,6 +371,26 @@ export default function App() {
 
         <Route
           exact
+          path="/category-display"
+          element={
+            <Protected>
+              <CategoryDisplay />
+            </Protected>
+          }
+        ></Route>
+
+        <Route
+          exact
+          path="/create-category"
+          element={
+            <Protected>
+              <CreateCategory />
+            </Protected>
+          }
+        ></Route>
+
+        <Route
+          exact
           path="/room-page-display"
           element={
             <Protected>
@@ -441,6 +463,7 @@ export default function App() {
             </Protected>
           }
         ></Route>
+        
       </Routes>
     </>
   );

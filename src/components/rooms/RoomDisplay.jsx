@@ -7,14 +7,14 @@ const RoomDisplay = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/fetchAllRoomPage`)
+    fetch(`${BASE_URL}/api/getAllRoommain`)
       .then((response) => response.json())
-      .then((data) => setRoomPageData(data))
+      .then((data) =>  setRoomPageData(data))
       .catch((error) => console.error("Error fetching images data:", error));
   }, []);
 
   const handleDelete = (roomPageID) => {
-    fetch(`${BASE_URL}/api/deleteRoomPage/${roomPageID}`, {
+    fetch(`${BASE_URL}/api/deleteRoommain/${roomPageID}`, {
       method: "DELETE",
     })
       .then((response) => response.json())

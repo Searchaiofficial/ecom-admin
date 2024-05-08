@@ -75,7 +75,7 @@ function RoomPageForm() {
 
         // --------- 💥 api call 💥 -------
         try {
-          const response = await fetch(`${BASE_URL}/api/createRoomPage`, {
+          const response = await fetch(`${BASE_URL}/api/createRoommain`, {
             method: 'POST',
             headers: {
             },
