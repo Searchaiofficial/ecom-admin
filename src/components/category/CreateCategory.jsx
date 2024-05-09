@@ -7,6 +7,7 @@ import { BASE_URL } from "../../../config";
 
 function CreateCategory() {
   // form related
+  const categoryType = ["Home Decor", "Wall Decor", "Flooring"]
   const { register, handleSubmit, getValues, reset, control } = useForm();
 
   const {
@@ -42,6 +43,7 @@ function CreateCategory() {
           formData.append(`subCategoriesImage`, file);
         }
 
+        formData.append("type", data.type);
         // --------- 💥 api call 💥 -------
         try {
           const response = await fetch(`${BASE_URL}/api/createCategory`, {
@@ -57,7 +59,7 @@ function CreateCategory() {
           console.error("Error uploading images:", error);
         }
 
-        reset();
+        // reset();
         // setSelectedColors([]);
         // setSelectedPurchaseMode([]);
       })}
@@ -112,6 +114,30 @@ function CreateCategory() {
                 </div>
               </div>
             </div>
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="type"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Category Type*
+              </label>
+              <div className="mt-2">
+                <select
+                  {...register("type", {
+                    required: "type is required",
+                  })}
+                  id="type"
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                >
+                  {categoryType.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              </div>
           </div>
 
           <div className="mt-10">

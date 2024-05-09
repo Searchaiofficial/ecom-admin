@@ -13,8 +13,8 @@ const CategoryDisplay = () => {
       .catch((error) => console.error("Error fetching images data:", error));
   }, []);
 
-  const handleDelete = (roomPageID) => {
-    fetch(`${BASE_URL}/api/deleteRoommain/${roomPageID}`, {
+  const handleDelete = (name) => {
+    fetch(`${BASE_URL}/api/deleteCategory/${name}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
@@ -40,8 +40,9 @@ const CategoryDisplay = () => {
           categoryData.map((item) => (
             <div
               key={item._id}
-              className="p-4 border border-gray-200 rounded-md"
+              className="p-4 relative border border-gray-200 rounded-md"
             >
+              <h1 className="absolute top-0 left-0 bg-red-600 text-white p-1">{item.type}</h1>
               <div className="cursor-pointer ">
                 {/* <Link href={`/roomPageData/${item._id}`}> */}
                 <div className="flex h-full w-full items-center justify-center cursor-pointer  overflow-hidden">
@@ -96,7 +97,7 @@ const CategoryDisplay = () => {
               <button
                 type="button"
                 className="text-white w-full mt-2 bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
-                onClick={() => handleDelete(item._id)}
+                onClick={() => handleDelete(item.name)}
               >
                 Delete
               </button>
