@@ -44,6 +44,7 @@ function CreateCategory() {
         }
 
         formData.append("type", data.type);
+        formData.append("description", data.description);
         // --------- 💥 api call 💥 -------
         try {
           const response = await fetch(`${BASE_URL}/api/createCategory`, {
@@ -59,7 +60,7 @@ function CreateCategory() {
           console.error("Error uploading images:", error);
         }
 
-        // reset();
+        reset();
         // setSelectedColors([]);
         // setSelectedPurchaseMode([]);
       })}
@@ -138,6 +139,23 @@ function CreateCategory() {
                 </select>
               </div>
               </div>
+          </div>
+
+          <div className="mt-10">
+            <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
+              Description
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <textarea
+                  {...register("description", {
+                    required: "description is required",
+                  })}
+                  id="description"
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="mt-10">

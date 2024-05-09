@@ -62,13 +62,12 @@ const CategoryDisplay = () => {
                 </div>
 
                 <div className={`bg-zinc-200 p-8`}>
-                  <h1 className=" text-gray-500 mb-1">
-                    Category Name :{" "}
-                    <span className="text-black text-lg font-bold">
-                      {" "}
+                  <h1 className="text-black text-lg font-bold mb-">
                       {item.name}
-                    </span>
                   </h1>
+                  <p className="text-gray-900 mb-1">
+                      {item?.description}
+                  </p>
                   <h1 className=" text-red-500 mb-1">
                     ({item.subcategories.length} Subcategories)
                   </h1>
