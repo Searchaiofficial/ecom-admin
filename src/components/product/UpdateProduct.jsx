@@ -86,7 +86,6 @@ const UpdateProduct = ({ productId, toggleModal }) => {
                       id="demandType"
                       onChange={handleDemandTypeChange}
                       value={demandTypeValue}
-                      // defaultValue={productDemandType}
                     >
                       {demandType.map((type) => (
                         <option key={type} value={type}>

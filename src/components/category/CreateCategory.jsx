@@ -7,7 +7,7 @@ import { BASE_URL } from "../../../config";
 
 function CreateCategory() {
   // form related
-  const categoryType = ["Home Decor", "Wall Decor", "Flooring"]
+  const categoryType = ["Homedecor", "Walldecor", "Flooring"]
   const { register, handleSubmit, getValues, reset, control } = useForm();
 
   const {

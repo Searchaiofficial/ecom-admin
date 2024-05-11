@@ -1,52 +1,74 @@
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import AdminNavbar from '../../AdminNavbar';
-import { BASE_URL } from '../../../../config';
+import React from "react";
+import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import AdminNavbar from "../../AdminNavbar";
+import { BASE_URL } from "../../../../config";
 
 function HeaderInfoForm() {
-  const { handleSubmit, control, setValue, getValues } = useForm();
+  const { handleSubmit, control, } = useForm();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     console.log(data);
+
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("description", data.description);
+    formData.append("link", data.link);
+
+    const fileInput = document.getElementById(`icon`);
+    const file = fileInput?.files[0];
+    formData.append(`icon`, file);
+
     try {
-      const response = await fetch(`${BASE_URL}/api/createHeaderInfoSection`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      const res = await response.json();
-      window.alert(res.message)
-      navigate('/homePage')
+      const response = await fetch(`${BASE_URL}/api/createHeaderInfoSection`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const responseData = await response.json();
+      window.alert(responseData.message);
+      // navigate('/homePage')
     } catch (error) {
-      console.log("error saving image section", error)
+      console.log("error saving image section", error);
     }
   };
 
-  const handleAddSection = () => {
-    setValue('sections', [...getValues('sections'), { sectionName: '', content: [] }]);
-  };
+  // const handleAddSection = () => {
+  //   setValue("sections", [
+  //     ...getValues("sections"),
+  //     { sectionName: "", content: [] },
+  //   ]);
+  // };
 
-  const handleAddContent = (sectionIndex) => {
-    const sections = getValues('sections');
-    sections[sectionIndex].content.push({ subheader: '', paragraph: '', icon: '' });
-    setValue('sections', sections);
-  };
+  // const handleAddContent = (sectionIndex) => {
+  //   const sections = getValues("sections");
+  //   sections[sectionIndex].content.push({
+  //     subheader: "",
+  //     paragraph: "",
+  //     icon: "",
+  //   });
+  //   setValue("sections", sections);
+  // };
 
   return (
     <>
-    <AdminNavbar/>
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto p-6 border rounded-md shadow-md mt-10">
+      <AdminNavbar />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="max-w-md mx-auto p-6 border rounded-md shadow-md mt-10"
+      >
         <div className="mb-6">
-          <label htmlFor="headerTitle" className="block text-sm font-medium leading-5 text-gray-700">
-            Header Title
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium leading-5 text-gray-700"
+          >
+            Title
           </label>
           <Controller
-            name="headerTitle"
+            name="title"
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -60,6 +82,63 @@ function HeaderInfoForm() {
         </div>
 
         <div className="mb-6">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium leading-5 text-gray-700"
+          >
+            Description
+          </label>
+          <Controller
+            name="description"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+              />
+            )}
+          />
+        </div>
+
+        <div className="mb-6">
+          <label
+            htmlFor="icon"
+            className="block text-sm font-medium leading-5 text-gray-700"
+          >
+            Icon
+          </label>
+          <input
+            name="icon"
+            type="file"
+            id="icon"
+            className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+          />
+        </div>
+
+        <div className="mb-6">
+          <label
+            htmlFor="link"
+            className="block text-sm font-medium leading-5 text-gray-700"
+          >
+            Link
+          </label>
+          <Controller
+            name="link"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+              />
+            )}
+          />
+        </div>
+
+        {/* <div className="mb-6">
           <label className="block text-sm font-medium leading-5 text-gray-700">Sections</label>
           <Controller
             name="sections"
@@ -150,7 +229,7 @@ function HeaderInfoForm() {
               </div>
             )}
           />
-        </div>
+        </div> */}
 
         <div className="mt-8">
           <button
