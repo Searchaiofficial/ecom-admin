@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 // import Review from '../homepage/review/Review';
 import { Button } from "@material-tailwind/react";
 import { BASE_URL } from "../../../config";
+import { useEffect, useState } from "react";
 
 function RoomPageForm() {
   // form related
   const { register, handleSubmit, getValues, reset, control } = useForm();
-
+  const [selectRoomOption, setSelectRoomOption] = useState([]);
+  const [selectedRoom1, setSelectedRoom1] = useState("");
+  const [selectedRoom2, setSelectedRoom2] = useState("");
   const {
     fields: subHeadings,
     append: appendSubHeading,
@@ -19,6 +22,35 @@ function RoomPageForm() {
   });
 
   const navigate = useNavigate();
+
+  const handleRoomChange = (e, roomNumber) => {
+    const room = e.target.value;
+    if (roomNumber === 1) {
+      setSelectedRoom1(room);
+    } else if (roomNumber === 2) {
+      setSelectedRoom2(room);
+    }
+  };
+
+
+  const fetchRoom = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/rooms`);
+      const responseData = await response.json();
+      console.log("Response Data:", responseData);
+      const selectRoomOptionData = responseData.map(room => `${room.roomType}-${room.productId}`);
+      console.log("Select Room Data:", selectRoomOptionData);
+      setSelectRoomOption(selectRoomOptionData);
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectRoomOption.length === 0) {
+      fetchRoom();
+    }
+  }, [selectRoomOption]);
 
   return (
     <form
@@ -65,6 +97,20 @@ function RoomPageForm() {
         formData.append("title", data.title);
         formData.append("description", data.description);
 
+        const [roomType1, productId1] = selectedRoom1.split('-');
+        const [roomType2, productId2] = selectedRoom2.split('-');
+
+        const roomData = [
+          { roomType: roomType1, productId: productId1 },
+          { roomType: roomType2, productId: productId2 }
+        ];
+
+        // Loop through each object in roomData and append its properties to formData
+        roomData.forEach((room, index) => {
+          formData.append(`roomData[${index}][roomType]`, room.roomType);
+          formData.append(`roomData[${index}][productId]`, room.productId);
+        });
+
         const fileInput = document.getElementById(`image`);
         const file = fileInput?.files[0];
         formData.append(`image`, file);
@@ -72,7 +118,7 @@ function RoomPageForm() {
         for (var key of formData.entries()) {
           console.log(key[0] + ", " + key[1]);
         }
-
+        console.log("Form-Data:", formData);
         // --------- 💥 api call 💥 -------
         try {
           const response = await fetch(`${BASE_URL}/api/createRoommain`, {
@@ -80,7 +126,7 @@ function RoomPageForm() {
             headers: {
             },
             body: formData,
-        });
+          });
           const responseData = await response.json();
           window.alert(responseData.message);
           // navigate("/admin");
@@ -95,7 +141,7 @@ function RoomPageForm() {
     >
       {/* ➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡ ➡➡➡➡➡➡➡➡*/}
 
-      <div className="space-y-12 bg-white p-6 md:p-12">
+      <div div className="space-y-12 bg-white p-6 md:p-12" >
         <div className="border-b border-gray-500 pb-12">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 text-center">
             Create Room Page
@@ -165,6 +211,41 @@ function RoomPageForm() {
               </div>
             </div>
           </div>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">RoomData 1:</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomChange(e, 1)} // Pass 1 for room 1
+                value={selectedRoom1}
+              >
+                <option value="">-- Select Room --</option>
+                {selectRoomOption.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">RoomData 2:</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomChange(e, 2)} // Pass 2 for room 2
+                value={selectedRoom2}
+              >
+                <option value="">-- Select Room --</option>
+                {selectRoomOption.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
 
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
@@ -295,7 +376,7 @@ function RoomPageForm() {
                   id="image"
                   className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   accept="image/*"
-                  // onChange={(e) => handleImageChange(e, 1)}
+                // onChange={(e) => handleImageChange(e, 1)}
                 />
               </div>
             </div>
@@ -460,7 +541,7 @@ function RoomPageForm() {
             />
           </div>
         </div>
-      </div>
+      </div >
 
       <div className="mb-24 flex items-center justify-center md:justify-end gap-x-6 mr-10">
         <button
@@ -478,7 +559,7 @@ function RoomPageForm() {
           Create Suggestion
         </Button>
       </div>
-    </form>
+    </form >
   );
 }
 
