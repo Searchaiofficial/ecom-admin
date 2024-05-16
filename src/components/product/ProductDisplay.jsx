@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../../../config";
 import Navbar from "../Navbar";
-import { useNavigate } from "react-router-dom";
 import UpdateProduct from "./UpdateProduct";
+import { useNavigate } from "react-router-dom";
 
 const ProductDisplay = () => {
   const [modalOpen, setModalOpen] = useState(false);
+
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
@@ -14,12 +15,15 @@ const ProductDisplay = () => {
   const [productID, setProductID] = useState({}); // [1
   const handleUpdate = (productId) => () => {
     setProductID(productId);
-    toggleModal();
+    // toggleModal();
+    window.location.replace(`/update/${productId}`)
+
   };
 
   const [productData, setProductData] = useState([]);
   const [expandedProduct, setExpandedProduct] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
   useEffect(() => {
     const limit = 100;
     const apiUrl = `${BASE_URL}/api/products?limit=${limit}`;

@@ -45,6 +45,9 @@ import RoomDisplay from "./components/rooms/RoomDisplay";
 import RoomPageForm from "./components/rooms/RoomPageForm";
 import CreateCategory from "./components/category/CreateCategory";
 import CategoryDisplay from "./components/category/CategoryDisplay";
+import DemandPage from "./Pages/Demand-page";
+import OfferPage from "./Pages/offer-page";
+import UpdateProduct from "./Pages/update-product";
 
 export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -205,7 +208,7 @@ export default function App() {
             </Protected>
           }
         ></Route>
-        
+
         <Route
           exact
           path="/update-home-page/new-suggestion"
@@ -463,7 +466,35 @@ export default function App() {
             </Protected>
           }
         ></Route>
-        
+
+        <Route
+          exact
+          path="/demand"
+          element={
+            <Protected>
+              <DemandPage />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/offer"
+          element={
+            <Protected>
+              <OfferPage />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/update/:id"
+          element={
+            <Protected>
+              <UpdateProduct />
+            </Protected>
+          }
+        ></Route>
+
       </Routes>
     </>
   );

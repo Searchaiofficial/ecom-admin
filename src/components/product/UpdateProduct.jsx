@@ -131,19 +131,7 @@ const UpdateProduct = ({ productId, toggleModal }) => {
                       onChange={handleOnChange}
                     />
 
-                    <label
-                      htmlFor="endDate"
-                      className="mt-4 font-medium text-sm"
-                    >
-                      End Date
-                    </label>
-                    <input
-                      type="date"
-                      className="mt-4 bg-gray-200 text-gray-800 font-medium rounded-lg text-sm px-2 py-1"
-                      name="endDate"
-                      id="endDate"
-                      onChange={handleOnChange}
-                    />
+                    
 
                     <button
                       type="button"
