@@ -162,7 +162,6 @@ function ProductForm() {
     "In-store request Only",
   ];
   const typeofprice = ["Special Price", "Discounted Price"];
-  const demandtype = ["Best Seller", "Most Rated", "Trending"];
 
   // --
 
@@ -181,6 +180,7 @@ function ProductForm() {
   const [selectedPurchaseMode, setSelectedPurchaseMode] = useState([]);
   const [pdf, setPdf] = useState("");
   const [roomMultipleSelector, setRoomMultipleSelector] = useState([]);
+  const [demandTypes, setDemandTypes] = useState([])
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
@@ -244,7 +244,20 @@ function ProductForm() {
     }
   };
 
+  const fetchAllDemandTypes = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/getAllDemandTypes`);
+      const responseData = await response.json();
+      setDemandTypes(responseData.map((demand) => demand.type));
+    } catch (error) {
+      console.error("Error fetching demand types:", error);
+    }
+  };
+
   useEffect(() => {
+    if(demandTypes.length === 0){
+      fetchAllDemandTypes();
+    }
     if (categoryOptions.length === 0) {
       fetchCategories();
     }
@@ -255,7 +268,7 @@ function ProductForm() {
     } else {
       setAvailableColors([]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, categoryOptions]);
 
   const getColorsForCategory = (category) => {
@@ -368,7 +381,12 @@ function ProductForm() {
         formData.append("totalPricePerUnit", data.totalPricePerUnit);
         formData.append("discountedprice", data.discountedprice);
         formData.append("perUnitType", data.perUnitType);
-        formData.append("specialprice", data.specialprice);
+        if(data.specialprice){
+          formData.append("specialprice[price]", data.specialprice.price);
+          formData.append("specialprice[startDate]", data.specialprice.startDate);
+          formData.append("specialprice[endDate]", data.specialprice.endDate);
+        }
+        // formData.append("specialprice", data.specialprice);
         formData.append("perUnitPrice", parseFloat(data.perUnitPrice));
         // Convert dimensions to FormData
         formData.append(
@@ -431,7 +449,6 @@ function ProductForm() {
         });
 
         featuresData.forEach((feature, index) => {
-          console.log(feature.heading);
           formData.append(
             `features[${index}][heading]`,
             feature?.heading || ""
@@ -451,12 +468,12 @@ function ProductForm() {
           });
           const responseData = await response.json();
           window.alert(responseData.message);
-          navigate("/admin");
+          // navigate("/admin");
         } catch (error) {
           console.error("Error uploading images:", error);
         }
 
-        reset();
+        // reset();
         setSelectedColors([]);
         setSelectedPurchaseMode([]);
       })}
@@ -618,13 +635,11 @@ function ProductForm() {
                     value={selectedSubcategory}
                   >
                     <option value="">-- Select Subcategory --</option>
-                    {subCategoryOptions.map(
-                      (subcategory, index) => (
-                        <option key={index} value={subcategory}>
-                          {subcategory}
-                        </option>
-                      )
-                    )}
+                    {subCategoryOptions.map((subcategory, index) => (
+                      <option key={index} value={subcategory}>
+                        {subcategory}
+                      </option>
+                    ))}
                   </select>
                 </>
               )}
@@ -781,7 +796,7 @@ function ProductForm() {
                 onChange={handleProductChange}
               >
                 <option value="">-- Select Demand Type--</option>
-                {demandtype.map((demandtype, index) => (
+                {demandTypes.map((demandtype, index) => (
                   <option key={index} value={demandtype}>
                     {demandtype}
                   </option>
@@ -839,7 +854,6 @@ function ProductForm() {
                 </div>
               </div>
             </div>
-
             <div
               className="sm:col-span-2"
               style={{
@@ -847,21 +861,69 @@ function ProductForm() {
               }}
             >
               <label
-                htmlFor="Special Price"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                htmlFor="specialprice"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
               >
-                Special Price
+                Special Price*
               </label>
-
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
-                    type="number"
-                    {...register("specialprice", {
-                      min: 1,
-                      max: 10000,
+                    type="text"
+                    {...register("specialprice.price", {
+                      required: "name is required",
                     })}
                     id="specialprice"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="sm:col-span-2"
+              style={{
+                display: priceType === "Special Price" ? "block" : "none",
+              }}
+            >
+              <label
+                htmlFor="specialstartdate"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Special Price Start Date*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="date"
+                    {...register("specialprice.startDate", {
+                      required: "name is required",
+                    })}
+                    id="specialstartdate"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="sm:col-span-2"
+              style={{
+                display: priceType === "Special Price" ? "block" : "none",
+              }}
+            >
+              <label
+                htmlFor="specialenddate"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Special Price End Date*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="date"
+                    {...register("specialprice.endDate", {
+                      required: "name is required",
+                    })}
+                    id="specialenddate"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -870,7 +932,7 @@ function ProductForm() {
           </div>
 
           <select
-            className="w-full my-2 border border-gray-400 rounded-md p-1"
+            className="w-full my-4 max-w-xs border border-gray-400 rounded-md p-1"
             onChange={(e) => {
               const color = e.target.value;
               setColor(color);

@@ -66,7 +66,7 @@ const UpdateProductForm = () => {
 
         } catch (error) {
             console.log("ADD PRODUCT TO DEMAND ERROR :", error)
-            window.alert("Some error occured try again")
+            window.alert(error.message)
 
         }
     }
@@ -85,7 +85,7 @@ const UpdateProductForm = () => {
 
         } catch (error) {
             console.log("ADD PRODUCT TO DEMAND ERROR :", error)
-            window.alert("Some error occured try again")
+            window.alert(error)
 
         }
     };
@@ -98,20 +98,18 @@ const UpdateProductForm = () => {
 
         } catch (error) {
             console.log("DELETE PRODUCT FROM DEMAND TYPE :", error)
-            window.alert("Some error occured try again")
+            window.alert(error)
         }
     }
 
     const updateOfferType = async () => {
         try {
-            console.log(offerName)
-            console.log(id)
-            // const responce = await axios.post(`${BASE_URL}/api/addProductToOffer`, { type: offerName, productId: id })
-            // window.alert(responce.data.message)
+            const responce = await axios.post(`${BASE_URL}/api/addProductToOffer`, { type: offerName, productId: id })
+            window.alert(responce.data.message)
 
         } catch (error) {
             console.log("ADD PRODUCT TO DEMAND ERROR :", error)
-            window.alert("Some error occured try again")
+            window.alert(error.message)
         }
     }
 
@@ -122,7 +120,7 @@ const UpdateProductForm = () => {
 
         } catch (error) {
             console.log("DELETE PRODUCT FROM DEMAND TYPE :", error)
-            window.alert("Some error occured try again")
+            window.alert(error)
         }
     }
 
@@ -172,14 +170,14 @@ const UpdateProductForm = () => {
                         <option key={0} value="">
                             -----
                         </option>
-                        {offerTypes && offerTypes.map((demand) => (
-                            <option key={demand._id} value={demand.type}>
-                                {demand.type}
+                        {offerTypes && offerTypes.map((offer) => (
+                            <option key={offer._id} value={offer.type}>
+                                {offer.type}
                             </option>
                         ))}
                     </select>
-                    <button onClick={updateOfferType} className="bg-blue-500 text-white p-2 rounded-lg -ml-8">Update Demand type</button>
-                    <button onClick={RemoveProductfromOfferType} className="bg-red-500 text-white p-2 rounded-lg -ml-8 min-w-[275px]">Remove Product From Offer type</button>
+                    <button onClick={updateOfferType} className="bg-blue-500 text-white p-2 rounded-lg -ml-8">Update Offer</button>
+                    <button onClick={RemoveProductfromOfferType} className="bg-red-500 text-white p-2 rounded-lg -ml-8 min-w-[275px]">Remove Product From Offer</button>
                 </div>
 
                 {/* Update special price */}

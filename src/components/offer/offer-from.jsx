@@ -327,7 +327,7 @@ const OfferForm = () => {
                 {/* Add category to offer */}
 
 
-                <div className="flex flex-col items-center gap-12 pb-12 border-b-2">
+                {/* <div className="flex flex-col items-center gap-12 pb-12 border-b-2">
                     <h1 className="text-2xl font-bold leading-7 text-gray-900 text-center">Add category to offer</h1>
                     <div className="flex items-center gap-36">
                         <div>
@@ -377,13 +377,13 @@ const OfferForm = () => {
                         </div>
                     </div>
                 </div>
-
+ */}
 
 
                 {/* Remove Category from offer */}
 
 
-                <div className="flex flex-col items-center gap-10 mb-12 border-b-2">
+                {/* <div className="flex flex-col items-center gap-10 mb-12 border-b-2">
                     <h1 className="text-2xl font-bold leading-7 text-gray-900 text-center">Remove category from offer</h1>
                     <div className="flex items-center gap-36 mb-12">
                         <div>
@@ -431,7 +431,7 @@ const OfferForm = () => {
                             <button onClick={handleRemoveCategory} className="p-3 bg-blue-500 rounded-lg text-white  font-semibold">Remove category from offer</button>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
 
 

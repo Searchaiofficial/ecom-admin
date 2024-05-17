@@ -41,13 +41,8 @@ const Banner = () => {
                 className="p-4 border border-gray-200 rounded-md"
               >
                 <div className="relative">
-                  <img
-                    src={item.img}
-                    alt={`Image ${item._id}`}
-                    className="w-full h-60 object-cover rounded-md mb-2"
-                  />
                   <div className="absolute top-10 z-10 p-4 text-black">
-                    <h1 className="mb-2 mt-1 text-2xl">{item.imgTitle}</h1>
+                    <h1 className="mb-2 mt-1 text-2xl">{item.room.roomType}</h1>
                     <p className="mb-2 mt-1 text-sm">{item.text}</p>
                   </div>
                 </div>
