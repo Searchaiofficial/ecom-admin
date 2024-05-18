@@ -46,7 +46,58 @@ function CreateNewSuggestion() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  useEffect(() => {
+  const [rooms, setRooms] = useState([]);
+  const [selectedRoomOption, setSelectedRoomOption] = useState([]);
+  const [selectedRoomData1, setSelectedRoomData1] = useState("");
+  const [selectedRoomData2, setSelectedRoomData2] = useState("");
+  const [selectedRoomData3, setSelectedRoomData3] = useState("");
+  const [selectedRoomData4, setSelectedRoomData4] = useState("");
+  const [optionRoomData, setOptionRoomData] = useState([]);
+
+
+  const handleRoomChange = (e) => {
+    const room = e.target.value;
+    setSelectedRoomOption(room);
+  };
+
+  const handleRoomDataChange = (e, number) => {
+    const room = e.target.value;
+    if (number === 1) {
+        setSelectedRoomData1(room);
+    } else if (number === 2) {
+        setSelectedRoomData2(room);
+    } else if (number === 3) {
+        setSelectedRoomData3(room);
+    } else if (number === 4) {
+        setSelectedRoomData4(room);
+    }
+  }
+
+    const fetchAllRooms = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/getAllDifferentRoomTypes`);
+        const responseData = await response.json();
+        setRooms(responseData);
+      } catch (error) {
+        console.error("Error fetching room details:", error);
+      }
+    };
+
+    const fetchRoomData = async (roomType) => {
+      try {
+        const response = await fetch(`${BASE_URL}/api/rooms/${roomType}`);
+        const responseData = await response.json();
+        console.log("Response Data:", responseData);
+        const selectRoomOptionData = responseData.map(
+          (room) => `${room.roomType}-${room.productId}`
+        );
+        console.log("Select Room Data:", selectRoomOptionData);
+        setOptionRoomData(selectRoomOptionData);
+      } catch (error) {
+        console.error("Error fetching room details:", error);
+      }
+    };
+
     const fetchCategories = async () => {
       try {
         const response = await fetch(`${BASE_URL}/api/categories`);
@@ -58,8 +109,17 @@ function CreateNewSuggestion() {
       }
     };
 
+  useEffect(() => {
+    if (rooms.length === 0) {
+      fetchAllRooms();
+    }
+
+    if (selectedRoomOption) {
+      fetchRoomData(selectedRoomOption);
+    }
+
     fetchCategories();
-  }, []);
+  }, [rooms, selectedRoomOption]);
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
@@ -102,94 +162,116 @@ function CreateNewSuggestion() {
           }
         }
 
-        for(let i = 1; i <= factors.length; i++) {
+        for (let i = 1; i <= factors.length; i++) {
           const fileInput = document.getElementById(`factors${i}Image`);
           const file = fileInput?.files[0];
-          if(file) {
+          if (file) {
             formData.append(`factorsImage`, file);
           }
         }
 
-        console.log(images.differentMaterialsItem1);
-        formData.append(
-          "differentMaterialsItem1",
-          images.differentMaterialsItem1
-        );
-        formData.append(
-          "differentMaterialsItem2",
-          images.differentMaterialsItem2
-        );
-        formData.append(
-          "differentMaterialsWaysToImproveItem1",
-          images.differentMaterialsWaysToImproveItem1
-        );
-        formData.append(
-          "differentMaterialsWaysToImproveItem2",
-          images.differentMaterialsWaysToImproveItem2
-        );
         formData.append("mainImage", images.mainImage);
         formData.append("suggestionCardImage", images.suggestionCardImage);
         formData.append("category", selectedCategory);
         formData.append("heading", data.heading);
         formData.append("summary", data.summary);
         formData.append("shortSummary", data.shortSummary);
-        formData.append(
-          "differentMaterials[title]",
-          data.differentMaterials.title
-        );
-        formData.append(
-          "differentMaterials[items][0][label]",
-          data.differentMaterials.items[0].label
-        );
 
-        formData.append(
-          "differentMaterials[items][1][label]",
-          data.differentMaterials.items[1].label
-        );
+        const [roomType1, productId1] = selectedRoomData1.split('-');
+        const [roomType2, productId2] = selectedRoomData2.split('-');
+        const [roomType3, productId3] = selectedRoomData3.split('-');
+        const [roomType4, productId4] = selectedRoomData4.split('-');
 
-        formData.append(
-          "differentMaterials[chooseDifferentMaterial][title]",
-          data.differentMaterials.chooseDifferentMaterial.title
-        );
-        formData.append(
-          "differentMaterials[waysToImprove][title]",
-          data.differentMaterials.waysToImprove.title
-        );
-        formData.append(
-          "differentMaterials[waysToImprove][description]",
-          data.differentMaterials.waysToImprove.description
-        );
-        formData.append(
-          "differentMaterials[waysToImprove][items][0][label]",
-          data.differentMaterials.waysToImprove.items[0].label
-        );
-        formData.append(
-          "differentMaterials[waysToImprove][items][1][label]",
-          data.differentMaterials.waysToImprove.items[1].label
-        );
 
-        formData.append(
-          "differentMaterials[chooseDifferentMaterial][description]",
-          data.differentMaterials.chooseDifferentMaterial.description
-        );
-        formData.append(
-          "differentMaterials[chooseDifferentMaterial][material][name]",
-          data.differentMaterials.chooseDifferentMaterial.material.name
-        );
-        formData.append(
-          "differentMaterials[chooseDifferentMaterial][material][guaranteePeriod]",
-          data.differentMaterials.chooseDifferentMaterial.material
-            .guaranteePeriod
-        );
-        formData.append(
-          "differentMaterials[chooseDifferentMaterial][material][recyclingFee]",
-          data.differentMaterials.chooseDifferentMaterial.material.recyclingFee
-        );
-        formData.append(
-          "differentMaterials[chooseDifferentMaterial][material][trialSchema]",
-          data.differentMaterials.chooseDifferentMaterial.material.trialSchema
-        );
+        const roomData = [
+          { roomType: roomType1, productId: productId1 },
+          { roomType: roomType2, productId: productId2 },
+          { roomType: roomType3, productId: productId3 },
+          { roomType: roomType4, productId: productId4 },
+        ];
 
+        // Loop through each object in roomData and append its properties to formData
+        roomData.forEach((room, index) => {
+          formData.append(`roomData[${index}][roomType]`, room.roomType);
+          formData.append(`roomData[${index}][productId]`, room.productId);
+        });
+
+        formData.append("roomType", selectedRoomOption);
+
+        // console.log(images.differentMaterialsItem1);
+        // formData.append(
+        //   "differentMaterialsItem1",
+        //   images.differentMaterialsItem1
+        // );
+        // formData.append(
+        //   "differentMaterialsItem2",
+        //   images.differentMaterialsItem2
+        // );
+        // formData.append(
+        //   "differentMaterialsWaysToImproveItem1",
+        //   images.differentMaterialsWaysToImproveItem1
+        // );
+        // formData.append(
+        //   "differentMaterialsWaysToImproveItem2",
+        //   images.differentMaterialsWaysToImproveItem2
+        // );
+
+        // formData.append(
+        //   "differentMaterials[title]",
+        //   data.differentMaterials.title
+        // );
+        // formData.append(
+        //   "differentMaterials[items][0][label]",
+        //   data.differentMaterials.items[0].label
+        // );
+
+        // formData.append(
+        //   "differentMaterials[items][1][label]",
+        //   data.differentMaterials.items[1].label
+        // );
+
+        // formData.append(
+        //   "differentMaterials[chooseDifferentMaterial][title]",
+        //   data.differentMaterials.chooseDifferentMaterial.title
+        // );
+        // formData.append(
+        //   "differentMaterials[waysToImprove][title]",
+        //   data.differentMaterials.waysToImprove.title
+        // );
+        // formData.append(
+        //   "differentMaterials[waysToImprove][description]",
+        //   data.differentMaterials.waysToImprove.description
+        // );
+        // formData.append(
+        //   "differentMaterials[waysToImprove][items][0][label]",
+        //   data.differentMaterials.waysToImprove.items[0].label
+        // );
+        // formData.append(
+        //   "differentMaterials[waysToImprove][items][1][label]",
+        //   data.differentMaterials.waysToImprove.items[1].label
+        // );
+
+        // formData.append(
+        //   "differentMaterials[chooseDifferentMaterial][description]",
+        //   data.differentMaterials.chooseDifferentMaterial.description
+        // );
+        // formData.append(
+        //   "differentMaterials[chooseDifferentMaterial][material][name]",
+        //   data.differentMaterials.chooseDifferentMaterial.material.name
+        // );
+        // formData.append(
+        //   "differentMaterials[chooseDifferentMaterial][material][guaranteePeriod]",
+        //   data.differentMaterials.chooseDifferentMaterial.material
+        //     .guaranteePeriod
+        // );
+        // formData.append(
+        //   "differentMaterials[chooseDifferentMaterial][material][recyclingFee]",
+        //   data.differentMaterials.chooseDifferentMaterial.material.recyclingFee
+        // );
+        // formData.append(
+        //   "differentMaterials[chooseDifferentMaterial][material][trialSchema]",
+        //   data.differentMaterials.chooseDifferentMaterial.material.trialSchema
+        // );
 
         // --------- 💥 api call 💥 -------
         try {
@@ -207,7 +289,7 @@ function CreateNewSuggestion() {
           console.error("Error uploading images:", error);
         }
 
-        reset();
+        // reset();
       })}
     >
       {/* ➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡ ➡➡➡➡➡➡➡➡*/}
@@ -436,9 +518,10 @@ function CreateNewSuggestion() {
                 key={subHeading.id}
               >
                 <div className="sm:col-span-3">
-                  <label 
+                  <label
                     htmlFor={`subHeadings[${index}].title`}
-                    className="block text-sm font-medium leading-6 text-gray-900">
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
                     SubHeading {index + 1} Title*
                   </label>
                   <div className="mt-2">
@@ -479,12 +562,9 @@ function CreateNewSuggestion() {
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                       <input
                         type="file"
-                        {...register(
-                          `subHeadings${index + 1}Image1`,
-                          {
-                            required: "Sub Heading is required",
-                          }
-                        )}
+                        {...register(`subHeadings${index + 1}Image1`, {
+                          required: "Sub Heading is required",
+                        })}
                         id={`subHeadings${index + 1}Image1`}
                         onChange={(e) =>
                           handleImageChange(e, "subHeadingImage1")
@@ -502,12 +582,9 @@ function CreateNewSuggestion() {
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                       <input
                         type="file"
-                        {...register(
-                          `subHeadings${index + 1}Image2`,
-                          {
-                            required: "Sub Heading is required",
-                          }
-                        )}
+                        {...register(`subHeadings${index + 1}Image2`, {
+                          required: "Sub Heading is required",
+                        })}
                         id={`subHeadings${index + 1}Image2`}
                         // onChange={(e) =>
                         //   handleImageChange(e, "subHeadingImage2")
@@ -537,7 +614,7 @@ function CreateNewSuggestion() {
             </button>
           </div>
 
-          <div className="sm:col-span-6">
+          {/* <div className="sm:col-span-6">
             <label
               htmlFor="title"
               className="block text-sm font-medium leading-6 text-gray-900"
@@ -556,9 +633,9 @@ function CreateNewSuggestion() {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
                 htmlFor="title"
@@ -622,9 +699,9 @@ function CreateNewSuggestion() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
                 htmlFor="title"
@@ -672,9 +749,9 @@ function CreateNewSuggestion() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
+          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
             <div className="sm:col-span-2">
               <label
                 htmlFor="title"
@@ -769,9 +846,9 @@ function CreateNewSuggestion() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <h1 className="text-xl mt-10">Ways to Improve</h1>
+          {/* <h1 className="text-xl mt-10">Ways to Improve</h1>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
@@ -900,6 +977,90 @@ function CreateNewSuggestion() {
                   />
                 </div>
               </div>
+            </div>
+          </div> */}
+
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">Choose Room</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomChange(e)} // Pass 1 for room 1
+              >
+                <option value="">-- Select Room --</option>
+                {rooms.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">RoomData 1:</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomDataChange(e, 1)} // Pass 1 for room 1
+                value={selectedRoomData1}
+              >
+                <option value="">-- Select Room Data--</option>
+                {optionRoomData.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">RoomData 2:</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomDataChange(e, 2)} // Pass 2 for room 2
+                value={selectedRoomData2}
+              >
+                <option value="">-- Select Room Data--</option>
+                {optionRoomData.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">RoomData 3:</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomDataChange(e, 3)} // Pass 1 for room 1
+                value={selectedRoomData3}
+              >
+                <option value="">-- Select Room Data--</option>
+                {optionRoomData.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">RoomData 4:</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomDataChange(e, 4)} // Pass 2 for room 2
+                value={selectedRoomData4}
+              >
+                <option value="">-- Select Room Data--</option>
+                {optionRoomData.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

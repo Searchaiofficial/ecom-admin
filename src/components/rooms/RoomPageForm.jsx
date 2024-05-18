@@ -9,9 +9,19 @@ import { useEffect, useState } from "react";
 function RoomPageForm() {
   // form related
   const { register, handleSubmit, getValues, reset, control } = useForm();
-  const [selectRoomOption, setSelectRoomOption] = useState([]);
-  const [selectedRoom1, setSelectedRoom1] = useState("");
-  const [selectedRoom2, setSelectedRoom2] = useState("");
+  const [roomCategory, setRoomCategory] = useState([]); // [roomType, productId
+  const [rooms, setRooms] = useState([]);
+  const [selectedRoomOption, setSelectedRoomOption] = useState([]);
+  const [selectRoomCategory1, setSelectRoomCategory1] = useState("");
+  const [selectRoomCategory2, setSelectRoomCategory2] = useState("");
+  const [selectRoomCategory3, setSelectRoomCategory3] = useState("");
+  const [selectRoomCategory4, setSelectRoomCategory4] = useState("");
+  const [selectRoomCategory5, setSelectRoomCategory5] = useState("");
+
+  const [selectedRoomData1, setSelectedRoomData1] = useState("");
+  const [selectedRoomData2, setSelectedRoomData2] = useState("");
+  const [optionRoomData, setOptionRoomData] = useState([]);
+
   const {
     fields: subHeadings,
     append: appendSubHeading,
@@ -23,35 +33,84 @@ function RoomPageForm() {
 
   const navigate = useNavigate();
 
-  const handleRoomChange = (e, roomNumber) => {
+  const handleCategoryChange = (e, number) => {
     const room = e.target.value;
-    if (roomNumber === 1) {
-      setSelectedRoom1(room);
-    } else if (roomNumber === 2) {
-      setSelectedRoom2(room);
+    if (number === 1) {
+      setSelectRoomCategory1(room);
+    } else if (number === 2) {
+      setSelectRoomCategory2(room);
+    } else if (number === 3) {
+      setSelectRoomCategory3(room);
+    } else if (number === 4) {
+      setSelectRoomCategory4(room);
+    } else if (number === 5) {
+      setSelectRoomCategory5(room);
     }
   };
 
+  const handleRoomChange = (e) => {
+    const room = e.target.value;
+    setSelectedRoomOption(room);
+  };
 
-  const fetchRoom = async () => {
+  const handleRoomDataChange = (e, number) => {
+    const room = e.target.value;
+    if (number === 1) {
+        setSelectedRoomData1(room);
+    } else if (number === 2) {
+        setSelectedRoomData2(room);
+    }
+    };
+
+
+  const fetchAllRooms = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/api/rooms`);
+      const response = await fetch(`${BASE_URL}/api/getAllDifferentRoomTypes`);
+      const responseData = await response.json();
+      setRooms(responseData);
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+    }
+  };
+
+  const fetchRoomCategory = async (roomType) => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/getAllCategoriesByRoomType/${roomType}`
+      );
+      const responseData = await response.json();
+      setRoomCategory(responseData);
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+    }
+  };
+
+  const fetchRoomData = async (roomType) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/rooms/${roomType}`);
       const responseData = await response.json();
       console.log("Response Data:", responseData);
-      const selectRoomOptionData = responseData.map(room => `${room.roomType}-${room.productId}`);
+      const selectRoomOptionData = responseData.map(
+        (room) => `${room.roomType}-${room.productId}`
+      );
       console.log("Select Room Data:", selectRoomOptionData);
-      setSelectRoomOption(selectRoomOptionData);
+      setOptionRoomData(selectRoomOptionData);
     } catch (error) {
       console.error("Error fetching room details:", error);
     }
   };
 
   useEffect(() => {
-    if (selectRoomOption.length === 0) {
-      fetchRoom();
+    if (rooms.length === 0) {
+      fetchAllRooms();
     }
-  }, [selectRoomOption]);
-  
+
+    if (selectedRoomOption) {
+      fetchRoomCategory(selectedRoomOption);
+      fetchRoomData(selectedRoomOption);
+    }
+  }, [rooms, selectedRoomOption]);
+
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -97,12 +156,22 @@ function RoomPageForm() {
         formData.append("title", data.title);
         formData.append("description", data.description);
 
-        const [roomType1, productId1] = selectedRoom1.split('-');
-        const [roomType2, productId2] = selectedRoom2.split('-');
+        // const [roomType1, productId1] = selectedRoomCategory1.split("-");
+        // const [roomType2, productId2] = selectedRoomCategory2.split("-");
+
+        formData.append("roomType", selectedRoomOption);
+        formData.append("category[0]", selectRoomCategory1);
+        formData.append("category[1]", selectRoomCategory2);
+        formData.append("category[2]", selectRoomCategory3);
+        formData.append("category[3]", selectRoomCategory4);
+        formData.append("category[4]", selectRoomCategory5);
+
+        const [roomType1, productId1] = selectedRoomData1.split('-');
+        const [roomType2, productId2] = selectedRoomData2.split('-');
 
         const roomData = [
           { roomType: roomType1, productId: productId1 },
-          { roomType: roomType2, productId: productId2 }
+          { roomType: roomType2, productId: productId2 },
         ];
 
         // Loop through each object in roomData and append its properties to formData
@@ -122,9 +191,8 @@ function RoomPageForm() {
         // --------- 💥 api call 💥 -------
         try {
           const response = await fetch(`${BASE_URL}/api/createRoommain`, {
-            method: 'POST',
-            headers: {
-            },
+            method: "POST",
+            headers: {},
             body: formData,
           });
           const responseData = await response.json();
@@ -141,7 +209,7 @@ function RoomPageForm() {
     >
       {/* ➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡ ➡➡➡➡➡➡➡➡*/}
 
-      <div div className="space-y-12 bg-white p-6 md:p-12" >
+      <div div className="space-y-12 bg-white p-6 md:p-12">
         <div className="border-b border-gray-500 pb-12">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 text-center">
             Create Room Page
@@ -212,16 +280,114 @@ function RoomPageForm() {
             </div>
           </div>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">Choose Room</label>
+              <select
+                id="room"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleRoomChange(e)} // Pass 1 for room 1
+              >
+                <option value="">-- Select Room --</option>
+                {rooms.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">Category 1:</label>
+              <select
+                id=""
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleCategoryChange(e, 1)} // Pass 2 for room 2
+                // value={selectedRoomCategory2}
+              >
+                <option value="">-- Select Category --</option>
+                {roomCategory.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">Category 2:</label>
+              <select
+                id=""
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleCategoryChange(e, 2)} // Pass 2 for room 2
+                // value={selectedRoomCategory2}
+              >
+                <option value="">-- Select Category--</option>
+                {roomCategory.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">Category 3:</label>
+              <select
+                id=""
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleCategoryChange(e, 3)} // Pass 2 for room 2
+                // value={selectedRoomCategory2}
+              >
+                <option value="">-- Select Category--</option>
+                {roomCategory.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">Category 4:</label>
+              <select
+                id=""
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleCategoryChange(e, 4)} // Pass 2 for room 2
+                // value={selectedRoomCategory2}
+              >
+                <option value="">-- Select Category--</option>
+                {roomCategory.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-1 my-6">
+              <label htmlFor="room">Category 5:</label>
+              <select
+                id=""
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleCategoryChange(e, 5)} // Pass 2 for room 2
+                // value={selectedRoomCategory2}
+              >
+                <option value="">-- Select Category--</option>
+                {roomCategory.map((room, index) => (
+                  <option key={index} value={room}>
+                    {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3 my-6">
               <label htmlFor="room">RoomData 1:</label>
               <select
                 id="room"
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                onChange={(e) => handleRoomChange(e, 1)} // Pass 1 for room 1
-                value={selectedRoom1}
+                onChange={(e) => handleRoomDataChange(e, 1)} // Pass 1 for room 1
+                value={selectedRoomData1}
               >
-                <option value="">-- Select Room --</option>
-                {selectRoomOption.map((room, index) => (
+                <option value="">-- Select Room Data--</option>
+                {optionRoomData.map((room, index) => (
                   <option key={index} value={room}>
                     {room}
                   </option>
@@ -233,11 +399,11 @@ function RoomPageForm() {
               <select
                 id="room"
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                onChange={(e) => handleRoomChange(e, 2)} // Pass 2 for room 2
-                value={selectedRoom2}
+                onChange={(e) => handleRoomDataChange(e, 2)} // Pass 2 for room 2
+                value={selectedRoomData2}
               >
-                <option value="">-- Select Room --</option>
-                {selectRoomOption.map((room, index) => (
+                <option value="">-- Select Room Data--</option>
+                {optionRoomData.map((room, index) => (
                   <option key={index} value={room}>
                     {room}
                   </option>
@@ -245,7 +411,6 @@ function RoomPageForm() {
               </select>
             </div>
           </div>
-
 
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
@@ -292,54 +457,6 @@ function RoomPageForm() {
                     </div>
                   </div>
                 </div>
-
-                {/* <div className="sm:col-span-3">
-                  <label className="block text-sm font-medium leading-6 text-gray-900">
-                    SubHeading Image 1*
-                  </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                      <input
-                        type="file"
-                        {...register(
-                          `subHeadings${index + 1}Image1`,
-                          {
-                            required: "Sub Heading is required",
-                          }
-                        )}
-                        id={`subHeadings${index + 1}Image1`}
-                        onChange={(e) =>
-                          handleImageChange(e, "subHeadingImage1")
-                        }
-                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div className="sm:col-span-3">
-                  <label className="block text-sm font-medium leading-6 text-gray-900">
-                    SubHeading Image 2*
-                  </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                      <input
-                        type="file"
-                        {...register(
-                          `subHeadings${index + 1}Image2`,
-                          {
-                            required: "Sub Heading is required",
-                          }
-                        )}
-                        id={`subHeadings${index + 1}Image2`}
-                        // onChange={(e) =>
-                        //   handleImageChange(e, "subHeadingImage2")
-                        // }
-                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                </div> */}
-
                 <button
                   className="bg-red-600  w-20 my-2 px-2 rounded-md"
                   type="button"
@@ -376,7 +493,7 @@ function RoomPageForm() {
                   id="image"
                   className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   accept="image/*"
-                // onChange={(e) => handleImageChange(e, 1)}
+                  // onChange={(e) => handleImageChange(e, 1)}
                 />
               </div>
             </div>
@@ -541,7 +658,7 @@ function RoomPageForm() {
             />
           </div>
         </div>
-      </div >
+      </div>
 
       <div className="mb-24 flex items-center justify-center md:justify-end gap-x-6 mr-10">
         <button
@@ -556,10 +673,10 @@ function RoomPageForm() {
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          Create Suggestion
+          Create Room Main
         </Button>
       </div>
-    </form >
+    </form>
   );
 }
 
