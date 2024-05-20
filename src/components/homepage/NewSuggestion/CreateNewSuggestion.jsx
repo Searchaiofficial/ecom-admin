@@ -30,6 +30,92 @@ function CreateNewSuggestion() {
   const navigate = useNavigate();
 
   const [images, setImages] = useState([]);
+  const [firstSlider, setFirstSlider] = useState({
+    type: "",
+    subType: "",
+  });
+  const [secondSlider, setSecondSlider] = useState({
+    type: "",
+    subType: "",
+  });
+  const [thirdSlider, setThirdSlider] = useState({
+    type: "",
+    subType: "",
+  });
+
+  const [allOfferData, setAllOfferData] = useState([]);
+  const [allDemandData, setAllDemandData] = useState([]);
+  const [allCategoryData, setAllCategoryData] = useState([]);
+
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const [rooms, setRooms] = useState([]);
+  const [selectedRoomOption, setSelectedRoomOption] = useState([]);
+  const [selectedRoomData1, setSelectedRoomData1] = useState("");
+  const [selectedRoomData2, setSelectedRoomData2] = useState("");
+  const [selectedRoomData3, setSelectedRoomData3] = useState("");
+  const [selectedRoomData4, setSelectedRoomData4] = useState("");
+  const [optionRoomData, setOptionRoomData] = useState([]);
+
+  const [firstSliderSubData, setFirstSliderSubData] = useState([]);
+  const [secondSliderSubData, setSecondSliderSubData] = useState([]);
+  const [thirdSliderSubData, setThirdSliderSubData] = useState([]);
+
+  const sliderOption = ["Demand Type", "Offer", "Category"];
+
+  const handleSliderChange = (e, number) => {
+    const type = e.target.value;
+    if (number === 1) {
+      setFirstSlider({ ...firstSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    } else if (number === 2) {
+      setSecondSlider({ ...secondSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    } else if (number === 3) {
+      setThirdSlider({ ...thirdSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    }
+  };
+
+  const handleTypeAndSubTypeChange = (type, number) => {
+    if (number === 1) {
+      if (type === "Demand Type") {
+        setFirstSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setFirstSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setFirstSliderSubData(allCategoryData);
+      }
+    } else if (number === 2) {
+      if (type === "Demand Type") {
+        setSecondSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setSecondSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setSecondSliderSubData(allCategoryData);
+      }
+    } else if (number === 3) {
+      if (type === "Demand Type") {
+        setThirdSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setThirdSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setThirdSliderSubData(allCategoryData);
+      }
+    }
+  };
+
+  const handleSubTypeChange = (e, number) => {
+    const subType = e.target.value;
+    if (number === 1) {
+      setFirstSlider({ ...firstSlider, subType });
+    } else if (number === 2) {
+      setSecondSlider({ ...secondSlider, subType });
+    } else if (number === 3) {
+      setThirdSlider({ ...thirdSlider, subType });
+    }
+  };
 
   const handleImageChange = (e, fieldName) => {
     const file = e.target.files[0];
@@ -43,17 +129,38 @@ function CreateNewSuggestion() {
     }
   };
 
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const fetchAllDemandData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/getAllDemandTypes`);
+      const responseData = await response.json();
+      const data = responseData.map((demand) => demand.type);
+      setAllDemandData(data);
+    } catch (error) {
+      console.error("Error fetching demand data:", error);
+    }
+  };
 
-  const [rooms, setRooms] = useState([]);
-  const [selectedRoomOption, setSelectedRoomOption] = useState([]);
-  const [selectedRoomData1, setSelectedRoomData1] = useState("");
-  const [selectedRoomData2, setSelectedRoomData2] = useState("");
-  const [selectedRoomData3, setSelectedRoomData3] = useState("");
-  const [selectedRoomData4, setSelectedRoomData4] = useState("");
-  const [optionRoomData, setOptionRoomData] = useState([]);
+  const fetchAllOfferData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/getAllOffers`);
+      const responseData = await response.json();
+      const data = responseData.map((offer) => offer.type);
+      setAllOfferData(data);
+    } catch (error) {
+      console.error("Error fetching offer data:", error);
+    }
+  };
 
+  const fetchAllCategoryData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/categories`);
+      const responseData = await response.json();
+      const data = responseData.map((category) => category.name);
+      setAllCategoryData(data);
+    } catch (error) {
+      console.error("Error fetching category data:", error);
+    }
+  };
 
   const handleRoomChange = (e) => {
     const room = e.target.value;
@@ -63,51 +170,51 @@ function CreateNewSuggestion() {
   const handleRoomDataChange = (e, number) => {
     const room = e.target.value;
     if (number === 1) {
-        setSelectedRoomData1(room);
+      setSelectedRoomData1(room);
     } else if (number === 2) {
-        setSelectedRoomData2(room);
+      setSelectedRoomData2(room);
     } else if (number === 3) {
-        setSelectedRoomData3(room);
+      setSelectedRoomData3(room);
     } else if (number === 4) {
-        setSelectedRoomData4(room);
+      setSelectedRoomData4(room);
     }
-  }
+  };
 
-    const fetchAllRooms = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/getAllDifferentRoomTypes`);
-        const responseData = await response.json();
-        setRooms(responseData);
-      } catch (error) {
-        console.error("Error fetching room details:", error);
-      }
-    };
+  const fetchAllRooms = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/getAllDifferentRoomTypes`);
+      const responseData = await response.json();
+      setRooms(responseData);
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+    }
+  };
 
-    const fetchRoomData = async (roomType) => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/rooms/${roomType}`);
-        const responseData = await response.json();
-        console.log("Response Data:", responseData);
-        const selectRoomOptionData = responseData.map(
-          (room) => `${room.roomType}-${room.productId}`
-        );
-        console.log("Select Room Data:", selectRoomOptionData);
-        setOptionRoomData(selectRoomOptionData);
-      } catch (error) {
-        console.error("Error fetching room details:", error);
-      }
-    };
+  const fetchRoomData = async (roomType) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/rooms/${roomType}`);
+      const responseData = await response.json();
+      console.log("Response Data:", responseData);
+      const selectRoomOptionData = responseData.map(
+        (room) => `${room.roomType}-${room.productId}`
+      );
+      console.log("Select Room Data:", selectRoomOptionData);
+      setOptionRoomData(selectRoomOptionData);
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+    }
+  };
 
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/categories`);
-        const data = await response.json();
-        const categories = data.map((item) => item.name);
-        setCategories(categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/categories`);
+      const data = await response.json();
+      const categories = data.map((item) => item.name);
+      setCategories(categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
 
   useEffect(() => {
     if (rooms.length === 0) {
@@ -118,8 +225,19 @@ function CreateNewSuggestion() {
       fetchRoomData(selectedRoomOption);
     }
 
+    if (allDemandData.length === 0) {
+      fetchAllDemandData();
+    }
+
+    if (allOfferData.length === 0) {
+      fetchAllOfferData();
+    }
+
+    if (allCategoryData.length === 0) {
+      fetchAllCategoryData();
+    }
     fetchCategories();
-  }, [rooms, selectedRoomOption]);
+  }, [rooms, selectedRoomOption, allDemandData, allOfferData, allCategoryData]);
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
@@ -177,11 +295,10 @@ function CreateNewSuggestion() {
         formData.append("summary", data.summary);
         formData.append("shortSummary", data.shortSummary);
 
-        const [roomType1, productId1] = selectedRoomData1.split('-');
-        const [roomType2, productId2] = selectedRoomData2.split('-');
-        const [roomType3, productId3] = selectedRoomData3.split('-');
-        const [roomType4, productId4] = selectedRoomData4.split('-');
-
+        const [roomType1, productId1] = selectedRoomData1.split("-");
+        const [roomType2, productId2] = selectedRoomData2.split("-");
+        const [roomType3, productId3] = selectedRoomData3.split("-");
+        const [roomType4, productId4] = selectedRoomData4.split("-");
 
         const roomData = [
           { roomType: roomType1, productId: productId1 },
@@ -198,80 +315,14 @@ function CreateNewSuggestion() {
 
         formData.append("roomType", selectedRoomOption);
 
-        // console.log(images.differentMaterialsItem1);
-        // formData.append(
-        //   "differentMaterialsItem1",
-        //   images.differentMaterialsItem1
-        // );
-        // formData.append(
-        //   "differentMaterialsItem2",
-        //   images.differentMaterialsItem2
-        // );
-        // formData.append(
-        //   "differentMaterialsWaysToImproveItem1",
-        //   images.differentMaterialsWaysToImproveItem1
-        // );
-        // formData.append(
-        //   "differentMaterialsWaysToImproveItem2",
-        //   images.differentMaterialsWaysToImproveItem2
-        // );
+        formData.append("firstSlider[type]", firstSlider.type);
+        formData.append("firstSlider[subType]", firstSlider.subType);
 
-        // formData.append(
-        //   "differentMaterials[title]",
-        //   data.differentMaterials.title
-        // );
-        // formData.append(
-        //   "differentMaterials[items][0][label]",
-        //   data.differentMaterials.items[0].label
-        // );
+        formData.append("secondSlider[type]", secondSlider.type);
+        formData.append("secondSlider[subType]", secondSlider.subType);
 
-        // formData.append(
-        //   "differentMaterials[items][1][label]",
-        //   data.differentMaterials.items[1].label
-        // );
-
-        // formData.append(
-        //   "differentMaterials[chooseDifferentMaterial][title]",
-        //   data.differentMaterials.chooseDifferentMaterial.title
-        // );
-        // formData.append(
-        //   "differentMaterials[waysToImprove][title]",
-        //   data.differentMaterials.waysToImprove.title
-        // );
-        // formData.append(
-        //   "differentMaterials[waysToImprove][description]",
-        //   data.differentMaterials.waysToImprove.description
-        // );
-        // formData.append(
-        //   "differentMaterials[waysToImprove][items][0][label]",
-        //   data.differentMaterials.waysToImprove.items[0].label
-        // );
-        // formData.append(
-        //   "differentMaterials[waysToImprove][items][1][label]",
-        //   data.differentMaterials.waysToImprove.items[1].label
-        // );
-
-        // formData.append(
-        //   "differentMaterials[chooseDifferentMaterial][description]",
-        //   data.differentMaterials.chooseDifferentMaterial.description
-        // );
-        // formData.append(
-        //   "differentMaterials[chooseDifferentMaterial][material][name]",
-        //   data.differentMaterials.chooseDifferentMaterial.material.name
-        // );
-        // formData.append(
-        //   "differentMaterials[chooseDifferentMaterial][material][guaranteePeriod]",
-        //   data.differentMaterials.chooseDifferentMaterial.material
-        //     .guaranteePeriod
-        // );
-        // formData.append(
-        //   "differentMaterials[chooseDifferentMaterial][material][recyclingFee]",
-        //   data.differentMaterials.chooseDifferentMaterial.material.recyclingFee
-        // );
-        // formData.append(
-        //   "differentMaterials[chooseDifferentMaterial][material][trialSchema]",
-        //   data.differentMaterials.chooseDifferentMaterial.material.trialSchema
-        // );
+        formData.append("thirdSlider[type]", thirdSlider.type);
+        formData.append("thirdSlider[subType]", thirdSlider.subType);
 
         // --------- 💥 api call 💥 -------
         try {
@@ -614,372 +665,6 @@ function CreateNewSuggestion() {
             </button>
           </div>
 
-          {/* <div className="sm:col-span-6">
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Suggestion Different Material Title*
-            </label>
-            <div className="mt-2">
-              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                <input
-                  type="text"
-                  {...register("differentMaterials.title", {
-                    required: "Sub Heading is required",
-                  })}
-                  id="differentMaterials.title"
-                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-          </div> */}
-
-          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Suggestion Different Material Item1*
-              </label>
-              <div className="mt-2">
-                <div className="flex flex-col rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register("differentMaterials.items[0].label", {
-                      required: "Sub Heading is required",
-                    })}
-                    placeholder="Label 1"
-                    id="differentMaterials.items[0].label"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                  <input
-                    type="file"
-                    {...register("differentMaterials.items[0].image", {
-                      required: "Sub Heading is required",
-                    })}
-                    id="differentMaterials.items[0].image"
-                    onChange={(e) =>
-                      handleImageChange(e, "differentMaterialsItem1")
-                    }
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Suggestion Different Material Item1*
-              </label>
-              <div className="mt-2">
-                <div className="flex flex-col rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register("differentMaterials.items[1].label", {
-                      required: "Sub Heading is required",
-                    })}
-                    id="differentMaterials.items[1].label"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                  <input
-                    type="file"
-                    {...register("differentMaterials.items[1].image", {
-                      required: "Sub Heading is required",
-                    })}
-                    id="differentMaterials.items[1].image"
-                    onChange={(e) =>
-                      handleImageChange(e, "differentMaterialsItem2")
-                    }
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Suggestion choose Different Material title*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.chooseDifferentMaterial.title",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.chooseDifferentMaterial.title"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Suggestion choose Different Material Description2*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.chooseDifferentMaterial.description",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.chooseDifferentMaterial.description"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8">
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Choose Different Material Name*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.chooseDifferentMaterial.material.name",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.chooseDifferentMaterial.material.name"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Choose Different Material guaranteePeriod*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.chooseDifferentMaterial.material.guaranteePeriod",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.chooseDifferentMaterial.material.guaranteePeriod"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Choose Different Material Recycling Fee*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.chooseDifferentMaterial.material.recyclingFee",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.chooseDifferentMaterial.material.recyclingFee"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Choose Different Material trial Period*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.chooseDifferentMaterial.material.trialSchema",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.chooseDifferentMaterial.material.trialSchema"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* <h1 className="text-xl mt-10">Ways to Improve</h1>
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                WaysToImprove title*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register("differentMaterials.waysToImprove.title", {
-                      required: "Sub Heading is required",
-                    })}
-                    id="differentMaterials.waysToImprove.title"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                WaysToImprove description*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.waysToImprove.description",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.waysToImprove.description"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Different Material waysToImprove item1 label*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.waysToImprove.items[0].label",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.waysToImprove.items[0].label"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                  <input
-                    type="file"
-                    {...register(
-                      "differentMaterials.waysToImprove.items[0].image",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.waysToImprove.items[0].image"
-                    onChange={(e) =>
-                      handleImageChange(
-                        e,
-                        "differentMaterialsWaysToImproveItem1"
-                      )
-                    }
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="sm:col-span-3">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Different Material waysToImprove item2 label
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register(
-                      "differentMaterials.waysToImprove.items[1].label",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.waysToImprove.items[1].label"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                  <input
-                    type="file"
-                    {...register(
-                      "differentMaterials.waysToImprove.items[1].image",
-                      {
-                        required: "Sub Heading is required",
-                      }
-                    )}
-                    id="differentMaterials.waysToImprove.items[1].image"
-                    onChange={(e) =>
-                      handleImageChange(
-                        e,
-                        "differentMaterialsWaysToImproveItem2"
-                      )
-                    }
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-          </div> */}
-
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-1 my-6">
               <label htmlFor="room">Choose Room</label>
@@ -1058,6 +743,109 @@ function CreateNewSuggestion() {
                 {optionRoomData.map((room, index) => (
                   <option key={index} value={room}>
                     {room}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 1:</label>
+              <select
+                id="slider1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSliderChange(e, 1)} // Pass 1 for room 1
+                value={firstSlider.type}
+              >
+                <option value="">-- Select type--</option>
+                {sliderOption.map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 1 : SubData</label>
+              <select
+                id="subData1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSubTypeChange(e, 1)} // Pass 2 for room 2
+                value={firstSlider.subType}
+              >
+                <option value="">-- Select Sub Type--</option>
+                {firstSliderSubData.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 2:</label>
+              <select
+                id="slider2"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSliderChange(e, 2)} // Pass 1 for room 1
+                value={secondSlider.type}
+              >
+                <option value="">-- Select type--</option>
+                {sliderOption.map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}s
+              </select>
+            </div>
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 2 : SubData</label>
+              <select
+                id="subData1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSubTypeChange(e, 2)} // Pass 2 for room 2
+                value={secondSlider.subType}
+              >
+                <option value="">-- Select Sub Type--</option>
+                {secondSliderSubData.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 3:</label>
+              <select
+                id="slider1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSliderChange(e, 3)} // Pass 1 for room 1
+                value={thirdSlider.type}
+              >
+                <option value="">-- Select type--</option>
+                {sliderOption.map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 3 : SubData</label>
+              <select
+                id="subData1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSubTypeChange(e, 3)} // Pass 2 for room 2
+                value={thirdSlider.subType}
+              >
+                <option value="">-- Select Sub Type--</option>
+                {thirdSliderSubData.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
                   </option>
                 ))}
               </select>

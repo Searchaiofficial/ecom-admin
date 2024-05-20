@@ -22,6 +22,29 @@ function RoomPageForm() {
   const [selectedRoomData2, setSelectedRoomData2] = useState("");
   const [optionRoomData, setOptionRoomData] = useState([]);
 
+  const [allOfferData, setAllOfferData] = useState([]);
+  const [allDemandData, setAllDemandData] = useState([]);
+  const [allCategoryData, setAllCategoryData] = useState([])
+
+  const [firstSlider, setFirstSlider] = useState({
+    type: "",
+    subType: "",
+  });
+  const [secondSlider, setSecondSlider] = useState({
+    type: "",
+    subType: "",
+  });
+  const [thirdSlider, setThirdSlider] = useState({
+    type: "",
+    subType: "",
+  });
+
+  const [firstSliderSubData, setFirstSliderSubData] = useState([]);
+  const [secondSliderSubData, setSecondSliderSubData] = useState([]);
+  const [thirdSliderSubData, setThirdSliderSubData] = useState([]);
+
+  const sliderOption = ["Demand Type", "Offer", "Category"];
+
   const {
     fields: subHeadings,
     append: appendSubHeading,
@@ -48,6 +71,60 @@ function RoomPageForm() {
     }
   };
 
+  const handleSliderChange = (e, number) => {
+    const type = e.target.value;
+    if (number === 1) {
+      setFirstSlider({ ...firstSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    } else if (number === 2) {
+      setSecondSlider({ ...secondSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    } else if (number === 3) {
+      setThirdSlider({ ...thirdSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    }
+  };
+
+  const handleTypeAndSubTypeChange = (type, number) => {
+    if (number === 1) {
+      if (type === "Demand Type") {
+        setFirstSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setFirstSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setFirstSliderSubData(allCategoryData);
+      }
+    } else if (number === 2) {
+      if (type === "Demand Type") {
+        setSecondSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setSecondSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setSecondSliderSubData(allCategoryData);
+      }
+    } else if (number === 3) {
+      if (type === "Demand Type") {
+        setThirdSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setThirdSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setThirdSliderSubData(allCategoryData);
+      }
+    }
+  };
+
+  const handleSubTypeChange = (e, number) => {
+    const subType = e.target.value;
+    if (number === 1) {
+      setFirstSlider({ ...firstSlider, subType });
+    } else if (number === 2) {
+      setSecondSlider({ ...secondSlider, subType });
+    } else if (number === 3) {
+      setThirdSlider({ ...thirdSlider, subType });
+    }
+  };
+
+
   const handleRoomChange = (e) => {
     const room = e.target.value;
     setSelectedRoomOption(room);
@@ -56,12 +133,11 @@ function RoomPageForm() {
   const handleRoomDataChange = (e, number) => {
     const room = e.target.value;
     if (number === 1) {
-        setSelectedRoomData1(room);
+      setSelectedRoomData1(room);
     } else if (number === 2) {
-        setSelectedRoomData2(room);
+      setSelectedRoomData2(room);
     }
-    };
-
+  };
 
   const fetchAllRooms = async () => {
     try {
@@ -100,21 +176,67 @@ function RoomPageForm() {
     }
   };
 
+  const fetchAllDemandData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/getAllDemandTypes`);
+      const responseData = await response.json();
+      const data = responseData.map((demand) => demand.type);
+      setAllDemandData(data);
+    } catch (error) {
+      console.error("Error fetching demand data:", error);
+    }
+  };
+
+  const fetchAllOfferData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/getAllOffers`);
+      const responseData = await response.json();
+      const data = responseData.map((offer) => offer.type);
+      setAllOfferData(data);
+    } catch (error) {
+      console.error("Error fetching offer data:", error);
+    }
+  };
+
+  const fetchAllCategoryData = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/categories`);
+      const responseData = await response.json();
+      const data = responseData.map((category) => category.name);
+      setAllCategoryData(data);
+    } catch (error) {
+      console.error("Error fetching category data:", error);
+    }
+  };
+
   useEffect(() => {
     if (rooms.length === 0) {
       fetchAllRooms();
+    }
+
+    if (allDemandData.length === 0) {
+      fetchAllDemandData();
+    }
+
+    if (allOfferData.length === 0) {
+      fetchAllOfferData();
+    }
+
+    if (allCategoryData.length === 0) {
+      fetchAllCategoryData();
     }
 
     if (selectedRoomOption) {
       fetchRoomCategory(selectedRoomOption);
       fetchRoomData(selectedRoomOption);
     }
-  }, [rooms, selectedRoomOption]);
+  }, [rooms, selectedRoomOption, allDemandData, allOfferData, allCategoryData]);
 
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
         const formData = new FormData();
+        console.log(firstSlider, secondSlider, thirdSlider);
         console.log("Form-Data:", data);
 
         const subHeadingData = getValues("subHeadings");
@@ -166,13 +288,23 @@ function RoomPageForm() {
         formData.append("category[3]", selectRoomCategory4);
         formData.append("category[4]", selectRoomCategory5);
 
-        const [roomType1, productId1] = selectedRoomData1.split('-');
-        const [roomType2, productId2] = selectedRoomData2.split('-');
+        const [roomType1, productId1] = selectedRoomData1.split("-");
+        const [roomType2, productId2] = selectedRoomData2.split("-");
 
         const roomData = [
           { roomType: roomType1, productId: productId1 },
           { roomType: roomType2, productId: productId2 },
         ];
+
+        formData.append("firstSlider[type]", firstSlider.type);
+        formData.append("firstSlider[subType]", firstSlider.subType);
+
+        formData.append("secondSlider[type]", secondSlider.type);
+        formData.append("secondSlider[subType]", secondSlider.subType);
+
+        formData.append("thirdSlider[type]", thirdSlider.type);
+        formData.append("thirdSlider[subType]", thirdSlider.subType);
+        
 
         // Loop through each object in roomData and append its properties to formData
         roomData.forEach((room, index) => {
@@ -209,7 +341,7 @@ function RoomPageForm() {
     >
       {/* ➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡ ➡➡➡➡➡➡➡➡*/}
 
-      <div div className="space-y-12 bg-white p-6 md:p-12">
+      <div className="space-y-12 bg-white p-6 md:p-12">
         <div className="border-b border-gray-500 pb-12">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 text-center">
             Create Room Page
@@ -411,6 +543,8 @@ function RoomPageForm() {
               </select>
             </div>
           </div>
+
+          s
 
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
