@@ -277,6 +277,10 @@ function RoomPageForm() {
         formData.append("roomName", data.roomName);
         formData.append("title", data.title);
         formData.append("description", data.description);
+        formData.append("fiveGridHeader", data.fiveGridHeader)
+        formData.append("fiveGridDescription", data.fiveGridDescription)
+        formData.append("twoGridHeader", data.twoGridHeader)
+        formData.append("twoGridDescription", data.twoGridDescription)
 
         // const [roomType1, productId1] = selectedRoomCategory1.split("-");
         // const [roomType2, productId2] = selectedRoomCategory2.split("-");
@@ -304,7 +308,7 @@ function RoomPageForm() {
 
         formData.append("thirdSlider[type]", thirdSlider.type);
         formData.append("thirdSlider[subType]", thirdSlider.subType);
-        
+
 
         // Loop through each object in roomData and append its properties to formData
         roomData.forEach((room, index) => {
@@ -321,18 +325,18 @@ function RoomPageForm() {
         }
         console.log("Form-Data:", formData);
         // --------- 💥 api call 💥 -------
-        try {
-          const response = await fetch(`${BASE_URL}/api/createRoommain`, {
-            method: "POST",
-            headers: {},
-            body: formData,
-          });
-          const responseData = await response.json();
-          window.alert(responseData.message);
-          // navigate("/admin");
-        } catch (error) {
-          console.error("Error uploading images:", error);
-        }
+        // try {
+        //   const response = await fetch(`${BASE_URL}/api/createRoommain`, {
+        //     method: "POST",
+        //     headers: {},
+        //     body: formData,
+        //   });
+        //   const responseData = await response.json();
+        //   window.alert(responseData.message);
+        //   // navigate("/admin");
+        // } catch (error) {
+        //   console.error("Error uploading images:", error);
+        // }
 
         // reset();
         // setSelectedColors([]);
@@ -411,6 +415,49 @@ function RoomPageForm() {
               </div>
             </div>
           </div>
+
+          <div className="sm:col-span-3 mt-8 md:w-1/2">
+            <label
+              htmlFor="fiveGridHeader"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Five Grid Header
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <input
+                  type="text"
+                  {...register("fiveGridHeader", {
+                    required: "fiveGridHeader is required",
+                  })}
+                  id="fiveGridHeader"
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="sm:col-span-3 mt-8 md:w-1/2">
+            <label
+              htmlFor="fiveGridDescription"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Five Grid Description
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <input
+                  type="text"
+                  {...register("fiveGridDescription", {
+                    required: "fiveGridDescription is required",
+                  })}
+                  id="fiveGridDescription"
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+          </div>
+
+
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-1 my-6">
               <label htmlFor="room">Choose Room</label>
@@ -433,7 +480,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 1)} // Pass 2 for room 2
-                // value={selectedRoomCategory2}
+              // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category --</option>
                 {roomCategory.map((room, index) => (
@@ -449,7 +496,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 2)} // Pass 2 for room 2
-                // value={selectedRoomCategory2}
+              // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -465,7 +512,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 3)} // Pass 2 for room 2
-                // value={selectedRoomCategory2}
+              // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -481,7 +528,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 4)} // Pass 2 for room 2
-                // value={selectedRoomCategory2}
+              // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -497,7 +544,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 5)} // Pass 2 for room 2
-                // value={selectedRoomCategory2}
+              // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -506,6 +553,47 @@ function RoomPageForm() {
                   </option>
                 ))}
               </select>
+            </div>
+          </div>
+
+          <div className="sm:col-span-3 mt-8 md:w-1/2">
+            <label
+              htmlFor="twoGridHeader"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Two Grid Header
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <input
+                  type="text"
+                  {...register("twoGridHeader", {
+                    required: "twoGridHeader is required",
+                  })}
+                  id="twoGridHeader"
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="sm:col-span-3 mt-8 md:w-1/2">
+            <label
+              htmlFor="twoGridDescription"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Two Grid Description
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <input
+                  type="text"
+                  {...register("twoGridDescription", {
+                    required: "twoGridDescription is required",
+                  })}
+                  id="twoGridDescription"
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                />
+              </div>
             </div>
           </div>
 
@@ -627,7 +715,7 @@ function RoomPageForm() {
                   id="image"
                   className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   accept="image/*"
-                  // onChange={(e) => handleImageChange(e, 1)}
+                // onChange={(e) => handleImageChange(e, 1)}
                 />
               </div>
             </div>
