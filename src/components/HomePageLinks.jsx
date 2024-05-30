@@ -18,6 +18,7 @@ const HomePageLinks = () => {
     "New Product",
     "Banner",
     "New Suggestion",
+    "Instagram Hashtag Slider"
   ];
 
   return (

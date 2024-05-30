@@ -48,6 +48,7 @@ import CategoryDisplay from "./components/category/CategoryDisplay";
 import DemandPage from "./Pages/Demand-page";
 import OfferPage from "./Pages/offer-page";
 import UpdateProduct from "./Pages/update-product";
+import InstagramHashtagSlider from "./components/homepage/InstagramHashtagSlider.jsx";
 
 export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -234,6 +235,15 @@ export default function App() {
           element={
             <Protected>
               <Banner />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/update-home-page/instagram-hashtag-slider"
+          element={
+            <Protected>
+              <InstagramHashtagSlider />
             </Protected>
           }
         ></Route>
@@ -494,7 +504,6 @@ export default function App() {
             </Protected>
           }
         ></Route>
-
       </Routes>
     </>
   );
