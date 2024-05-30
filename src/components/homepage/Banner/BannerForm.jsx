@@ -10,7 +10,7 @@ const BannerForm = () => {
   const navigate = useNavigate();
   const [roomTypes, setRoomTypes] = useState([]);
 
-  
+
   const fetchAllDifferentRoomTypes = async () => {
     try {
       const responce = await axios.get(`${BASE_URL}/api/getAllDifferentRoomTypes`);
@@ -41,6 +41,8 @@ const BannerForm = () => {
 
       formData.append("text", data.text);
       formData.append("roomType", data.roomType);
+      formData.append("mainHeading", data.mainHeading)
+      formData.append("description", data.description)
 
       const response = await fetch(`${BASE_URL}/api/createBannerSection`, {
         method: "POST",
@@ -120,6 +122,42 @@ const BannerForm = () => {
             </div>
           </div>
         </div> */}
+        <label
+          htmlFor={`mainHeading`}
+          className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+        >
+          Main Heading
+        </label>
+        <div className="mt-2">
+          <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+            <input
+              type="text"
+              {...register("mainHeading", {
+                required: "mainHeading is required",
+              })}
+              id="mainHeading"
+              className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+            />
+          </div>
+        </div>
+        <label
+          htmlFor={`description`}
+          className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+        >
+          Description
+        </label>
+        <div className="mt-2">
+          <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+            <input
+              type="text"
+              {...register("description", {
+                required: "description is required",
+              })}
+              id="description"
+              className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+            />
+          </div>
+        </div>
 
         <label
           htmlFor={`text`}

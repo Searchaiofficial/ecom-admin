@@ -14,7 +14,7 @@ const HomePageLinks = () => {
     "Map Detail",
     "Category Description",
     "Image Changer (Multiple Images)",
-    "Reviews",
+    "Special Reviews",
     "New Product",
     "Banner",
     "New Suggestion",

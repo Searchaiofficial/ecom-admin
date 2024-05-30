@@ -14,27 +14,25 @@ function NewProductForm() {
 
   const fetchOfferTypes = async () => {
     try {
-      const responce = await axios.get(`${BASE_URL}/api/getAllOffers`);
-      setOffertypes(responce.data);
+      const response = await axios.get(`${BASE_URL}/api/getAllOffers`);
+      setOffertypes(response.data);
     } catch (error) {
-      console.log("FETCH OFFER ERROR :", error);
+      console.log("FETCH OFFER ERROR:", error);
     }
   };
 
   const fetchAllDifferentRoomTypes = async () => {
     try {
-      const responce = await axios.get(`${BASE_URL}/api/getAllDifferentRoomTypes`);
-      setRoomTypes(responce.data);
+      const response = await axios.get(`${BASE_URL}/api/getAllDifferentRoomTypes`);
+      setRoomTypes(response.data);
     } catch (error) {
-      console.log("FETCH ROOM TYPE ERROR :", error);
+      console.log("FETCH ROOM TYPE ERROR:", error);
     }
   };
-  
-
 
   useEffect(() => {
     fetchOfferTypes();
-    fetchAllDifferentRoomTypes()
+    fetchAllDifferentRoomTypes();
   }, []);
 
   const onSubmit = async (data) => {
@@ -45,26 +43,29 @@ function NewProductForm() {
       if (mode === "room") {
         const fileInput = document.getElementById(`image`);
         const file = fileInput?.files[0];
-        formData.append(`image`, file);
+        if (file) formData.append("image", file);
         formData.append("imgTitle", data.imgTitle);
         formData.append("offer", data.offer);
         formData.append("roomType", data.roomType);
+        formData.append("description", data.Description);
+        formData.append("mainHeading", data.mainHeading);
       } else {
         for (let i = 0; i < 5; i++) {
           const fileInput = document.getElementById(`image-${i}`);
           const file = fileInput?.files[0];
-          formData.append(`image`, file);
-          formData.append(`heading${i}`, data[`heading-${i}`]);
-          formData.append(`offer${i}`, data[`offer-${i}`]);
+          if (file) formData.append(`image-${i}`, file);
+          formData.append(`heading-${i}`, data[`heading-${i}`]);
+          formData.append(`offer-${i}`, data[`offer-${i}`]);
         }
       }
+
       const response = await fetch(`${BASE_URL}/api/createnewProductSection`, {
         method: "POST",
         body: formData,
       });
       const res = await response.json();
       window.alert(res.message);
-      // navigate("/homePage");
+      navigate("/homePage");
     } catch (error) {
       console.log("error saving image section", error);
     }
@@ -110,11 +111,11 @@ function NewProductForm() {
                 Image Source
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
                   <input
                     type="file"
                     {...register("image", {
-                      required: "name is required",
+                      required: "Image is required",
                     })}
                     id="image"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -124,17 +125,17 @@ function NewProductForm() {
               </div>
 
               <label
-                htmlFor={`imgTitle`}
+                htmlFor="imgTitle"
                 className="block text-sm font-medium leading-5 text-gray-700 mt-4"
               >
                 Image Title
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
                   <input
                     type="text"
                     {...register("imgTitle", {
-                      required: "imgTitle is required",
+                      required: "Image title is required",
                     })}
                     id="imgTitle"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -142,48 +143,126 @@ function NewProductForm() {
                 </div>
               </div>
 
+              <label
+                htmlFor="mainHeading"
+                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+              >
+                Main Heading
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
+                  <input
+                    type="text"
+                    {...register("mainHeading", {
+                      required: "heading is required",
+                    })}
+                    id="mainHeading"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+
+              <label
+                htmlFor="Description"
+                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+              >
+                Description
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
+                  <input
+                    type="text"
+                    {...register("Description", {
+                      required: "description is required",
+                    })}
+                    id="Description"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+
+
+
               <div className="flex items-center gap-20 mt-2">
-                <label className=" text-gray-700">Offer Type:</label>
+                <label className="text-gray-700">Offer Type:</label>
                 <select
                   {...register("offer", {
-                    required: "offer is required",
+                    required: "Offer is required",
                   })}
                   className="py-1 px-2 rounded-md bg-gray-100 min-w-[213px]"
                 >
                   <option key={0} value="">
                     -----
                   </option>
-                  {offerTypes &&
-                    offerTypes.map((offer) => (
-                      <option key={offer._id} value={offer.type}>
-                        {offer.type}
-                      </option>
-                    ))}
+                  {offerTypes.map((offer) => (
+                    <option key={offer._id} value={offer.type}>
+                      {offer.type}
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div className="flex items-center gap-20 mt-2">
-                <label className=" text-gray-700">Room Type:</label>
+                <label className="text-gray-700">Room Type:</label>
                 <select
                   {...register("roomType", {
-                    required: "roomType is required",
+                    required: "Room type is required",
                   })}
                   className="py-1 px-2 rounded-md bg-gray-100 min-w-[213px]"
                 >
                   <option key={0} value="">
                     -----
                   </option>
-                  {roomTypes &&
-                    roomTypes.map((type) => (
-                      <option key={roomTypes._id} value={type}>
-                        {type}
-                      </option>
-                    ))}
+                  {roomTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
                 </select>
               </div>
             </>
           ) : (
             <>
+
+              <label
+                htmlFor="mainHeading"
+                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+              >
+                Main Heading
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
+                  <input
+                    type="text"
+                    {...register("mainHeading", {
+                      required: "heading is required",
+                    })}
+                    id="mainHeading"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+              <label
+                htmlFor="Description"
+                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+              >
+                Description
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
+                  <input
+                    type="text"
+                    {...register("Description", {
+                      required: "description is required",
+                    })}
+                    id="Description"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+
+
+
               {[...Array(5)].map((_, index) => (
                 <div key={index}>
                   <label
@@ -193,7 +272,7 @@ function NewProductForm() {
                     Heading {index + 1}
                   </label>
                   <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
                       <input
                         type="text"
                         {...register(`heading-${index}`, {
@@ -206,26 +285,23 @@ function NewProductForm() {
                   </div>
 
                   <div className="flex items-center gap-20 mt-2">
-                <label className=" text-gray-700">Offer Type:</label>
-                <select
-                  {...register(`offer-${index}`, {
-                    required: "offer is required",
-                  })}
-                  className="py-1 px-2 rounded-md bg-gray-100 min-w-[213px]"
-                  // value={offerName}
-                  // onChange={(e) => setOfferName(e.target.value)}
-                >
-                  <option key={0} value="">
-                    -----
-                  </option>
-                  {offerTypes &&
-                    offerTypes.map((offer) => (
-                      <option key={offer._id} value={offer.type}>
-                        {offer.type}
+                    <label className="text-gray-700">Offer Type:</label>
+                    <select
+                      {...register(`offer-${index}`, {
+                        required: "Offer is required",
+                      })}
+                      className="py-1 px-2 rounded-md bg-gray-100 min-w-[213px]"
+                    >
+                      <option key={0} value="">
+                        -----
                       </option>
-                    ))}
-                </select>
-              </div>
+                      {offerTypes.map((offer) => (
+                        <option key={offer._id} value={offer.type}>
+                          {offer.type}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
                   <label
                     htmlFor={`image-${index}`}
@@ -234,7 +310,7 @@ function NewProductForm() {
                     Image {index + 1}
                   </label>
                   <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600">
                       <input
                         type="file"
                         {...register(`image-${index}`, {

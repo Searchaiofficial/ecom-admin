@@ -25,7 +25,8 @@ import ImgGrid from "./components/homepage/ImgGrid/ImgGrid";
 import MapDetails from "./components/homepage/MapSection/MapDetails";
 import CatDescription from "./components/homepage/catDescription/CatDescription";
 import ImageChanger from "./components/homepage/imgChanger/Imagechanger";
-import Review from "./components/homepage/review/Review";
+import SpecialReview from "./components/homepage/SpecialReview/SpecialReview";
+
 
 import ProductDisplay from "./components/product/ProductDisplay";
 import OrderDetails from "./components/dashboard/OrderDetails";
@@ -192,10 +193,10 @@ export default function App() {
 
         <Route
           exact
-          path="/update-home-page/reviews"
+          path="/update-home-page/special-reviews"
           element={
             <Protected>
-              <Review />
+              <SpecialReview />
             </Protected>
           }
         ></Route>
