@@ -29,6 +29,7 @@ export const createInstagramHashtagPost = async ({
   products,
   permalink,
   categoryId,
+  username,
 }) => {
   try {
     const response = await axios.post(`${baseURL}/api/hashtagpost`, {
@@ -36,6 +37,7 @@ export const createInstagramHashtagPost = async ({
       mediaUrl,
       products,
       categoryId,
+      username,
       postUrl: permalink,
     });
     return response.data;
@@ -57,11 +59,13 @@ export const updateInstagramHashtagPost = async ({
   id,
   products,
   categoryId,
+  username,
 }) => {
   try {
     const response = await axios.patch(`${baseURL}/api/hashtagpost/${id}`, {
       products,
       categoryId,
+      username,
     });
     return response.data;
   } catch (error) {

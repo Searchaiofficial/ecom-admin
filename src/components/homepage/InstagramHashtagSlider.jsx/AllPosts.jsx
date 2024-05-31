@@ -45,7 +45,11 @@ const Post = ({ post }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="relative flex items-center">
+    <a
+      href={post.permalink}
+      target="_blank"
+      className="relative flex items-center"
+    >
       <img
         className="object-cover rounded-lg"
         src={post.media_url}
@@ -55,7 +59,7 @@ const Post = ({ post }) => {
       {isModalOpen ? (
         <SelectPostModal post={post} setIsModalOpen={setIsModalOpen} />
       ) : null}
-    </div>
+    </a>
   );
 };
 
@@ -73,6 +77,7 @@ const SelectPostButton = ({ post, setIsModalOpen }) => {
 const SelectPostModal = ({ post, setIsModalOpen }) => {
   const [productIds, setProductIds] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState({});
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -104,6 +109,7 @@ const SelectPostModal = ({ post, setIsModalOpen }) => {
       products: products,
       permalink: post.permalink,
       categoryId: categoryId,
+      username: username,
     });
 
     refreshPage();
@@ -127,6 +133,13 @@ const SelectPostModal = ({ post, setIsModalOpen }) => {
           <hr className="w-full" />
           <form onSubmit={onSubmit} className="flex flex-col gap-1">
             <SelectCategoryDropdown setSelectedCategory={setSelectedCategory} />
+            <input
+              type="text"
+              placeholder="Username"
+              className="w-full border rounded-lg p-2"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
             {productIds.length === 0 ? (
               <p>No products added.</p>
             ) : (

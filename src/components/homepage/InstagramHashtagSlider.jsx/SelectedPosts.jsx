@@ -46,7 +46,7 @@ const Post = ({ post }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="relative">
+    <a className="relative" href={post.postUrl} target="_blank">
       <img
         className="object-cover rounded-lg h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 lg:h-80 lg:w-80 xl:h-96 xl:w-96"
         src={post.mediaUrl}
@@ -59,7 +59,7 @@ const Post = ({ post }) => {
           <EditPostModal post={post} setIsModalOpen={setIsModalOpen} />
         ) : null}
       </div>
-    </div>
+    </a>
   );
 };
 
@@ -70,6 +70,7 @@ const EditPostModal = ({ post, setIsModalOpen }) => {
   }));
   const [productIds, setProductIds] = useState(postProductIds);
   const [selectedCategory, setSelectedCategory] = useState({});
+  const [username, setUsername] = useState(post.username || "");
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -99,6 +100,7 @@ const EditPostModal = ({ post, setIsModalOpen }) => {
       id: post.id,
       products: products,
       categoryId: categoryId,
+      username: username,
     });
 
     refreshPage();
@@ -124,6 +126,13 @@ const EditPostModal = ({ post, setIsModalOpen }) => {
             <SelectCategoryDropdown
               setSelectedCategory={setSelectedCategory}
               initialValue={post.category}
+            />
+            <input
+              type="text"
+              placeholder="Username"
+              className="w-full border rounded-lg p-2"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
             {productIds.length === 0 ? (
               <p>No products added.</p>
