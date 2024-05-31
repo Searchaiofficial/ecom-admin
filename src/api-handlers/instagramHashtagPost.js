@@ -29,6 +29,7 @@ export const createInstagramHashtagPost = async ({
   products,
   permalink,
   categoryId,
+  categoryName,
   username,
 }) => {
   try {
@@ -37,6 +38,7 @@ export const createInstagramHashtagPost = async ({
       mediaUrl,
       products,
       categoryId,
+      categoryName,
       username,
       postUrl: permalink,
     });

@@ -46,12 +46,14 @@ const Post = ({ post }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <a className="relative" href={post.postUrl} target="_blank">
-      <img
-        className="object-cover rounded-lg h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 lg:h-80 lg:w-80 xl:h-96 xl:w-96"
-        src={post.mediaUrl}
-        alt={"Instagram Post"}
-      />
+    <div className="relative">
+      <a href={post.postUrl} target="_blank">
+        <img
+          className="object-cover rounded-lg h-48 w-48 sm:h-64 sm:w-64 md:h-72 md:w-72 lg:h-80 lg:w-80 xl:h-96 xl:w-96"
+          src={post.mediaUrl}
+          alt={"Instagram Post"}
+        />
+      </a>
       <div className="absolute flex gap-2 items-center top-2 right-2">
         <EditPostButton post={post} setIsModalOpen={setIsModalOpen} />
         <DeletePostButton post={post} />
@@ -59,7 +61,7 @@ const Post = ({ post }) => {
           <EditPostModal post={post} setIsModalOpen={setIsModalOpen} />
         ) : null}
       </div>
-    </a>
+    </div>
   );
 };
 

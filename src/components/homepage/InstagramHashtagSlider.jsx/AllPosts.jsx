@@ -45,21 +45,19 @@ const Post = ({ post }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <a
-      href={post.permalink}
-      target="_blank"
-      className="relative flex items-center"
-    >
-      <img
-        className="object-cover rounded-lg"
-        src={post.media_url}
-        alt={"Instagram Post"}
-      />
+    <div className="relative flex items-center">
+      <a href={post.permalink} target="_blank">
+        <img
+          className="object-cover rounded-lg"
+          src={post.media_url}
+          alt={"Instagram Post"}
+        />
+      </a>
       <SelectPostButton post={post} setIsModalOpen={setIsModalOpen} />
       {isModalOpen ? (
         <SelectPostModal post={post} setIsModalOpen={setIsModalOpen} />
       ) : null}
-    </a>
+    </div>
   );
 };
 
@@ -67,7 +65,7 @@ const SelectPostButton = ({ post, setIsModalOpen }) => {
   return (
     <button
       onClick={() => setIsModalOpen((prev) => !prev)}
-      className="bg-blue-500 text-white px-2 py-1 rounded-lg absolute right-2 bottom-2 hover:bg-blue-600 transition"
+      className="bg-blue-500 text-white px-2 py-1 rounded-lg absolute right-2 bottom-2 hover:bg-blue-600 transition z-10"
     >
       Select Post
     </button>
@@ -102,6 +100,7 @@ const SelectPostModal = ({ post, setIsModalOpen }) => {
 
     const products = productIds.map((product) => product.value);
     const categoryId = selectedCategory._id;
+    const categoryName = selectedCategory.name;
 
     await createInstagramHashtagPost({
       id: post.id,
@@ -109,6 +108,7 @@ const SelectPostModal = ({ post, setIsModalOpen }) => {
       products: products,
       permalink: post.permalink,
       categoryId: categoryId,
+      categoryName: categoryName,
       username: username,
     });
 
