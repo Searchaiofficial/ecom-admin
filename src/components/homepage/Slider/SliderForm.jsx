@@ -34,12 +34,15 @@ function SliderForm() {
       // formData.append('circles', JSON.stringify(data.circles));
 
       // image
-      const fileInput = document.getElementById(`image`);
-      const file = fileInput?.files[0];
-      formData.append(`image`, file);
+      const fileInput1 = document.getElementById(`image1`);
+      const file1 = fileInput1?.files[0];
+      formData.append(`desktopImgSrc`, file1);
+      
+      const fileInput2 = document.getElementById(`image2`);
+      const file2 = fileInput2?.files[0];
+      formData.append(`mobileImgSrc`, file2);
 
       formData.append("imgTitle", data.imgTitle);
-      formData.append("mobileSlide", data.mobileSlide);
 
       const response = await fetch(`${BASE_URL}/api/createImgCricle`, {
         method: "POST",
@@ -62,40 +65,41 @@ function SliderForm() {
         onSubmit={handleSubmit(onSubmit)}
         className="max-w-md mx-auto p-6 border rounded-md shadow-md mt-10"
       >
-        <div className="mt-6">
+        <div>
           <label
-            htmlFor="deviceSelect"
-            className="block text-sm leading-6 text-gray-900 font-bold"
-          >
-            Select Device
-          </label>
-          <div className="mt-2">
-             <select
-                id="mobileSelect"
-                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                {...register("mobileSlide", {
-                })}
-                defaultValue={false}
-              >
-                <option value={false}>Large Device</option>
-                <option value={true}>Mobile Device</option>
-              </select>
-          </div>
-
-          <label
-            htmlFor="image"
+            htmlFor="image1"
             className="block text-sm font-medium leading-6 text-gray-900 font-bold"
           >
-            Image Source
+            Desktop Image 
           </label>
           <div className="mt-2">
             <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
               <input
                 type="file"
-                {...register("image", {
+                {...register("desktopImgSrc", {
                   required: "name is required",
                 })}
-                id="image"
+                id="image1"
+                className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                accept="image/*"
+                // onChange={(e) => handleImageChange(e, 1)}
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="image2"
+            className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+          >
+            Mobile Image 
+          </label>
+          <div className="mt-2">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+              <input
+                type="file"
+                {...register("mobileImgSrc", {
+                  required: "name is required",
+                })}
+                id="image2"
                 className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 accept="image/*"
                 // onChange={(e) => handleImageChange(e, 1)}
