@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import AdminNavbar from "../../AdminNavbar";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -12,8 +12,11 @@ function RoomForm() {
   const productId = searchParams.get("productId");
   const params = useParams();
 
+  const [loading, setLoading] = useState(false)
+
   const onSubmit = async (data) => {
     try {
+      setLoading(true)
       const formData = new FormData();
       data.circles.forEach((circle, index) => {
         formData.append(`circles[${index}].productTitle`, circle.productTitle);
@@ -51,11 +54,15 @@ function RoomForm() {
 
       const responseData = await response.json();
       window.alert(responseData.message);
+      setLoading(false)
       // navigate('/homePage');
     } catch (error) {
       console.log(error);
+      setLoading(false)
     }
   };
+
+
 
   return (
     <>
@@ -81,7 +88,7 @@ function RoomForm() {
                 id="image"
                 className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 accept="image/*"
-                // onChange={(e) => handleImageChange(e, 1)}
+              // onChange={(e) => handleImageChange(e, 1)}
               />
             </div>
           </div>
@@ -251,7 +258,9 @@ function RoomForm() {
             type="submit"
             className="w-full bg-indigo-500 p-3 rounded-md text-white font-medium focus:outline-none focus:shadow-outline-indigo active:bg-indigo-600"
           >
-            Create Room
+            {
+              loading ? "Creating Room ..." : "Create Room"
+            }
           </button>
         </div>
       </form>

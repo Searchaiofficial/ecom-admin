@@ -255,7 +255,7 @@ function ProductForm() {
   };
 
   useEffect(() => {
-    if(demandTypes.length === 0){
+    if (demandTypes.length === 0) {
       fetchAllDemandTypes();
     }
     if (categoryOptions.length === 0) {
@@ -343,11 +343,14 @@ function ProductForm() {
     }
   };
 
+  const [loading, setLoading] = useState(false)
+
   return (
     <form
       noValidate
       // submit method of the form 💥
       onSubmit={handleSubmit(async (data) => {
+        setLoading(true)
         const formData = new FormData();
         console.log("Form-Data:", data);
         const coreValuesData = getValues("coreValues");
@@ -381,7 +384,7 @@ function ProductForm() {
         formData.append("totalPricePerUnit", data.totalPricePerUnit);
         formData.append("discountedprice", data.discountedprice);
         formData.append("perUnitType", data.perUnitType);
-        if(data.specialprice){
+        if (data.specialprice) {
           formData.append("specialprice[price]", data.specialprice.price);
           formData.append("specialprice[startDate]", data.specialprice.startDate);
           formData.append("specialprice[endDate]", data.specialprice.endDate);
@@ -468,9 +471,11 @@ function ProductForm() {
           });
           const responseData = await response.json();
           window.alert(responseData.message);
+          setLoading(false)
           // navigate("/admin");
         } catch (error) {
           console.error("Error uploading images:", error);
+          setLoading(false)
         }
 
         // reset();
@@ -1334,7 +1339,9 @@ function ProductForm() {
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          Add product
+          {
+            loading ? "Adding product..." : "Add product"
+          }
         </Button>
       </div>
     </form>

@@ -12,6 +12,8 @@ function NewProductForm() {
   const [offerTypes, setOffertypes] = useState([]);
   const [roomTypes, setRoomTypes] = useState([]);
 
+  const [loading, setloading] = useState(false)
+
   const fetchOfferTypes = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/getAllOffers`);
@@ -36,6 +38,7 @@ function NewProductForm() {
   }, []);
 
   const onSubmit = async (data) => {
+    setloading(true)
     const formData = new FormData();
 
     try {
@@ -66,8 +69,10 @@ function NewProductForm() {
       const res = await response.json();
       window.alert(res.message);
       navigate("/homePage");
+      setloading(false)
     } catch (error) {
       console.log("error saving image section", error);
+      setloading(false)
     }
   };
 
@@ -333,7 +338,9 @@ function NewProductForm() {
             type="submit"
             className="w-full bg-indigo-500 p-3 rounded-md text-white font-medium focus:outline-none focus:shadow-outline-indigo active:bg-indigo-600"
           >
-            Create Image
+            {
+              loading ? "Creating Image ..." : "Create Image"
+            }
           </button>
         </div>
       </form>
