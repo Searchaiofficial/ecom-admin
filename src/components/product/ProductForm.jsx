@@ -870,9 +870,7 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register("specialprice.price", {
-                      required: "name is required",
-                    })}
+                    {...register("specialprice.price")}
                     id="specialprice"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
@@ -895,9 +893,7 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="date"
-                    {...register("specialprice.startDate", {
-                      required: "name is required",
-                    })}
+                    {...register("specialprice.startDate")}
                     id="specialstartdate"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
@@ -920,9 +916,7 @@ function ProductForm() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="date"
-                    {...register("specialprice.endDate", {
-                      required: "name is required",
-                    })}
+                    {...register("specialprice.endDate")}
                     id="specialenddate"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
