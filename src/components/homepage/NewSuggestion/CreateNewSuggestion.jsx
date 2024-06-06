@@ -243,9 +243,12 @@ function CreateNewSuggestion() {
     const category = e.target.value;
     setSelectedCategory(category);
   };
+
+  const [loading, setLoading] = useState(false)
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
+        setLoading(true)
         const formData = new FormData();
         console.log("Form-Data:", data);
         const subHeadingData = getValues("subHeadings");
@@ -261,7 +264,7 @@ function CreateNewSuggestion() {
           );
         });
 
-        factorsData.forEach((factor, index) => {
+        factorsData?.forEach((factor, index) => {
           formData.append(`factors[items][${index}][label]`, factor?.label);
         });
 
@@ -335,9 +338,11 @@ function CreateNewSuggestion() {
           );
           const responseData = await response.json();
           window.alert(responseData.message);
+          setLoading(false)
           // navigate("/admin");
         } catch (error) {
           console.error("Error uploading images:", error);
+          setLoading(false)
         }
 
         // reset();
@@ -867,7 +872,7 @@ function CreateNewSuggestion() {
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          Create Suggestion
+          {loading ? "creating Suggestion ..." : "Create Suggestion"}
         </Button>
       </div>
     </form>
