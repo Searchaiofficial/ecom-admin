@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import AdminNavbar from "../../AdminNavbar";
-import { useNavigate } from "react-router-dom";
+import { useAsyncValue, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../../config";
 import axios from "axios";
 
@@ -9,6 +9,7 @@ const BannerForm = () => {
   const { handleSubmit, register } = useForm();
   const navigate = useNavigate();
   const [roomTypes, setRoomTypes] = useState([]);
+  const [loading, setLoading] = useState(false)
 
 
   const fetchAllDifferentRoomTypes = async () => {
@@ -28,6 +29,7 @@ const BannerForm = () => {
 
 
   const onSubmit = async (data) => {
+    setLoading(true)
     const formData = new FormData();
 
     try {
@@ -50,9 +52,11 @@ const BannerForm = () => {
       });
       const res = await response.json();
       window.alert(res.message);
+      setLoading(false)
       // navigate("/homePage");
     } catch (error) {
       console.log("error saving image section", error);
+      setLoading(false)
     }
   };
 
@@ -203,7 +207,9 @@ const BannerForm = () => {
             type="submit"
             className="w-full bg-indigo-500 p-3 rounded-md text-white font-medium focus:outline-none focus:shadow-outline-indigo active:bg-indigo-600"
           >
-            Create Image
+            {
+              loading ? "Creating Image ..." : "Create Image"
+            }
           </button>
         </div>
       </form>
