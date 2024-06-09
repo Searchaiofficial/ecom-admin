@@ -9,7 +9,7 @@ const Slider = () => {
     useEffect(() => {
         fetch(`${BASE_URL}/api/getImgCircle?limit=${100}`)
             .then((response) => response.json())
-            .then((data) => setApiData(data.result))
+            .then((data) =>{ console.log(data.result); setApiData(data.result)})
             .catch((error) => console.error('Error fetching data:', error));
     }, []);
 
@@ -35,7 +35,7 @@ const Slider = () => {
                     {apiData && apiData.map((item) => (
                         // <div key={item._id} style={{ marginBottom: '20px', position: "relative" }} className='col-span-3 border'>
                         <div key={item._id} style={{ marginBottom: '20px', position: "relative" }} className='border mx-auto'>  
-                            <img src={item.imgSrc} alt="Product" style={{ maxWidth: '100%', width: "400px", height: "200px" }} />
+                            <img src={item.desktopImgSrc} alt="Product" style={{ maxWidth: '100%', width: "400px", height: "200px" }} />
                             {item.circles.length>0 && item.circles.map((circle) => (
                                 <div
                                     key={circle._id}
