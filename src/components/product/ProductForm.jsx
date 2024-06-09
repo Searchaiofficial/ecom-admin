@@ -97,6 +97,15 @@ function ProductForm() {
     name: "colors",
   });
 
+  const {
+    fields: productDimensions,
+    append: appendProductDimensions,
+    remove: removeProductDimensions,
+  } = useFieldArray({
+    control,
+    name: "productDimensions",
+  });
+
   // -------------------------------------------------
 
   const roomOptions = [
@@ -180,7 +189,7 @@ function ProductForm() {
   const [selectedPurchaseMode, setSelectedPurchaseMode] = useState([]);
   const [pdf, setPdf] = useState("");
   const [roomMultipleSelector, setRoomMultipleSelector] = useState([]);
-  const [demandTypes, setDemandTypes] = useState([])
+  const [demandTypes, setDemandTypes] = useState([]);
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
@@ -343,17 +352,18 @@ function ProductForm() {
     }
   };
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   return (
     <form
       noValidate
       // submit method of the form 💥
       onSubmit={handleSubmit(async (data) => {
-        setLoading(true)
+        setLoading(true);
         const formData = new FormData();
-        console.log("Form-Data:", data);
+        // console.log("Form-Data:", data);
         const coreValuesData = getValues("coreValues");
+        const productDimensionsData = getValues("productDimensions");
         const featuresData = getValues("features");
         const colorsData = getValues("colors");
         console.log("colorsData", colorsData);
@@ -386,30 +396,58 @@ function ProductForm() {
         formData.append("perUnitType", data.perUnitType);
         if (data.specialprice) {
           formData.append("specialprice[price]", data.specialprice.price);
-          formData.append("specialprice[startDate]", data.specialprice.startDate);
+          formData.append(
+            "specialprice[startDate]",
+            data.specialprice.startDate
+          );
           formData.append("specialprice[endDate]", data.specialprice.endDate);
         }
         // formData.append("specialprice", data.specialprice);
         formData.append("perUnitPrice", parseFloat(data.perUnitPrice));
-        // Convert dimensions to FormData
-        formData.append(
-          "dimensions[length][value]",
-          parseFloat(dimensions.length.value)
-        );
-        formData.append("dimensions[length][unit]", dimensions.length.unit);
-        formData.append(
-          "dimensions[width][value]",
-          parseFloat(dimensions.width.value)
-        );
-        formData.append("dimensions[width][unit]", dimensions.width.unit);
-        formData.append(
-          "dimensions[thickness][value]",
-          parseFloat(dimensions.thickness.value)
-        );
-        formData.append(
-          "dimensions[thickness][unit]",
-          dimensions.thickness.unit
-        );
+
+        // formData.append(
+        //   "dimensions[0][length][value]",
+        //   parseFloat(data.productDimensions[0].length.value)
+        // );
+        // formData.append(
+        //   "dimensions[0][length][unit]",
+        //   data.productDimensions[0].length.unit
+        // );
+        // formData.append(
+        //   "dimensions[0][width][value]",
+        //   parseFloat(data.productDimensions[0].width.value)
+        // );
+        // formData.append(
+        //   "dimensions[0][width][unit]",
+        //   data.productDimensions[0].width.unit
+        // );
+        // formData.append(
+        //   "dimensions[0][thickness][value]",
+        //   parseFloat(data.productDimensions[0].thickness.value)
+        // );
+        // formData.append(
+        //   "dimensions[0][thickness][unit]",
+        //   data.productDimensions[0].thickness.unit
+        // );
+
+        // formData.append(
+        //   "dimensions[length][value]",
+        //   parseFloat(dimensions.length.value)
+        // );
+        // formData.append("dimensions[length][unit]", dimensions.length.unit);
+        // formData.append(
+        //   "dimensions[width][value]",
+        //   parseFloat(dimensions.width.value)
+        // );
+        // formData.append("dimensions[width][unit]", dimensions.width.unit);
+        // formData.append(
+        //   "dimensions[thickness][value]",
+        //   parseFloat(dimensions.thickness.value)
+        // );
+        // formData.append(
+        //   "dimensions[thickness][unit]",
+        //   dimensions.thickness.unit
+        // );
 
         // Add images to FormData
         for (let i = 1; i <= 4; i++) {
@@ -458,6 +496,33 @@ function ProductForm() {
           );
         });
 
+        productDimensionsData.forEach((productDimension, index) => {
+          formData.append(
+            `dimensions[${index}][length][value]`,
+            productDimension?.length?.value || ""
+          );
+          formData.append(
+            `dimensions[${index}][length][unit]`,
+            productDimension?.length?.unit || ""
+          );
+          formData.append(
+            `dimensions[${index}][width][value]`,
+            productDimension?.width?.value || ""
+          );
+          formData.append(
+            `dimensions[${index}][width][unit]`,
+            productDimension?.width?.unit || ""
+          );
+          formData.append(
+            `dimensions[${index}][thickness][value]`,
+            productDimension?.thickness?.value || ""
+          );
+          formData.append(
+            `dimensions[${index}][thickness][unit]`,
+            productDimension?.thickness?.unit || ""
+          );
+        });
+
         // //  add PDF to FormData
         // formData.append('pdf', data.pdf[0]);
         formData.append("maintainanceDetails", data.maintainanceDetails);
@@ -471,11 +536,11 @@ function ProductForm() {
           });
           const responseData = await response.json();
           window.alert(responseData.message);
-          setLoading(false)
+          setLoading(false);
           // navigate("/admin");
         } catch (error) {
           console.error("Error uploading images:", error);
-          setLoading(false)
+          setLoading(false);
         }
 
         // reset();
@@ -591,10 +656,10 @@ function ProductForm() {
 
             <div className="sm:col-span-3">
               <label
-                htmlFor="collection"
+                htmlFor="shortDescription"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
               >
-                Short Description*
+                Collection*
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
@@ -651,43 +716,142 @@ function ProductForm() {
             </div>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <DimensionInput
-              label="Length"
-              value={dimensions.length.value}
-              unit={dimensions.length.unit}
-              onChange={(newValue) => handleDimensionChange("length", newValue)}
-            />
-            <DimensionInput
-              label="Width"
-              value={dimensions.width.value}
-              unit={dimensions.width.unit}
-              onChange={(newValue) => handleDimensionChange("width", newValue)}
-            />
-            <DimensionInput
-              label="Thickness"
-              value={dimensions.thickness.value}
-              unit={dimensions.thickness.unit}
-              onChange={(newValue) =>
-                handleDimensionChange("thickness", newValue)
-              }
-            />
-
-            <div className="mb-4">
-              <p className="bold">Selected Dimensions:</p>
-              <p>
-                <b className="mr-1">Length:</b> {dimensions.length.value}{" "}
-                {dimensions.length.unit}
-              </p>
-              <p>
-                <b className="mr-1">Width:</b> {dimensions.width.value}{" "}
-                {dimensions.width.unit}
-              </p>
-              <p>
-                <b className="mr-1">Thickness: </b>
-                {dimensions.thickness.value} {dimensions.thickness.unit}
-              </p>
+          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-2">
+              <label>Length :</label>
+              <input
+                type="number"
+                {...register(`productDimensions.${0}.length.value`)}
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+              />
+              <select {...register(`productDimensions.${0}.length.unit`)}>
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="in">in</option>
+                <option value="ft">ft</option>
+              </select>
             </div>
+            <div className="sm:col-span-2">
+              <label>Width :</label>
+              <input
+                type="number"
+                {...register(`productDimensions.${0}.width.value`)}
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+              />
+              <select {...register(`productDimensions.${0}.width.unit`)}>
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="in">in</option>
+                <option value="ft">ft</option>
+              </select>
+            </div>
+            <div className="sm:col-span-2">
+              <label>Thickness :</label>
+              <input
+                type="number"
+                {...register(`productDimensions.${0}.thickness.value`)}
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+              />
+              <select
+                {...register(`productDimensions.${0}.thickness.unit`)}
+                defaultValue="mm"
+              >
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m">m</option>
+                <option value="in">in</option>
+                <option value="ft">ft</option>
+              </select>
+            </div>
+          </div> */}
+          <div>
+            {productDimensions.map((productDimensions, index) => (
+              <div
+                className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
+                key={productDimensions.id}
+              >
+                <div className="sm:col-span-2">
+                  <label>Length :</label>
+                  <input
+                    type="number"
+                    {...register(`productDimensions.${index}.length.value`,{
+                      required: "Dimension is required",
+                    })}
+                    className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                  />
+                  <select
+                    {...register(`productDimensions.${index}.length.unit`,{
+                      required: "Dimension is required",
+                    })}
+                  >
+                    <option value="mm">mm</option>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="in">in</option>
+                    <option value="ft">ft</option>
+                  </select>
+                </div>
+                <div className="sm:col-span-2">
+                  <label>Width :</label>
+                  <input
+                    type="number"
+                    {...register(`productDimensions.${index}.width.value`, {
+                      required: "Dimension is required",
+                    })}
+                    className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                  />
+                  <select
+                    {...register(`productDimensions.${index}.width.unit`,{
+                      required: "Dimension is required",
+                    })}
+                  >
+                    <option value="mm">mm</option>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="in">in</option>
+                    <option value="ft">ft</option>
+                  </select>
+                </div>
+                <div className="sm:col-span-2">
+                  <label>Thickness :</label>
+                  <input
+                    type="number"
+                    {...register(`productDimensions.${index}.thickness.value`,{
+                      required: "Dimension is required",
+                    })}
+                    className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                  />
+                  <select
+                    {...register(`productDimensions.${index}.thickness.unit`,{
+                      required: "Dimension is required",
+                    })}
+                    defaultValue="mm"
+                  >
+                    <option value="mm">mm</option>
+                    <option value="cm">cm</option>
+                    <option value="m">m</option>
+                    <option value="in">in</option>
+                    <option value="ft">ft</option>
+                  </select>
+                </div>
+                <button
+                  className="bg-red-600 w-20 my-2 px-2 rounded-md"
+                  type="button"
+                  onClick={() => removeProductDimensions(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <button
+              className="bg-blue-600 h-[2rem] w-[8rem] mt-2 rounded-md"
+              type="button"
+              onClick={() => appendProductDimensions({})}
+            >
+              Add Dimension
+            </button>
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -1333,9 +1497,7 @@ function ProductForm() {
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          {
-            loading ? "Adding product..." : "Add product"
-          }
+          {loading ? "Adding product..." : "Add product"}
         </Button>
       </div>
     </form>
