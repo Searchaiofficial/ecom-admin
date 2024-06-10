@@ -521,6 +521,18 @@ function ProductForm() {
             `dimensions[${index}][thickness][unit]`,
             productDimension?.thickness?.unit || ""
           );
+          formData.append(
+            `dimensions[${index}][price]`,
+            productDimension?.price || ""
+          );
+          formData.append(
+            `dimensions[${index}][discountedprice]`,
+            productDimension?.discountedprice || ""
+          );
+          formData.append(
+            `dimensions[${index}][specialprice]`,
+            productDimension?.specialprice || ""
+          );
         });
 
         // //  add PDF to FormData
@@ -659,7 +671,7 @@ function ProductForm() {
                 htmlFor="shortDescription"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
               >
-                Collection*
+                Short description*
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
@@ -768,81 +780,150 @@ function ProductForm() {
           </div> */}
           <div>
             {productDimensions.map((productDimensions, index) => (
-              <div
-                className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
-                key={productDimensions.id}
-              >
-                <div className="sm:col-span-2">
-                  <label>Length :</label>
-                  <input
-                    type="number"
-                    {...register(`productDimensions.${index}.length.value`,{
-                      required: "Dimension is required",
-                    })}
-                    className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                  />
-                  <select
-                    {...register(`productDimensions.${index}.length.unit`,{
-                      required: "Dimension is required",
-                    })}
+              <div key={productDimensions.id}>
+                {index ===0 ? <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Standard Dimension {index+1}</h2>
+                :
+                <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Dimension {index + 1}</h2>
+                }
+                <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div className="sm:col-span-2">
+                    <label>Length :</label>
+                    <input
+                      type="number"
+                      {...register(`productDimensions.${index}.length.value`)}
+                      className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                    />
+                    <select
+                      {...register(`productDimensions.${index}.length.unit`)}
+                    >
+                      <option value="mm">mm</option>
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                      <option value="in">in</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label>Width :</label>
+                    <input
+                      type="number"
+                      {...register(`productDimensions.${index}.width.value`)}
+                      className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                    />
+                    <select
+                      {...register(`productDimensions.${index}.width.unit`)}
+                    >
+                      <option value="mm">mm</option>
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                      <option value="in">in</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label>Thickness :</label>
+                    <input
+                      type="number"
+                      {...register(
+                        `productDimensions.${index}.thickness.value`
+                      )}
+                      className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                    />
+                    <select
+                      {...register(
+                        `productDimensions.${index}.thickness.unit`
+                      )}
+                      defaultValue="mm"
+                    >
+                      <option value="mm">mm</option>
+                      <option value="cm">cm</option>
+                      <option value="m">m</option>
+                      <option value="in">in</option>
+                      <option value="ft">ft</option>
+                    </select>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor={`productDimensions.${index}.price`}
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Price
+                    </label>
+
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                        <input
+                          type="number"
+                          {...register(`productDimensions.${index}.price`, {
+                            required: "price is required",
+                            min: 1,
+                            max: 100000,
+                          })}
+                          id={`productDimensions.${index}.price`}
+                          className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor={`productDimensions.${index}.discountedprice`}
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Discounted Price
+                    </label>
+
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                        <input
+                          type="number"
+                          {...register(
+                            `productDimensions.${index}.discountedprice`,
+                            {
+                              min: 1,
+                              max: 10000,
+                            }
+                          )}
+                          id={`productDimensions.${index}.discountedprice`}
+                          className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label
+                      htmlFor={`productDimensions.${index}.specialprice`}
+                      className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                      Special Price
+                    </label>
+
+                    <div className="mt-2">
+                      <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                        <input
+                          type="number"
+                          {...register(
+                            `productDimensions.${index}.specialprice`,
+                            {
+                              min: 1,
+                              max: 10000,
+                            }
+                          )}
+                          id={`productDimensions.${index}.specialprice`}
+                          className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    className="bg-red-600 w-20 my-2 px-2 rounded-md"
+                    type="button"
+                    onClick={() => removeProductDimensions(index)}
                   >
-                    <option value="mm">mm</option>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="in">in</option>
-                    <option value="ft">ft</option>
-                  </select>
+                    Remove
+                  </button>
                 </div>
-                <div className="sm:col-span-2">
-                  <label>Width :</label>
-                  <input
-                    type="number"
-                    {...register(`productDimensions.${index}.width.value`, {
-                      required: "Dimension is required",
-                    })}
-                    className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                  />
-                  <select
-                    {...register(`productDimensions.${index}.width.unit`,{
-                      required: "Dimension is required",
-                    })}
-                  >
-                    <option value="mm">mm</option>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="in">in</option>
-                    <option value="ft">ft</option>
-                  </select>
-                </div>
-                <div className="sm:col-span-2">
-                  <label>Thickness :</label>
-                  <input
-                    type="number"
-                    {...register(`productDimensions.${index}.thickness.value`,{
-                      required: "Dimension is required",
-                    })}
-                    className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                  />
-                  <select
-                    {...register(`productDimensions.${index}.thickness.unit`,{
-                      required: "Dimension is required",
-                    })}
-                    defaultValue="mm"
-                  >
-                    <option value="mm">mm</option>
-                    <option value="cm">cm</option>
-                    <option value="m">m</option>
-                    <option value="in">in</option>
-                    <option value="ft">ft</option>
-                  </select>
-                </div>
-                <button
-                  className="bg-red-600 w-20 my-2 px-2 rounded-md"
-                  type="button"
-                  onClick={() => removeProductDimensions(index)}
-                >
-                  Remove
-                </button>
               </div>
             ))}
             <button
