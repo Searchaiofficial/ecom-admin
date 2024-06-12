@@ -37,6 +37,15 @@ function CreateCategory() {
         const file = fileInput?.files[0];
         formData.append(`image`, file);
 
+        const maintenanceDetails = document.getElementById(`maintenanceDetails`);
+        const maintenanceDetailsFile = maintenanceDetails?.files[0];
+        formData.append(`maintenanceDetails`, maintenanceDetailsFile);
+        console.log("maintenanceDetailsFile", maintenanceDetailsFile)
+
+        const certification = document.getElementById(`certification`);
+        const certificationFile = certification?.files[0];
+        formData.append(`certification`, certificationFile);
+
         for(var i=0; i<subCategoryData.length; i++) {
           const fileInput = document.getElementById(`subCategoriesImage${i + 1}`);
           const file = fileInput?.files[0];
@@ -60,7 +69,7 @@ function CreateCategory() {
           console.error("Error uploading images:", error);
         }
 
-        reset();
+        // reset();
         // setSelectedColors([]);
         // setSelectedPurchaseMode([]);
       })}
@@ -154,6 +163,47 @@ function CreateCategory() {
                   id="description"
                   className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 />
+              </div>
+            </div>
+          </div>
+
+          
+          <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="maintenanceDetails"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Maintenance Details*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="file"
+                    {...register("maintenanceDetails")}
+                    id="maintenanceDetails"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="certification"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Certification Details*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="file"
+                    {...register("certification")}
+                    id="certification"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
               </div>
             </div>
           </div>
