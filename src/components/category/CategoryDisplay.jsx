@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../config";
 
 const CategoryDisplay = () => {
   const [categoryData, setCategoryData] = useState([]);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     fetch(`${BASE_URL}/api/categories`)
@@ -23,6 +24,10 @@ const CategoryDisplay = () => {
 
     window.location.reload();
   };
+
+  const handleUpdate = (name) => {
+    navigate(`/category-update/:${name}`)
+  }
 
   return (
     <div className="mt-4 border-t border-red-400 py-4 mx-4">
@@ -63,10 +68,10 @@ const CategoryDisplay = () => {
 
                 <div className={`bg-zinc-200 p-8`}>
                   <h1 className="text-black text-lg font-bold mb-">
-                      {item.name}
+                    {item.name}
                   </h1>
                   <p className="text-gray-900 mb-1">
-                      {item?.description}
+                    {item?.description}
                   </p>
                   <h1 className=" text-red-500 mb-1">
                     ({item.subcategories.length} Subcategories)
@@ -99,6 +104,13 @@ const CategoryDisplay = () => {
                 onClick={() => handleDelete(item.name)}
               >
                 Delete
+              </button>
+              <button
+                type="button"
+                className="text-white w-full mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1"
+                onClick={() => handleUpdate(item.name)}
+              >
+                Update
               </button>
             </div>
           ))}

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 // import Review from '../homepage/review/Review';
 import { Button } from "@material-tailwind/react";
 import { BASE_URL } from "../../../config";
+import axios from "axios";
 
 const DimensionInput = ({ label, value, unit, onChange }) => {
   return (
@@ -279,6 +280,26 @@ function ProductForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, categoryOptions]);
+
+  console.log(selectedCategory)
+
+
+  const [categoryColors, setCategoryColors] = useState([])
+
+  useEffect(() => {
+    const fetchCategoryDetails = async () => {
+      const response = await axios.get(`${BASE_URL}/api/getCategoryByName/${selectedCategory}`)
+      console.log(response.data)
+      setCategoryColors(response.data?.avaliableColors)
+    }
+
+    if (selectedCategory) {
+      fetchCategoryDetails()
+    }
+
+  }, [selectedCategory])
+
+
 
   const getColorsForCategory = (category) => {
     switch (category) {
@@ -781,9 +802,9 @@ function ProductForm() {
           <div>
             {productDimensions.map((productDimensions, index) => (
               <div key={productDimensions.id}>
-                {index ===0 ? <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Standard Dimension {index+1}</h2>
-                :
-                <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Dimension {index + 1}</h2>
+                {index === 0 ? <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Standard Dimension {index + 1}</h2>
+                  :
+                  <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Dimension {index + 1}</h2>
                 }
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-2">
@@ -1183,7 +1204,7 @@ function ProductForm() {
             }}
           >
             <option value="">Select Color</option>
-            {getColorsForCategory(selectedCategory)
+            {categoryColors
               .filter((color) => !selectedColors.includes(color))
               .map((color, colorIndex) => (
                 <option key={colorIndex} value={color}>
@@ -1297,7 +1318,7 @@ function ProductForm() {
                   }}
                 >
                   <option value="">Select Color</option>
-                  {getColorsForCategory(selectedCategory)
+                  {categoryColors
                     .filter((color) => !selectedColors.includes(color))
                     .map((color, colorIndex) => (
                       <option key={colorIndex} value={color}>

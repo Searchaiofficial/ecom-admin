@@ -1,14 +1,26 @@
-import { useForm, useFieldArray,  } from "react-hook-form";
+import { useForm, useFieldArray, } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 // import Review from '../homepage/review/Review';
 import { Button } from "@material-tailwind/react";
 import { BASE_URL } from "../../../config";
+import { useState } from "react";
 
 function CreateCategory() {
   // form related
   const categoryType = ["Homedecor", "Walldecor", "Flooring"]
   const { register, handleSubmit, getValues, reset, control } = useForm();
+  const [colors, setColors] = useState([{ name: "" }]);
+  const addColorInput = () => {
+    setColors([...colors, { name: "" }]);
+  };
+  const handleColorChange = (index, event) => {
+    const newColors = [...colors];
+    newColors[index].name = event.target.value;
+    setColors(newColors);
+  };
+
+  console.log(colors)
 
   const {
     fields: subCategories,
@@ -45,8 +57,11 @@ function CreateCategory() {
         const certification = document.getElementById(`certification`);
         const certificationFile = certification?.files[0];
         formData.append(`certification`, certificationFile);
+        colors.forEach((color, index) => {
+          formData.append(`avaliableColors[${index}]`, color.name);
+        });
 
-        for(var i=0; i<subCategoryData.length; i++) {
+        for (var i = 0; i < subCategoryData.length; i++) {
           const fileInput = document.getElementById(`subCategoriesImage${i + 1}`);
           const file = fileInput?.files[0];
           formData.append(`subCategoriesImage`, file);
@@ -61,7 +76,7 @@ function CreateCategory() {
             headers: {
             },
             body: formData,
-        });
+          });
           const responseData = await response.json();
           window.alert(responseData.message);
           // navigate("/admin");
@@ -147,7 +162,7 @@ function CreateCategory() {
                   ))}
                 </select>
               </div>
-              </div>
+            </div>
           </div>
 
           <div className="mt-10">
@@ -167,7 +182,7 @@ function CreateCategory() {
             </div>
           </div>
 
-          
+
           <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-2">
               <label
@@ -207,10 +222,40 @@ function CreateCategory() {
               </div>
             </div>
           </div>
+          <div>
+            <p className="block text-sm font-medium leading-6 text-gray-900 font-bold mt-10 mb-5">
+              Category Colors
+            </p>
+
+            {/* Dynamic rendering of color inputs */}
+            <div className="flex items-center gap-4">
+              {colors.map((color, index) => (
+                <div key={index} className="flex flex-col items-start gap-2">
+                  <p className="text-sm font-semibold">Color {index + 1}</p>
+                  <input
+                    type="text"
+                    placeholder="Enter color"
+                    className="p-2 border"
+                    value={color.name}
+                    onChange={(e) => handleColorChange(index, e)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Button to add another color input */}
+            <button
+              type="button"
+              className="p-2 bg-blue-500 text-white rounded-lg mt-5"
+              onClick={addColorInput}
+            >
+              Add Another Color
+            </button>
+          </div>
 
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
-            Subcategory
+              Subcategory
             </label>
             {subCategories.map((subCategory, index) => (
               <div
@@ -279,7 +324,7 @@ function CreateCategory() {
               Add Subcategory
             </button>
           </div>
-  
+
         </div>
       </div>
 
