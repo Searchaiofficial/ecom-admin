@@ -43,6 +43,7 @@ function SliderForm() {
       formData.append(`mobileImgSrc`, file2);
 
       formData.append("imgTitle", data.imgTitle);
+      formData.append("link", data.link);
 
       const response = await fetch(`${BASE_URL}/api/createImgCricle`, {
         method: "POST",
@@ -121,6 +122,25 @@ function SliderForm() {
                   required: "imgTitle is required",
                 })}
                 id="imgTitle"
+                className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          
+          <label
+            htmlFor="Link"
+            className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+          >
+            Link
+          </label>
+          <div className="mt-2">
+            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+              <input
+                type="text"
+                {...register("link", {
+                  required: "link is required",
+                })}
+                id="link"
                 className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
               />
             </div>
