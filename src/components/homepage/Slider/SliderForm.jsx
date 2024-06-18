@@ -1,12 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import AdminNavbar from "../../AdminNavbar";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../../config";
+import axios, { all } from "axios";
 
 function SliderForm() {
   const { handleSubmit, control, register } = useForm();
   const navigate = useNavigate();
+  const [selectedOption, setSelectedOption] = useState("offer");
+  const [allCategory, setAllCategory] = useState("")
+  const [demandTypes, setDemandTypes] = useState([])
+  const [offerTypes, setOffertypes] = useState([])
+
+  const fetchAllCategory = async () => {
+    try {
+      const responce = await axios.get(`${BASE_URL}/api/categories`)
+      setAllCategory(responce.data)
+      console.log(responce.data)
+    } catch (error) {
+      console.log("FETCH DEMAND TYPES ERROR :", error)
+    }
+  }
+
+  const fetchDemandTypes = async () => {
+    try {
+      const responce = await axios.get(`${BASE_URL}/api/getAllDemandTypes`)
+      setDemandTypes(responce.data)
+
+    } catch (error) {
+      console.log("FETCH DEMAND TYPES ERROR :", error)
+    }
+  }
+
+  const fetchOfferTypes = async () => {
+    try {
+      const responce = await axios.get(`${BASE_URL}/api/getAllOffers`)
+      setOffertypes(responce.data)
+
+    } catch (error) {
+      console.log("FETCH DEMAND TYPES ERROR :", error)
+    }
+  }
+
+  useState(() => {
+    fetchAllCategory()
+    fetchDemandTypes()
+    fetchOfferTypes()
+  }, [])
 
   const onSubmit = async (data) => {
     try {
@@ -37,13 +78,25 @@ function SliderForm() {
       const fileInput1 = document.getElementById(`image1`);
       const file1 = fileInput1?.files[0];
       formData.append(`desktopImgSrc`, file1);
-      
+
       const fileInput2 = document.getElementById(`image2`);
       const file2 = fileInput2?.files[0];
       formData.append(`mobileImgSrc`, file2);
 
       formData.append("imgTitle", data.imgTitle);
-      formData.append("link", data.link);
+      // formData.append("link", data.link);
+      formData.append("category", data.category)
+      formData.append("type", selectedOption);
+
+      if (selectedOption === "demand") {
+
+        formData.append("demand", data.demand)
+      }
+
+      if (selectedOption === "offer") {
+
+        formData.append("offer", data.offer)
+      }
 
       const response = await fetch(`${BASE_URL}/api/createImgCricle`, {
         method: "POST",
@@ -53,7 +106,7 @@ function SliderForm() {
 
       const responseData = await response.json();
       window.alert(responseData.message);
-    //   navigate("/homePage");
+      navigate("/homePage");
     } catch (error) {
       console.log(error);
     }
@@ -71,7 +124,7 @@ function SliderForm() {
             htmlFor="image1"
             className="block text-sm font-medium leading-6 text-gray-900 font-bold"
           >
-            Desktop Image 
+            Desktop Image
           </label>
           <div className="mt-2">
             <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
@@ -83,7 +136,7 @@ function SliderForm() {
                 id="image1"
                 className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 accept="image/*"
-                // onChange={(e) => handleImageChange(e, 1)}
+              // onChange={(e) => handleImageChange(e, 1)}
               />
             </div>
           </div>
@@ -91,7 +144,7 @@ function SliderForm() {
             htmlFor="image2"
             className="block text-sm font-medium leading-6 text-gray-900 font-bold"
           >
-            Mobile Image 
+            Mobile Image
           </label>
           <div className="mt-2">
             <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
@@ -103,7 +156,7 @@ function SliderForm() {
                 id="image2"
                 className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 accept="image/*"
-                // onChange={(e) => handleImageChange(e, 1)}
+              // onChange={(e) => handleImageChange(e, 1)}
               />
             </div>
           </div>
@@ -126,8 +179,8 @@ function SliderForm() {
               />
             </div>
           </div>
-          
-          <label
+
+          {/* <label
             htmlFor="Link"
             className="block text-sm font-medium leading-6 text-gray-900 font-bold"
           >
@@ -144,7 +197,142 @@ function SliderForm() {
                 className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
               />
             </div>
+          </div> */}
+
+
+          {
+            allCategory && allCategory.length > 0 && (
+              <>
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+                >
+                  Category
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <select
+                      {...register("category", {
+                        required: "category is required",
+                      })}
+                      id="category"
+                      className="block flex-1 border-0 bg-transparent p-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    >
+                      <option key={0} value={null}>
+                        ------
+                      </option>
+
+                      {allCategory?.map((item) => (
+                        <option key={item._id} value={item.name}>
+                          {item.name}
+                        </option>
+                      ))}
+
+                    </select>
+                  </div>
+                </div>
+              </>
+            )
+          }
+
+          <div className="mt-8">
+            <label className="block text-sm font-medium leading-5 text-gray-700">
+              Type
+            </label>
+            <div className="mt-2">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  value="offer"
+                  checked={selectedOption === "offer"}
+                  onChange={() => setSelectedOption("offer")}
+                  className="form-radio"
+                />
+                <span className="ml-2">Offer</span>
+              </label>
+              <label className="inline-flex items-center ml-6">
+                <input
+                  type="radio"
+                  value="demand"
+                  checked={selectedOption === "demand"}
+                  onChange={() => setSelectedOption("demand")}
+                  className="form-radio"
+                />
+                <span className="ml-2">Demand</span>
+              </label>
+            </div>
           </div>
+
+          {
+            selectedOption === "offer" && (
+              <>
+                <label
+                  htmlFor="offer"
+                  className="block mt-4 text-sm font-medium leading-6 text-gray-900 font-bold"
+                >
+                  Offer
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <select
+                      {...register("offer", {
+                        required: "offer is required",
+                      })}
+                      id="offer"
+                      className="block flex-1 border-0 bg-transparent p-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    >
+                      <option key={0} value={null}>
+                        ------
+                      </option>
+
+                      {offerTypes?.map((item) => (
+                        <option key={item._id} value={item.type}>
+                          {item.type}
+                        </option>
+                      ))}
+
+                    </select>
+                  </div>
+                </div>
+              </>
+            )
+          }
+          {
+            selectedOption === "demand" && (
+              <>
+                <label
+                  htmlFor="demand"
+                  className="block mt-4 text-sm font-medium leading-6 text-gray-900 font-bold"
+                >
+                  Demand
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <select
+                      {...register("demand", {
+                        required: "demand is required",
+                      })}
+                      id="demand"
+                      className="block flex-1 border-0 bg-transparent p-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    >
+                      <option key={0} value={null}>
+                        ------
+                      </option>
+
+                      {demandTypes?.map((item) => (
+                        <option key={item._id} value={item.type}>
+                          {item.type}
+                        </option>
+                      ))}
+
+                    </select>
+                  </div>
+                </div>
+              </>
+            )
+          }
+
+
 
           <label className="block text-sm font-medium leading-5 text-gray-700 mt-4">
             Circles
