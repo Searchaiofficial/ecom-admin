@@ -90,7 +90,7 @@ function SliderForm() {
 
       if (selectedOption === "demand") {
 
-        formData.append("demand", data.demand)
+        formData.append("demandtype", data.demand)
       }
 
       if (selectedOption === "offer") {
@@ -106,7 +106,7 @@ function SliderForm() {
 
       const responseData = await response.json();
       window.alert(responseData.message);
-      navigate("/homePage");
+      // navigate("/homePage");
     } catch (error) {
       console.log(error);
     }
