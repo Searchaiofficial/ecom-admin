@@ -10,17 +10,31 @@ function CreateCategory() {
   // form related
   const categoryType = ["Homedecor", "Walldecor", "Flooring"]
   const { register, handleSubmit, getValues, reset, control } = useForm();
-  const [colors, setColors] = useState([{ name: "" }]);
+  const [colors, setColors] = useState([{ name: "", hexCode: "" }]);
+  const [services, SetServices] = useState([{ name: "", cost: "" }])
+
   const addColorInput = () => {
-    setColors([...colors, { name: "" }]);
+    setColors([...colors, { name: "", hexCode: "" }]);
   };
-  const handleColorChange = (index, event) => {
+
+  const addServiceInput = () => [
+    SetServices([...services, { name: "", cost: "" }])
+  ]
+
+  const handleColorChange = (index, field, value) => {
     const newColors = [...colors];
-    newColors[index].name = event.target.value;
+    newColors[index][field] = value;
     setColors(newColors);
   };
 
+  const handleServiceChange = (index, field, value) => {
+    const newService = [...services];
+    newService[index][field] = value;
+    SetServices(newService)
+  }
+
   console.log(colors)
+  console.log(services)
 
   const {
     fields: subCategories,
@@ -32,10 +46,12 @@ function CreateCategory() {
   });
 
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
 
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
+        setLoading(true)
         const formData = new FormData();
 
         const subCategoryData = getValues("subCategories");
@@ -45,43 +61,53 @@ function CreateCategory() {
 
         formData.append("name", data.name);
 
-        const fileInput = document.getElementById(`image`);
+        const fileInput = document.getElementById("image");
         const file = fileInput?.files[0];
-        formData.append(`image`, file);
+        formData.append("image", file);
 
-        const maintenanceDetails = document.getElementById(`maintenanceDetails`);
+        const maintenanceDetails = document.getElementById("maintenanceDetails");
         const maintenanceDetailsFile = maintenanceDetails?.files[0];
-        formData.append(`maintenanceDetails`, maintenanceDetailsFile);
-        console.log("maintenanceDetailsFile", maintenanceDetailsFile)
+        formData.append("maintenanceDetails", maintenanceDetailsFile);
 
-        const certification = document.getElementById(`certification`);
+        const certification = document.getElementById("certification");
         const certificationFile = certification?.files[0];
-        formData.append(`certification`, certificationFile);
+        formData.append("certification", certificationFile);
+
         colors.forEach((color, index) => {
-          formData.append(`avaliableColors[${index}]`, color.name);
+          formData.append(`availableColors[${index}][name]`, color.name);
+          formData.append(`availableColors[${index}][hexCode]`, color.hexCode);
         });
 
-        for (var i = 0; i < subCategoryData.length; i++) {
-          const fileInput = document.getElementById(`subCategoriesImage${i + 1}`);
-          const file = fileInput?.files[0];
-          formData.append(`subCategoriesImage`, file);
-        }
+        services.forEach((service, index) => {
+          formData.append(`availableServices[${index}][name]`, service.name);
+          formData.append(`availableServices[${index}][cost]`, service.cost);
+        });
+
+        subCategoryData.forEach((_, i) => {
+          const subCatImage = document.getElementById(`subCategoriesImage${i + 1}`);
+          const subCatFile = subCatImage?.files[0];
+          formData.append("subCategoriesImage", subCatFile);
+        });
 
         formData.append("type", data.type);
         formData.append("description", data.description);
-        // --------- 💥 api call 💥 -------
+
+        // for (const [key, value] of formData.entries()) {
+        //   console.log(`${key}: ${value}`);
+        // }
+
         try {
           const response = await fetch(`${BASE_URL}/api/createCategory`, {
-            method: 'POST',
-            headers: {
-            },
+            method: "POST",
             body: formData,
           });
           const responseData = await response.json();
           window.alert(responseData.message);
           // navigate("/admin");
+          setLoading(false)
         } catch (error) {
           console.error("Error uploading images:", error);
+          setLoading(false)
         }
 
         // reset();
@@ -224,20 +250,64 @@ function CreateCategory() {
           </div>
           <div>
             <p className="block text-sm font-medium leading-6 text-gray-900 font-bold mt-10 mb-5">
+              Catregory Services
+            </p>
+
+            {/* Dynamic rendering of color inputs */}
+            <div className="flex flex-wrap gap-4">
+              {services.map((service, index) => (
+                <div key={index} className="flex flex-col items-start gap-2">
+                  <p className="text-sm font-semibold">Service {index + 1}</p>
+                  <input
+                    type="text"
+                    placeholder="Enter Service name"
+                    className="p-2 border"
+                    value={service.name}
+                    onChange={(e) => handleServiceChange(index, "name", e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter Service cost"
+                    className="p-2 border"
+                    value={service.cost}
+                    onChange={(e) => handleServiceChange(index, "cost", e.target.value)}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Button to add another color input */}
+            <button
+              type="button"
+              className="p-2 bg-blue-500 text-white rounded-lg mt-5"
+              onClick={addServiceInput}
+            >
+              Add Another Service
+            </button>
+          </div>
+          <div>
+            <p className="block text-sm font-medium leading-6 text-gray-900 font-bold mt-10 mb-5">
               Category Colors
             </p>
 
             {/* Dynamic rendering of color inputs */}
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap gap-4">
               {colors.map((color, index) => (
                 <div key={index} className="flex flex-col items-start gap-2">
                   <p className="text-sm font-semibold">Color {index + 1}</p>
                   <input
                     type="text"
-                    placeholder="Enter color"
+                    placeholder="Enter color name"
                     className="p-2 border"
                     value={color.name}
-                    onChange={(e) => handleColorChange(index, e)}
+                    onChange={(e) => handleColorChange(index, "name", e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Enter hex code"
+                    className="p-2 border"
+                    value={color.hexCode}
+                    onChange={(e) => handleColorChange(index, "hexCode", e.target.value)}
                   />
                 </div>
               ))}
@@ -341,7 +411,9 @@ function CreateCategory() {
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          Create Category
+          {
+            loading ? "Creating Category..." : "Create Category"
+          }
         </Button>
       </div>
     </form>

@@ -290,7 +290,7 @@ function ProductForm() {
     const fetchCategoryDetails = async () => {
       const response = await axios.get(`${BASE_URL}/api/getCategoryByName/${selectedCategory}`)
       console.log(response.data)
-      setCategoryColors(response.data?.avaliableColors)
+      setCategoryColors(response.data?.availableColors)
     }
 
     if (selectedCategory) {
@@ -1207,8 +1207,8 @@ function ProductForm() {
             {categoryColors
               .filter((color) => !selectedColors.includes(color))
               .map((color, colorIndex) => (
-                <option key={colorIndex} value={color}>
-                  {color}
+                <option key={colorIndex} value={`${color.name}`}>
+                  {color.name}
                 </option>
               ))}
           </select>
@@ -1321,8 +1321,8 @@ function ProductForm() {
                   {categoryColors
                     .filter((color) => !selectedColors.includes(color))
                     .map((color, colorIndex) => (
-                      <option key={colorIndex} value={color}>
-                        {color}
+                      <option key={colorIndex} value={`${color.name}`}>
+                        {color.name}
                       </option>
                     ))}
                 </select>
