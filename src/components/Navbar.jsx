@@ -109,6 +109,12 @@ const Navbar = () => {
             </Link>
           </div>
         </li>
+        <li className="pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full">
+          <img className='inline-block ml-4' 
+            src="/Images/package.png"
+          alt="edit-admins" width={20} height={20} />
+          <Link to="/edit-admins" className="ml-4">Edit Admins</Link>
+        </li>
         <li className='pl-3 pt-1.5 pb-1.5 text-lg  rounded-full'>
           <img className='inline-block ml-4 float-left' src="/Images/order.png" alt="order" width={20} height={20} />
 

@@ -51,6 +51,7 @@ import OfferPage from "./Pages/offer-page";
 import UpdateProduct from "./Pages/update-product";
 import InstagramHashtagSlider from "./components/homepage/InstagramHashtagSlider.jsx";
 import CategoryUpdate from "./Pages/update-category.jsx";
+import EditAdmins from "./Pages/EditAdmins.jsx";
 
 export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -512,6 +513,15 @@ export default function App() {
           element={
             <Protected>
               <UpdateProduct />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/edit-admins"
+          element={
+            <Protected>
+              <EditAdmins />
             </Protected>
           }
         ></Route>
