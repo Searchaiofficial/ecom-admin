@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { updateLiveRoomAdmin } from "../../api-handlers/liveRoomAdmin";
 import { useEffect } from "react";
+import SelectCategoryDropdown from "../homepage/InstagramHashtagSlider.jsx/SelectCategoryDropdown";
 
 const EditAdminDialog = ({
   setIsEditAdminDialogOpen,
@@ -8,20 +9,24 @@ const EditAdminDialog = ({
   id,
   email,
   name,
+  topic,
 }) => {
   const [formData, setFormData] = useState({
     email: email,
     name: name,
   });
 
+  const [selectedCategory, setSelectedCategory] = useState({});
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { email, name } = formData;
+    const topic = selectedCategory?.name;
 
     if (!email) return;
 
-    await updateLiveRoomAdmin({ id, email, name });
+    await updateLiveRoomAdmin({ id, email, name, topic });
     await refreshAdmins();
 
     setIsEditAdminDialogOpen(false);
@@ -79,6 +84,7 @@ const EditAdminDialog = ({
                 setFormData({ ...formData, name: e.target.value })
               }
             />
+            <SelectCategoryDropdown setSelectedCategory={setSelectedCategory} />
             <button className="px-4 py-2 transition rounded-md bg-slate-500 text-white hover:bg-slate-500/90">
               Save
             </button>

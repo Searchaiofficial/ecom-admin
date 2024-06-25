@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { addLiveRoomAdmin } from "../../api-handlers/liveRoomAdmin";
+import SelectCategoryDropdown from "../homepage/InstagramHashtagSlider.jsx/SelectCategoryDropdown";
 
 const AddAdmin = ({ refreshAdmins }) => {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
   });
+
+  const [selectedCategory, setSelectedCategory] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,10 +17,11 @@ const AddAdmin = ({ refreshAdmins }) => {
 
     if (!email) return;
 
-    await addLiveRoomAdmin({ email, name });
+    await addLiveRoomAdmin({ email, name, topic: selectedCategory?.name });
     await refreshAdmins();
 
     setFormData({ email: "", name: "" });
+    setSelectedCategory({});
   };
 
   return (
@@ -41,6 +45,10 @@ const AddAdmin = ({ refreshAdmins }) => {
           className="border border-gray-300 rounded-md p-2"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        />
+        <SelectCategoryDropdown
+          setSelectedCategory={setSelectedCategory}
+          initialValue=""
         />
         <button className="px-4 py-2 transition rounded-md bg-slate-500 text-white hover:bg-slate-500/90">
           Add

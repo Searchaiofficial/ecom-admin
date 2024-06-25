@@ -20,11 +20,12 @@ export const deleteLiveRoomAdmin = async (id) => {
   }
 };
 
-export const addLiveRoomAdmin = async ({ name, email }) => {
+export const addLiveRoomAdmin = async ({ name, email, topic }) => {
   try {
     const response = await axios.post(`${baseURL}/api/liveroomadmin`, {
       name,
       email,
+      topic,
     });
     return response.data;
   } catch (error) {
@@ -32,11 +33,12 @@ export const addLiveRoomAdmin = async ({ name, email }) => {
   }
 };
 
-export const updateLiveRoomAdmin = async ({ id, name, email }) => {
+export const updateLiveRoomAdmin = async ({ id, name, email, topic }) => {
   try {
     const response = await axios.patch(`${baseURL}/api/liveroomadmin/${id}`, {
       name,
       email,
+      topic,
     });
     return response.data;
   } catch (error) {

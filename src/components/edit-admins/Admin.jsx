@@ -2,7 +2,7 @@ import { useState } from "react";
 import { deleteLiveRoomAdmin } from "../../api-handlers/liveRoomAdmin";
 import EditAdminDialog from "./EditAdminDialog";
 
-const Admin = ({ admin: { _id: id, email, name }, refreshAdmins }) => {
+const Admin = ({ admin: { _id: id, email, name, topic }, refreshAdmins }) => {
   const [isEditAdminDialogOpen, setIsEditAdminDialogOpen] = useState(false);
 
   const deleteAdmin = async () => {
@@ -18,11 +18,17 @@ const Admin = ({ admin: { _id: id, email, name }, refreshAdmins }) => {
           id={id}
           email={email}
           name={name}
+          topic={topic}
           refreshAdmins={refreshAdmins}
         />
       ) : null}
-      <li className="p-2 border border-gray-300 rounded-md flex flex-grow justify-between items-center max-w-2xl">
+      <li className="p-2 border border-gray-300 rounded-md flex flex-wrap flex-grow justify-between items-center max-w-2xl">
         <p>{email}</p>
+        {!!topic ? (
+          <p className="mx-2 font-bold text-sm px-2 py-2 border rounded-md">
+            {topic}
+          </p>
+        ) : null}
         <div className="ml-auto flex flex-wrap gap-2">
           <button
             onClick={() => setIsEditAdminDialogOpen((prev) => !prev)}
