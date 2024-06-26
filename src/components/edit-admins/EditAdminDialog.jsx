@@ -9,10 +9,8 @@ const EditAdminDialog = ({
   id,
   email,
   name,
-  topic,
 }) => {
   const [formData, setFormData] = useState({
-    email: email,
     name: name,
   });
 
@@ -21,12 +19,10 @@ const EditAdminDialog = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { email, name } = formData;
+    const { name } = formData;
     const topic = selectedCategory?.name;
 
-    if (!email) return;
-
-    await updateLiveRoomAdmin({ id, email, name, topic });
+    await updateLiveRoomAdmin({ id, name, topic });
     await refreshAdmins();
 
     setIsEditAdminDialogOpen(false);
@@ -65,16 +61,6 @@ const EditAdminDialog = ({
         <div className="flex flex-col gap-2 w-full">
           <hr className="w-full" />
           <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full">
-            <input
-              type="email"
-              required
-              placeholder="Email"
-              className="border border-gray-300 rounded-md p-2"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
             <input
               type="text"
               placeholder="Name"

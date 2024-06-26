@@ -33,11 +33,10 @@ export const addLiveRoomAdmin = async ({ name, email, topic }) => {
   }
 };
 
-export const updateLiveRoomAdmin = async ({ id, name, email, topic }) => {
+export const updateLiveRoomAdmin = async ({ id, name, topic }) => {
   try {
     const response = await axios.patch(`${baseURL}/api/liveroomadmin/${id}`, {
       name,
-      email,
       topic,
     });
     return response.data;
