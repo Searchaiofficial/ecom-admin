@@ -10,7 +10,9 @@ function RoomForm() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const productId = searchParams.get("productId");
+  const productObjectId = searchParams.get("productObjectId");
   const params = useParams();
+
 
   const [loading, setLoading] = useState(false)
 
@@ -45,6 +47,7 @@ function RoomForm() {
       formData.append(`image`, file);
       formData.append("roomType", params.roomType);
       formData.append("productId", productId);
+      formData.append("productObjectId", productObjectId);
 
       const response = await fetch(`${BASE_URL}/api/createRoom`, {
         method: "POST",

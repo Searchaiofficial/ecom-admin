@@ -415,6 +415,7 @@ function ProductForm() {
         formData.append("totalPricePerUnit", data.totalPricePerUnit);
         formData.append("discountedprice", data.discountedprice);
         formData.append("perUnitType", data.perUnitType);
+        formData.append("material", data.material);
         if (data.specialprice) {
           formData.append("specialprice[price]", data.specialprice.price);
           formData.append(
@@ -1037,6 +1038,26 @@ function ProductForm() {
                       required: "designStyle is required",
                     })}
                     id="designStyle"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="material"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Material*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register("material", {
+                      required: "material is required",
+                    })}
+                    id="material"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>

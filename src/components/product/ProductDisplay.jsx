@@ -43,11 +43,14 @@ const ProductDisplay = () => {
       .catch((error) => console.error("Error deleting data:", error));
   };
 
-  const handleRoom = (room, id) => {
-    navigate(`/homePage/create-room-section/${room}?productId=${id}`);
+  const handleRoom = (room, id, productObjectId) => {
+    console.log(id)
+    console.log(productObjectId)
+    navigate(`/homePage/create-room-section/${room}?productId=${id}&productObjectId=${productObjectId}`);
   };
 
   const handleToggleReadMore = (productId) => {
+    console.log(productId)
     setExpandedProduct((prev) => (prev === productId ? null : productId));
   };
 
@@ -104,7 +107,7 @@ const ProductDisplay = () => {
                             <button
                               key={index}
                               onClick={() =>
-                                handleRoom(category, product.productId)
+                                handleRoom(category, product.productId, product._id)
                               }
                               className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                             >
@@ -115,11 +118,11 @@ const ProductDisplay = () => {
                         <p>
                           <b>Style:</b> {product.style}
                         </p>
-                        <p>
+                        {/* <p>
                           <b>Dimensions:</b> {product.dimensions.length.value}{" "}
                           mm x {product.dimensions.width.value} mm x{" "}
                           {product.dimensions.thickness.value} mm
-                        </p>
+                        </p> */}
                         <p>
                           <b>Colors:</b> {product.colors.join(", ")}
                         </p>
