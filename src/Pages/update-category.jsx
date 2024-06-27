@@ -15,6 +15,9 @@ const CategoryUpdate = () => {
     const [editSubCategoryId, setEditSubCategoryId] = useState(null);
     const [message, setMessage] = useState("");
 
+    const [metadataTitle, setMetadataTitle] = useState("");
+    const [metadataMessage, setMetadataMessage] = useState("");
+
     // Fetch category details on component mount
     useEffect(() => {
         const fetchCategoryDetails = async () => {
@@ -23,6 +26,7 @@ const CategoryUpdate = () => {
                     `${BASE_URL}/api/getCategoryByName/${name}`
                 );
                 setCategoryDetails(response.data);
+                setMetadataTitle(response.data.metadata?.title || "");
             } catch (error) {
                 console.error("Error fetching category details:", error);
             }
@@ -36,6 +40,22 @@ const CategoryUpdate = () => {
         const file = e.target.files[0];
         setImage(file);
     };
+
+    const handleUpdateMetadata = async () => {
+        try {
+            const response = await axios.patch(
+              `${BASE_URL}/api/updatecategorymetadata/${categoryDetails.name}`,
+              {
+                metadataTitle,
+              }
+            );
+
+            setMetadataMessage(response.data.message);
+          } catch (error) {
+            console.error("Error updating metadata:", error);
+            setMetadataMessage("Error updating metadata");
+          }
+    }
 
     // Create a new subcategory
     const handleCreateSubcategory = async () => {
@@ -146,6 +166,33 @@ const CategoryUpdate = () => {
                 <p className="text-md font-semibold mt-2">
                     {categoryDetails?.description}
                 </p>
+            </div>
+
+            {/* Metadata */}
+            <h1 className="mt-4 text-lg font-semibold">Metadata</h1>
+            <div className="flex flex-col self-start ml-20 my-5">
+                <p className="font-semibold text-lg my-4">Metadata</p>
+                <div className="flex items-center">
+                    <label className="w-full flex justify-between gap-10 items-center">
+                        <span>
+                            Metadata Title
+                        </span>
+                        <input
+                            type="text"
+                            placeholder="Enter metadata title"
+                            className="border p-2 border-black rounded-md"
+                            value={metadataTitle}
+                            onChange={(e) => setMetadataTitle(e.target.value)}
+                        />
+                    </label>
+                </div>
+                <button
+                    className="bg-blue-500 p-2 rounded-lg mt-4 text-white hover:bg-blue-700"
+                    onClick={handleUpdateMetadata}
+                >
+                    Update Metadata
+                </button>
+                {metadataMessage && <p className="mt-4 text-red-500">{metadataMessage}</p>}
             </div>
 
             {/* Subcategories */}
