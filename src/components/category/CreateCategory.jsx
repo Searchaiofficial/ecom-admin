@@ -61,6 +61,9 @@ function CreateCategory() {
 
         formData.append("name", data.name);
 
+        const metadataTitle = document.getElementById("metadataTitle");
+        formData.append("metadataTitle", metadataTitle?.value);
+
         const fileInput = document.getElementById("image");
         const file = fileInput?.files[0];
         formData.append("image", file);
@@ -139,6 +142,25 @@ function CreateCategory() {
                       required: "title is required",
                     })}
                     id="title"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Category Metadata Title
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register("metadataTitle")}
+                    id="metadataTitle"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
