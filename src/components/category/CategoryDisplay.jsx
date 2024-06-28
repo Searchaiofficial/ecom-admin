@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../config";
+import axios from "axios";
 
 const CategoryDisplay = () => {
   const [categoryData, setCategoryData] = useState([]);
@@ -14,15 +15,13 @@ const CategoryDisplay = () => {
       .catch((error) => console.error("Error fetching images data:", error));
   }, []);
 
-  const handleDelete = (name) => {
-    fetch(`${BASE_URL}/api/deleteCategory/${name}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => setCategoryData(data))
-      .catch((error) => console.error("Error deleting data:", error));
-
-    window.location.reload();
+  const handleDelete = async (name) => {
+    try {
+      await axios.delete(`${BASE_URL}/api/deleteCategory/${name}`)
+      window.location.reload();
+    } catch (error) {
+      console.log("Error deleteing category", error)
+    }
   };
 
   const handleUpdate = (name) => {
