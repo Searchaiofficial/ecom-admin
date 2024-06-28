@@ -1,10 +1,10 @@
 import axios from "axios";
+import { BASE_URL } from "../../config";
 
-const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 export const getInstagramHashtagPosts = async () => {
   try {
-    const response = await axios.get(`${baseURL}/api/hashtagpost`);
+    const response = await axios.get(`${BASE_URL}/api/hashtagpost`);
     return response.data;
   } catch (error) {
     console.log(error.message);

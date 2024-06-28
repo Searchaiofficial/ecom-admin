@@ -1,10 +1,9 @@
 import axios from "axios";
-
-const baseURL = import.meta.env.VITE_REACT_APP_BASE_URL;
+import { BASE_URL } from "../../config";
 
 export const getLiveRoomAdmins = async () => {
   try {
-    const response = await axios.get(`${baseURL}/api/liveroomadmin`);
+    const response = await axios.get(`${BASE_URL}/api/liveroomadmin`);
     return response.data;
   } catch (error) {
     console.log(error.message);
