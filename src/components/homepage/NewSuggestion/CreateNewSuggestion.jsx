@@ -330,7 +330,7 @@ function CreateNewSuggestion() {
         // --------- 💥 api call 💥 -------
         try {
           const response = await fetch(
-            `http://localhost:4000/api/createSuggestion`,
+            `${BASE_URL}/api/createSuggestion`,
             {
               method: "POST",
               body: formData,
