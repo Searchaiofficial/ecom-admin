@@ -19,9 +19,10 @@ const NewSuggestion = () => {
     })
       .then((response) => response.json())
       .then((data) => setSuggestionData(data))
-      .catch((error) => console.error("Error deleting data:", error));
-      
-    window.location.reload();
+      .catch((error) => console.error("Error deleting data:", error))
+      .finally(() => {
+        window.location.reload();
+      });
   };
 
   return (
@@ -30,7 +31,9 @@ const NewSuggestion = () => {
         <h1 className="font-bold ">New Suggestion</h1>
         <span
           className="text-red-400  mt-1 hover:cursor-pointer"
-          onClick={() => navigate("/update-home-page/create-new-suggestion-section")}
+          onClick={() =>
+            navigate("/update-home-page/create-new-suggestion-section")
+          }
         >
           Create New
         </span>
