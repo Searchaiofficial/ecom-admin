@@ -177,7 +177,7 @@ function ProductForm() {
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [subCategoryOptions, setSubCategoryOptions] = useState([]);
-
+  const [productType, setProductType] = useState("normal");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [selectedColors, setSelectedColors] = useState([]);
@@ -281,25 +281,23 @@ function ProductForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, categoryOptions]);
 
-  console.log(selectedCategory)
+  console.log(selectedCategory);
 
-
-  const [categoryColors, setCategoryColors] = useState([])
+  const [categoryColors, setCategoryColors] = useState([]);
 
   useEffect(() => {
     const fetchCategoryDetails = async () => {
-      const response = await axios.get(`${BASE_URL}/api/getCategoryByName/${selectedCategory}`)
-      console.log(response.data)
-      setCategoryColors(response.data?.availableColors)
-    }
+      const response = await axios.get(
+        `${BASE_URL}/api/getCategoryByName/${selectedCategory}`
+      );
+      console.log(response.data);
+      setCategoryColors(response.data?.availableColors);
+    };
 
     if (selectedCategory) {
-      fetchCategoryDetails()
+      fetchCategoryDetails();
     }
-
-  }, [selectedCategory])
-
-
+  }, [selectedCategory]);
 
   const getColorsForCategory = (category) => {
     switch (category) {
@@ -398,6 +396,7 @@ function ProductForm() {
         console.log("coreValuesData", coreValuesData);
         console.log("featuresData", featuresData);
         // normal text data
+        formData.append("productType", productType);
         formData.append("title", data.title);
         console.log(data.patternNumber);
         formData.append("patternNumber", data.patternNumber);
@@ -425,7 +424,7 @@ function ProductForm() {
           formData.append("specialprice[endDate]", data.specialprice.endDate);
         }
         // formData.append("specialprice", data.specialprice);
-        formData.append("perUnitPrice", parseFloat(data.perUnitPrice));
+        formData.append("perUnitPrice", data.perUnitPrice);
 
         // formData.append(
         //   "dimensions[0][length][value]",
@@ -711,7 +710,38 @@ function ProductForm() {
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3 my-6">
+            <div className="sm:col-span-2 my-6">
+              <label>Product Type :</label>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="normal"
+                  name="requestType"
+                  value="normal"
+                  checked={productType === "normal"}
+                  onChange={() => setProductType("normal")}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <label htmlFor="normal" className="ml-2 text-gray-700">
+                  Normal
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="requested"
+                  name="requestType"
+                  value="requested"
+                  checked={productType === "requested"}
+                  onChange={() => setProductType("requested")}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <label htmlFor="requested" className="ml-2 text-gray-700">
+                  Requested
+                </label>
+              </div>
+            </div>
+            <div className="sm:col-span-2 my-6">
               <label htmlFor="category">Category:</label>
               <select
                 id="category"
@@ -728,7 +758,7 @@ function ProductForm() {
               </select>
             </div>
 
-            <div className="sm:col-span-3">
+            <div className="sm:col-span-2 my-6">
               {selectedCategory && (
                 <>
                   <label htmlFor="subcategory">Subcategory:</label>
@@ -803,10 +833,15 @@ function ProductForm() {
           <div>
             {productDimensions.map((productDimensions, index) => (
               <div key={productDimensions.id}>
-                {index === 0 ? <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Standard Dimension {index + 1}</h2>
-                  :
-                  <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">Dimension {index + 1}</h2>
-                }
+                {index === 0 ? (
+                  <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">
+                    Standard Dimension {index + 1}
+                  </h2>
+                ) : (
+                  <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">
+                    Dimension {index + 1}
+                  </h2>
+                )}
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-2">
                     <label>Length :</label>
@@ -852,9 +887,7 @@ function ProductForm() {
                       className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                     />
                     <select
-                      {...register(
-                        `productDimensions.${index}.thickness.unit`
-                      )}
+                      {...register(`productDimensions.${index}.thickness.unit`)}
                       defaultValue="mm"
                     >
                       <option value="mm">mm</option>
@@ -1009,18 +1042,20 @@ function ProductForm() {
               </select>
             </div>
 
-            <div className="sm:col-span-2">
-              <label htmlFor="perUnitPrice">Per Unit Price</label>
-              <input
-                type="number"
-                id="perUnitPrice"
-                {...register("perUnitPrice", {
-                  required: "Per Unit Price is required",
-                  min: 0,
-                })}
-                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-              />
-            </div>
+            {productType === "normal" && (
+              <div className="sm:col-span-2">
+                <label htmlFor="perUnitPrice">Per Unit Price</label>
+                <input
+                  type="number"
+                  id="perUnitPrice"
+                  {...register("perUnitPrice", {
+                    required: "Per Unit Price is required",
+                    min: 0,
+                  })}
+                  className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                />
+              </div>
+            )}
           </div>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
@@ -1063,23 +1098,25 @@ function ProductForm() {
                 </div>
               </div>
             </div>
-            <div className="sm:col-span-3 my-6">
-              <label label htmlFor="typeofprice">
-                Price:
-              </label>
-              <select
-                id="typeofprice"
-                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                onChange={handlePriceChange}
-              >
-                <option value="">-- Type of Price --</option>
-                {typeofprice.map((priceType, index) => (
-                  <option key={index} value={priceType}>
-                    {priceType}
-                  </option>
-                ))}
-              </select>
-            </div>
+            { productType === "normal" &&
+              <div className="sm:col-span-3 my-6">
+                <label label htmlFor="typeofprice">
+                  Price:
+                </label>
+                <select
+                  id="typeofprice"
+                  className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                  onChange={handlePriceChange}
+                >
+                  <option value="">-- Type of Price --</option>
+                  {typeofprice.map((priceType, index) => (
+                    <option key={index} value={priceType}>
+                      {priceType}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            }
             <div className="sm:col-span-3 my-6">
               <label htmlFor="demandtype">Demand Type:</label>
               <select
@@ -1096,29 +1133,31 @@ function ProductForm() {
               </select>
             </div>
 
-            <div className="sm:col-span-2">
-              <label
-                htmlFor="price"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Total Price
-              </label>
+            {productType === "normal" && (
+              <div className="sm:col-span-2">
+                <label
+                  htmlFor="price"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Total Price
+                </label>
 
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="number"
-                    {...register("totalPricePerUnit", {
-                      required: "totalPricePerUnit is required",
-                      min: 1,
-                      max: 100000,
-                    })}
-                    id="totalPricePerUnit"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <input
+                      type="number"
+                      {...register("totalPricePerUnit", {
+                        required: "totalPricePerUnit is required",
+                        min: 1,
+                        max: 100000,
+                      })}
+                      id="totalPricePerUnit"
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             <div
               className="sm:col-span-2"
               style={{
