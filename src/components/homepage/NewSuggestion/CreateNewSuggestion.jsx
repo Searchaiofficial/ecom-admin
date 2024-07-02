@@ -244,11 +244,11 @@ function CreateNewSuggestion() {
     setSelectedCategory(category);
   };
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        setLoading(true)
+        setLoading(true);
         const formData = new FormData();
         console.log("Form-Data:", data);
         const subHeadingData = getValues("subHeadings");
@@ -297,6 +297,7 @@ function CreateNewSuggestion() {
         formData.append("heading", data.heading);
         formData.append("summary", data.summary);
         formData.append("shortSummary", data.shortSummary);
+        formData.append("metadataTitle", data.metadataTitle);
 
         const [roomType1, productId1] = selectedRoomData1.split("-");
         const [roomType2, productId2] = selectedRoomData2.split("-");
@@ -338,11 +339,11 @@ function CreateNewSuggestion() {
           );
           const responseData = await response.json();
           window.alert(responseData.message);
-          setLoading(false)
+          setLoading(false);
           // navigate("/admin");
         } catch (error) {
           console.error("Error uploading images:", error);
-          setLoading(false)
+          setLoading(false);
         }
 
         // reset();
@@ -375,6 +376,27 @@ function CreateNewSuggestion() {
                       required: "heading is required",
                     })}
                     id="heading"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label
+                htmlFor="metadataTitle"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Metadata Title*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register("metadataTitle", {
+                      required: "Metadata title is required",
+                    })}
+                    id="metadataTitle"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -802,7 +824,8 @@ function CreateNewSuggestion() {
                   <option key={index} value={option}>
                     {option}
                   </option>
-                ))}s
+                ))}
+                s
               </select>
             </div>
             <div className="sm:col-span-3 my-6">
