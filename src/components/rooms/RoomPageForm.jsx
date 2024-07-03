@@ -24,7 +24,7 @@ function RoomPageForm() {
 
   const [allOfferData, setAllOfferData] = useState([]);
   const [allDemandData, setAllDemandData] = useState([]);
-  const [allCategoryData, setAllCategoryData] = useState([])
+  const [allCategoryData, setAllCategoryData] = useState([]);
 
   const [firstSlider, setFirstSlider] = useState({
     type: "",
@@ -44,7 +44,7 @@ function RoomPageForm() {
   const [thirdSliderSubData, setThirdSliderSubData] = useState([]);
 
   const sliderOption = ["Demand Type", "Offer", "Category"];
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
 
   const {
     fields: subHeadings,
@@ -124,7 +124,6 @@ function RoomPageForm() {
       setThirdSlider({ ...thirdSlider, subType });
     }
   };
-
 
   const handleRoomChange = (e) => {
     const room = e.target.value;
@@ -236,7 +235,7 @@ function RoomPageForm() {
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        setloading(true)
+        setloading(true);
         const formData = new FormData();
         console.log(firstSlider, secondSlider, thirdSlider);
         console.log("Form-Data:", data);
@@ -279,10 +278,11 @@ function RoomPageForm() {
         formData.append("roomName", data.roomName);
         formData.append("title", data.title);
         formData.append("description", data.description);
-        formData.append("fiveGridHeader", data.fiveGridHeader)
-        formData.append("fiveGridDescription", data.fiveGridDescription)
-        formData.append("twoGridHeader", data.twoGridHeader)
-        formData.append("twoGridDescription", data.twoGridDescription)
+        formData.append("fiveGridHeader", data.fiveGridHeader);
+        formData.append("fiveGridDescription", data.fiveGridDescription);
+        formData.append("twoGridHeader", data.twoGridHeader);
+        formData.append("twoGridDescription", data.twoGridDescription);
+        formData.append("metadataTitle", data.metadataTitle);
 
         // const [roomType1, productId1] = selectedRoomCategory1.split("-");
         // const [roomType2, productId2] = selectedRoomCategory2.split("-");
@@ -311,7 +311,6 @@ function RoomPageForm() {
         formData.append("thirdSlider[type]", thirdSlider.type);
         formData.append("thirdSlider[subType]", thirdSlider.subType);
 
-
         // Loop through each object in roomData and append its properties to formData
         roomData.forEach((room, index) => {
           formData.append(`roomData[${index}][roomType]`, room.roomType);
@@ -335,11 +334,11 @@ function RoomPageForm() {
           });
           const responseData = await response.json();
           window.alert(responseData.message);
-          setloading(false)
+          setloading(false);
           // navigate("/admin");
         } catch (error) {
           console.error("Error uploading images:", error);
-          setloading(false)
+          setloading(false);
         }
 
         reset();
@@ -354,7 +353,6 @@ function RoomPageForm() {
           <h2 className="text-2xl font-bold leading-7 text-gray-900 text-center">
             Create Room Page
           </h2>
-
           <div className="sm:col-span-3 md:w-1/2">
             <label
               htmlFor="roomNAme"
@@ -375,7 +373,26 @@ function RoomPageForm() {
               </div>
             </div>
           </div>
-
+          <div className="sm:col-span-3 md:w-1/2">
+            <label
+              htmlFor="metadataTitle"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Metadata Title
+            </label>
+            <div className="mt-2">
+              <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                <input
+                  type="text"
+                  {...register("metadataTitle", {
+                    required: "Metadata Title is required",
+                  })}
+                  id="metadataTitle"
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+          </div>
           <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-2">
               <label
@@ -419,7 +436,6 @@ function RoomPageForm() {
               </div>
             </div>
           </div>
-
           <div className="sm:col-span-3 mt-8 md:w-1/2">
             <label
               htmlFor="fiveGridHeader"
@@ -460,8 +476,6 @@ function RoomPageForm() {
               </div>
             </div>
           </div>
-
-
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-1 my-6">
               <label htmlFor="room">Choose Room</label>
@@ -484,7 +498,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 1)} // Pass 2 for room 2
-              // value={selectedRoomCategory2}
+                // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category --</option>
                 {roomCategory.map((room, index) => (
@@ -500,7 +514,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 2)} // Pass 2 for room 2
-              // value={selectedRoomCategory2}
+                // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -516,7 +530,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 3)} // Pass 2 for room 2
-              // value={selectedRoomCategory2}
+                // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -532,7 +546,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 4)} // Pass 2 for room 2
-              // value={selectedRoomCategory2}
+                // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -548,7 +562,7 @@ function RoomPageForm() {
                 id=""
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 onChange={(e) => handleCategoryChange(e, 5)} // Pass 2 for room 2
-              // value={selectedRoomCategory2}
+                // value={selectedRoomCategory2}
               >
                 <option value="">-- Select Category--</option>
                 {roomCategory.map((room, index) => (
@@ -559,7 +573,6 @@ function RoomPageForm() {
               </select>
             </div>
           </div>
-
           <div className="sm:col-span-3 mt-8 md:w-1/2">
             <label
               htmlFor="twoGridHeader"
@@ -600,7 +613,6 @@ function RoomPageForm() {
               </div>
             </div>
           </div>
-
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3 my-6">
               <label htmlFor="room">RoomData 1:</label>
@@ -635,9 +647,7 @@ function RoomPageForm() {
               </select>
             </div>
           </div>
-
           s
-
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
               SubHeadings
@@ -701,7 +711,6 @@ function RoomPageForm() {
               Add SubHeading
             </button>
           </div>
-
           <div className="mt-6">
             <label
               htmlFor="image"
@@ -719,7 +728,7 @@ function RoomPageForm() {
                   id="image"
                   className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   accept="image/*"
-                // onChange={(e) => handleImageChange(e, 1)}
+                  // onChange={(e) => handleImageChange(e, 1)}
                 />
               </div>
             </div>
@@ -899,9 +908,7 @@ function RoomPageForm() {
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          {
-            loading ? "Creating room main..." : "Create Room Main"
-          }
+          {loading ? "Creating room main..." : "Create Room Main"}
         </Button>
       </div>
     </form>
