@@ -45,6 +45,8 @@ function CreateCategory() {
     name: "subCategories",
   });
 
+const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
 
@@ -71,6 +73,7 @@ function CreateCategory() {
         const maintenanceDetails = document.getElementById("maintenanceDetails");
         const maintenanceDetailsFile = maintenanceDetails?.files[0];
         formData.append("maintenanceDetails", maintenanceDetailsFile);
+      
 
         const certification = document.getElementById("certification");
         const certificationFile = certification?.files[0];
@@ -98,6 +101,7 @@ function CreateCategory() {
         // for (const [key, value] of formData.entries()) {
         //   console.log(`${key}: ${value}`);
         // }
+        formData.append("isFreeSampleAvailable", isFreeSampleAvailable);
 
         try {
           const response = await fetch(`${BASE_URL}/api/createCategory`, {
@@ -164,6 +168,38 @@ function CreateCategory() {
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2 ">
+              <label>Free Sample :</label>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="normal"
+                  name="requestType"
+                  value="no"
+                  checked={!isFreeSampleAvailable }
+                  onChange={() => setIsFreeSampleAvailable(false)}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <label htmlFor="normal" className="ml-2 text-gray-700">
+                  Not Available
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="requested"
+                  name="requestType"
+                  value="requested"
+                  checked={isFreeSampleAvailable}
+                  onChange={() => setIsFreeSampleAvailable(true)}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <label htmlFor="requested" className="ml-2 text-gray-700">
+                  Available
+                </label>
               </div>
             </div>
 
