@@ -18,6 +18,9 @@ const CategoryUpdate = () => {
   const [metadataTitle, setMetadataTitle] = useState("");
   const [metadataMessage, setMetadataMessage] = useState("");
 
+  const [subcategoryDescription, setSubcategoryDescription] = useState("");
+  const [subcategoryMetadataTitle, setSubcategoryMetadataTitle] = useState("");
+
   // Fetch category details on component mount
   useEffect(() => {
     const fetchCategoryDetails = async () => {
@@ -43,27 +46,36 @@ const CategoryUpdate = () => {
 
   const handleUpdateMetadata = async () => {
     try {
-        const response = await axios.patch(
-          `${BASE_URL}/api/updatecategorymetadata/${categoryDetails.name}`,
-          {
-            metadataTitle,
-          }
-        );
+      const response = await axios.patch(
+        `${BASE_URL}/api/updatecategorymetadata/${categoryDetails.name}`,
+        {
+          metadataTitle,
+        }
+      );
 
-        setMetadataMessage(response.data.message);
-      } catch (error) {
-        console.error("Error updating metadata:", error);
-        setMetadataMessage("Error updating metadata");
-      }
-}
+      setMetadataMessage(response.data.message);
+    } catch (error) {
+      console.error("Error updating metadata:", error);
+      setMetadataMessage("Error updating metadata");
+    }
+  };
 
   // Create a new subcategory
   const handleCreateSubcategory = async () => {
     setMessage("");
-    if(!newSubCategoryImage) return setMessage("Please select an image");
+
+    if (!newSubCategoryImage) return setMessage("Please select an image");
+    if (!newSubCategoryName) return setMessage("Please enter a name");
+    if (!subcategoryDescription)
+      return setMessage("Please enter a description");
+    if (!subcategoryMetadataTitle)
+      return setMessage("Please enter a metadata title");
+
     const formData = new FormData();
     formData.append("image", newSubCategoryImage);
     formData.append("name", newSubCategoryName);
+    formData.append("description", subcategoryDescription);
+    formData.append("metadataTitle", subcategoryMetadataTitle);
 
     try {
       const response = await axios.post(
@@ -80,7 +92,11 @@ const CategoryUpdate = () => {
         ...prevDetails,
         subcategories: [
           ...prevDetails.subcategories,
-          { name: newSubCategoryName, img: response.data.newSubcategory.img, _id: response.data.newSubcategory._id},
+          {
+            name: newSubCategoryName,
+            img: response.data.newSubcategory.img,
+            _id: response.data.newSubcategory._id,
+          },
         ],
       }));
       const fileInput = document.getElementById("file_input_file");
@@ -98,7 +114,7 @@ const CategoryUpdate = () => {
   const handleDelete = async (subcategoryId) => {
     setMessage("");
     try {
-        console.log(subcategoryId, 'item._id')
+      console.log(subcategoryId, "item._id");
       await axios.delete(
         `${BASE_URL}/api/deleteSubCategory/${categoryDetails._id}/subCategory/${subcategoryId}`
       );
@@ -177,30 +193,30 @@ const CategoryUpdate = () => {
 
       {/* Metadata */}
       <h1 className="mt-4 text-lg font-semibold">Metadata</h1>
-            <div className="flex flex-col self-start ml-20 my-5">
-                <p className="font-semibold text-lg my-4">Metadata</p>
-                <div className="flex items-center">
-                    <label className="w-full flex justify-between gap-10 items-center">
-                        <span>
-                            Metadata Title
-                        </span>
-                        <input
-                            type="text"
-                            placeholder="Enter metadata title"
-                            className="border p-2 border-black rounded-md"
-                            value={metadataTitle}
-                            onChange={(e) => setMetadataTitle(e.target.value)}
-                        />
-                    </label>
-                </div>
-                <button
-                    className="bg-blue-500 p-2 rounded-lg mt-4 text-white hover:bg-blue-700"
-                    onClick={handleUpdateMetadata}
-                >
-                    Update Metadata
-                </button>
-                {metadataMessage && <p className="mt-4 text-red-500">{metadataMessage}</p>}
-            </div>
+      <div className="flex flex-col self-start ml-20 my-5">
+        <p className="font-semibold text-lg my-4">Metadata</p>
+        <div className="flex items-center">
+          <label className="w-full flex justify-between gap-10 items-center">
+            <span>Metadata Title</span>
+            <input
+              type="text"
+              placeholder="Enter metadata title"
+              className="border p-2 border-black rounded-md"
+              value={metadataTitle}
+              onChange={(e) => setMetadataTitle(e.target.value)}
+            />
+          </label>
+        </div>
+        <button
+          className="bg-blue-500 p-2 rounded-lg mt-4 text-white hover:bg-blue-700"
+          onClick={handleUpdateMetadata}
+        >
+          Update Metadata
+        </button>
+        {metadataMessage && (
+          <p className="mt-4 text-red-500">{metadataMessage}</p>
+        )}
+      </div>
 
       {/* Subcategories */}
       <h1 className="mt-4 text-lg font-semibold">Subcategories</h1>
@@ -218,6 +234,20 @@ const CategoryUpdate = () => {
             className="border p-2 border-black rounded-md"
             value={newSubCategoryName}
             onChange={(e) => setNewSubCategoryName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Enter subcategory description"
+            className="border p-2 border-black rounded-md"
+            value={subcategoryDescription}
+            onChange={(e) => setSubcategoryDescription(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Enter subcategory metadata title"
+            className="border p-2 border-black rounded-md"
+            value={subcategoryMetadataTitle}
+            onChange={(e) => setSubcategoryMetadataTitle(e.target.value)}
           />
           <button
             className="ml-20 bg-blue-500 p-2 rounded-lg text-white hover:bg-blue-700"
