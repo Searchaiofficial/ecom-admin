@@ -59,6 +59,8 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
         const subCategoryData = getValues("subCategories");
         subCategoryData.forEach((subCategory, index) => {
           formData.append(`subcategories[${index}][name]`, subCategory?.name);
+          formData.append(`subcategories[${index}][description]`, subCategory?.description);
+          formData.append(`subcategories[${index}][metadataTitle]`, subCategory?.metadataTitle);
         });
 
         formData.append("name", data.name);
@@ -403,6 +405,48 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                         type="text"
                         {...register(`subCategories[${index}].name`, {
                           required: "Sub Heading is required",
+                        })}
+                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor={`subCategories[${index}].description`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Subcategory {index + 1} Description*
+                  </label>
+                  <div className="mt-2">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                      <input
+                        id={`subCategories[${index}].description`}
+                        type="text"
+                        {...register(`subCategories[${index}].description`, {
+                          required: "Description is required",
+                        })}
+                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor={`subCategories[${index}].metadataTitle`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Subcategory {index + 1} Metadata Title*
+                  </label>
+                  <div className="mt-2">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                      <input
+                        id={`subCategories[${index}].metadataTitle`}
+                        type="text"
+                        {...register(`subCategories[${index}].metadataTitle`, {
+                          required: "Metadata Title is required",
                         })}
                         className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       />
