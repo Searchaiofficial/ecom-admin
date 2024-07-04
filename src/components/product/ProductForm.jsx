@@ -191,6 +191,7 @@ function ProductForm() {
   const [pdf, setPdf] = useState("");
   const [roomMultipleSelector, setRoomMultipleSelector] = useState([]);
   const [demandTypes, setDemandTypes] = useState([]);
+  const [productAvailability, setProductAvailability] = useState("in stock");
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
@@ -424,6 +425,9 @@ function ProductForm() {
           formData.append("specialprice[endDate]", data.specialprice.endDate);
         }
         // formData.append("specialprice", data.specialprice);
+        formData.append("availability", productAvailability)
+        formData.append("availabilityTime[from]", data.availabilityTime.from)
+        formData.append("availabilityTime[to]", data.availabilityTime.to)
         formData.append("perUnitPrice", data.perUnitPrice);
 
         // formData.append(
@@ -779,6 +783,79 @@ function ProductForm() {
               )}
             </div>
           </div>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-2 my-6">
+              <label>Product Availability :</label>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="in stock"
+                  name="productAvailability"
+                  value="in stock"
+                  checked={productAvailability === "in stock"}
+                  onChange={() => setProductAvailability("in stock")}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <label htmlFor="in stock" className="ml-2 text-gray-700">
+                  In stock
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="out of stock"
+                  name="productAvailability"
+                  value="out of stock"
+                  checked={productAvailability === "out of stock"}
+                  onChange={() => setProductAvailability("out of stock")}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <label htmlFor="out of stock" className="ml-2 text-gray-700">
+                  Out of stock
+                </label>
+              </div>
+            </div>
+            <div
+              className="sm:col-span-2 my-6"
+            >
+              <label
+                htmlFor="availabilityTimefrom"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Available From*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="date"
+                    {...register("availabilityTime.from")}
+                    id="availabilityTimefrom"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              className="sm:col-span-2 my-6"
+            >
+              <label
+                htmlFor="availabilityTimeto"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Available Upto*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="date"
+                    {...register("availabilityTime.to")}
+                    id="availabilityTimeto"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-2">
@@ -1098,7 +1175,7 @@ function ProductForm() {
                 </div>
               </div>
             </div>
-            { productType === "normal" &&
+            {productType === "normal" && (
               <div className="sm:col-span-3 my-6">
                 <label label htmlFor="typeofprice">
                   Price:
@@ -1116,7 +1193,7 @@ function ProductForm() {
                   ))}
                 </select>
               </div>
-            }
+            )}
             <div className="sm:col-span-3 my-6">
               <label htmlFor="demandtype">Demand Type:</label>
               <select
