@@ -1,4 +1,4 @@
-import { useForm, useFieldArray, } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 // import Review from '../homepage/review/Review';
@@ -8,18 +8,19 @@ import { useState } from "react";
 
 function CreateCategory() {
   // form related
-  const categoryType = ["Homedecor", "Walldecor", "Flooring"]
+  const options = [ {label : "No" , value : "no"}, {label : "Yes" , value : "yes"}]
+  const categoryType = ["Homedecor", "Walldecor", "Flooring"];
   const { register, handleSubmit, getValues, reset, control } = useForm();
   const [colors, setColors] = useState([{ name: "", hexCode: "" }]);
-  const [services, SetServices] = useState([{ name: "", cost: "" }])
+  const [services, SetServices] = useState([{ name: "", cost: "" }]);
 
   const addColorInput = () => {
     setColors([...colors, { name: "", hexCode: "" }]);
   };
 
   const addServiceInput = () => [
-    SetServices([...services, { name: "", cost: "" }])
-  ]
+    SetServices([...services, { name: "", cost: "" }]),
+  ];
 
   const handleColorChange = (index, field, value) => {
     const newColors = [...colors];
@@ -30,11 +31,11 @@ function CreateCategory() {
   const handleServiceChange = (index, field, value) => {
     const newService = [...services];
     newService[index][field] = value;
-    SetServices(newService)
-  }
+    SetServices(newService);
+  };
 
-  console.log(colors)
-  console.log(services)
+  console.log(colors);
+  console.log(services);
 
   const {
     fields: subCategories,
@@ -45,15 +46,13 @@ function CreateCategory() {
     name: "subCategories",
   });
 
-const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
-
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        setLoading(true)
+        setLoading(true);
         const formData = new FormData();
 
         const subCategoryData = getValues("subCategories");
@@ -61,6 +60,10 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
           formData.append(`subcategories[${index}][name]`, subCategory?.name);
           formData.append(`subcategories[${index}][description]`, subCategory?.description);
           formData.append(`subcategories[${index}][metadataTitle]`, subCategory?.metadataTitle);
+          formData.append(`subcategories[${index}][expectedDelivery]`, subCategory?.expectedDelivery);
+          formData.append(`subcategories[${index}][isFreeShippingAvailable]`, subCategory?.isFreeShippingAvailable);
+          formData.append(`subcategories[${index}][isFreeSampleAvailable]`, subCategory?.isFreeSampleAvailable);
+          formData.append(`subcategories[${index}][isOnlySoldInStore]`, subCategory?.isOnlySoldInStore);
         });
 
         formData.append("name", data.name);
@@ -72,10 +75,10 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
         const file = fileInput?.files[0];
         formData.append("image", file);
 
-        const maintenanceDetails = document.getElementById("maintenanceDetails");
+        const maintenanceDetails =
+          document.getElementById("maintenanceDetails");
         const maintenanceDetailsFile = maintenanceDetails?.files[0];
         formData.append("maintenanceDetails", maintenanceDetailsFile);
-      
 
         const certification = document.getElementById("certification");
         const certificationFile = certification?.files[0];
@@ -92,7 +95,9 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
         });
 
         subCategoryData.forEach((_, i) => {
-          const subCatImage = document.getElementById(`subCategoriesImage${i + 1}`);
+          const subCatImage = document.getElementById(
+            `subCategoriesImage${i + 1}`
+          );
           const subCatFile = subCatImage?.files[0];
           formData.append("subCategoriesImage", subCatFile);
         });
@@ -103,7 +108,6 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
         // for (const [key, value] of formData.entries()) {
         //   console.log(`${key}: ${value}`);
         // }
-        formData.append("isFreeSampleAvailable", isFreeSampleAvailable);
 
         try {
           const response = await fetch(`${BASE_URL}/api/createCategory`, {
@@ -113,10 +117,10 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
           const responseData = await response.json();
           window.alert(responseData.message);
           // navigate("/admin");
-          setLoading(false)
+          setLoading(false);
         } catch (error) {
           console.error("Error uploading images:", error);
-          setLoading(false)
+          setLoading(false);
         }
 
         // reset();
@@ -173,7 +177,7 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
               </div>
             </div>
 
-            <div className="sm:col-span-2 ">
+            {/* <div className="sm:col-span-2 ">
               <label>Free Sample :</label>
               <div className="flex items-center">
                 <input
@@ -203,7 +207,7 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                   Available
                 </label>
               </div>
-            </div>
+            </div> */}
 
             <div className="sm:col-span-2">
               <label
@@ -268,7 +272,6 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
             </div>
           </div>
 
-
           <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-2">
               <label
@@ -323,14 +326,18 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                     placeholder="Enter Service name"
                     className="p-2 border"
                     value={service.name}
-                    onChange={(e) => handleServiceChange(index, "name", e.target.value)}
+                    onChange={(e) =>
+                      handleServiceChange(index, "name", e.target.value)
+                    }
                   />
                   <input
                     type="text"
                     placeholder="Enter Service cost"
                     className="p-2 border"
                     value={service.cost}
-                    onChange={(e) => handleServiceChange(index, "cost", e.target.value)}
+                    onChange={(e) =>
+                      handleServiceChange(index, "cost", e.target.value)
+                    }
                   />
                 </div>
               ))}
@@ -360,14 +367,18 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                     placeholder="Enter color name"
                     className="p-2 border"
                     value={color.name}
-                    onChange={(e) => handleColorChange(index, "name", e.target.value)}
+                    onChange={(e) =>
+                      handleColorChange(index, "name", e.target.value)
+                    }
                   />
                   <input
                     type="text"
                     placeholder="Enter hex code"
                     className="p-2 border"
                     value={color.hexCode}
-                    onChange={(e) => handleColorChange(index, "hexCode", e.target.value)}
+                    onChange={(e) =>
+                      handleColorChange(index, "hexCode", e.target.value)
+                    }
                   />
                 </div>
               ))}
@@ -433,7 +444,7 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                   </div>
                 </div>
 
-                <div className="sm:col-span-3">
+                <div className="sm:col-span-2">
                   <label
                     htmlFor={`subCategories[${index}].metadataTitle`}
                     className="block text-sm font-medium leading-6 text-gray-900"
@@ -454,7 +465,8 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                   </div>
                 </div>
 
-                <div className="sm:col-span-3">
+                <div className="sm:col-span-2">
+                {/* <div className="sm:col-span-2"> */}
                   <label className="block text-sm font-medium leading-6 text-gray-900">
                     Subcategory Image {index + 1}*
                   </label>
@@ -462,12 +474,9 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                       <input
                         type="file"
-                        {...register(
-                          `subCategoriesImage${index + 1}`,
-                          {
-                            required: "Sub Heading is required",
-                          }
-                        )}
+                        {...register(`subCategoriesImage${index + 1}`, {
+                          required: "Sub Heading is required",
+                        })}
                         id={`subCategoriesImage${index + 1}`}
                         // onChange={(e) =>
                         //   handleImageChange(e, "subCategoryImage1")
@@ -477,6 +486,101 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
                     </div>
                   </div>
                 </div>
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`subCategories[${index}].expectedDelivery`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Expected Delivery (Day)*
+                  </label>
+                  <div className="mt-2">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                      <input
+                        type="Number"
+                        {...register(`subCategories[${index}].expectedDelivery`, {
+                          required: "expectedDelivery is required",
+                        })}
+                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`subCategories[${index}].isFreeSampleAvailable`}
+                    className="block text-sm font-medium leading-6 text-gray-900 "
+                  >
+                    Free Sample :*
+                  </label>
+                  <div className="mt-2">
+                    <select
+                      {...register(`subCategories[${index}].isFreeSampleAvailable`, {
+                        required: "Free Sample is required",
+                      })}
+                      id={`subCategories[${index}].isFreeSampleAvailable`}
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    >
+                      {options.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`subCategories[${index}].isFreeShippingAvailable`}
+                    className="block text-sm font-medium leading-6 text-gray-900 "
+                  >
+                    Free Shipping :*
+                  </label>
+                  <div className="mt-2">
+                    <select
+                      {...register(`subCategories[${index}].isFreeShippingAvailable`, {
+                        required: "Free Sipping is required",
+                      })}
+                      id={`subCategories[${index}].isFreeShippingAvailable`}
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    >
+                      {options.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label
+                    htmlFor={`subCategories[${index}].isOnlySoldInStore`}
+                    className="block text-sm font-medium leading-6 text-gray-900 "
+                  >
+                    Only Sold in Store :*
+                  </label>
+                  <div className="mt-2">
+                    <select
+                      {...register(`subCategories[${index}].isOnlySoldInStore`, {
+                        required: "Free Sipping is required",
+                      })}
+                      id={`subCategories[${index}].isOnlySoldInStore`}
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    >
+                      {options.map((type) => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                
 
                 <button
                   className="bg-red-600  w-20 my-2 px-2 rounded-md"
@@ -496,7 +600,6 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
               Add Subcategory
             </button>
           </div>
-
         </div>
       </div>
 
@@ -513,9 +616,7 @@ const [isFreeSampleAvailable, setIsFreeSampleAvailable] = useState(false);
           type="submit"
           className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
         >
-          {
-            loading ? "Creating Category..." : "Create Category"
-          }
+          {loading ? "Creating Category..." : "Create Category"}
         </Button>
       </div>
     </form>
