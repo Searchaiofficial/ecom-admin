@@ -487,7 +487,7 @@ function CreateCategory() {
                   </div>
                 </div>
 
-                <div className="sm:col-span-2">
+                {/* <div className="sm:col-span-2">
                   <label
                     htmlFor={`subCategories[${index}].expectedDelivery`}
                     className="block text-sm font-medium leading-6 text-gray-900"
@@ -578,7 +578,7 @@ function CreateCategory() {
                       ))}
                     </select>
                   </div>
-                </div>
+                </div> */}
 
                 
 

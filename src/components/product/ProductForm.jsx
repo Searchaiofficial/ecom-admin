@@ -175,6 +175,7 @@ function ProductForm() {
 
   // --
 
+  const options = [ {label : "No" , value : "no"}, {label : "Yes" , value : "yes"}]
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [subCategoryOptions, setSubCategoryOptions] = useState([]);
   const [productType, setProductType] = useState("normal");
@@ -425,10 +426,15 @@ function ProductForm() {
           formData.append("specialprice[endDate]", data.specialprice.endDate);
         }
         // formData.append("specialprice", data.specialprice);
-        formData.append("availability", productAvailability)
-        formData.append("availabilityTime[from]", data.availabilityTime.from)
-        formData.append("availabilityTime[to]", data.availabilityTime.to)
+        formData.append("availability", productAvailability);
+        formData.append("availabilityTime[from]", data.availabilityTime.from);
+        formData.append("availabilityTime[to]", data.availabilityTime.to);
         formData.append("perUnitPrice", data.perUnitPrice);
+        formData.append("expectedDelivery", data.expectedDelivery);
+        formData.append("isFreeSampleAvailable", data.isFreeSampleAvailable);
+        formData.append("isFreeShippingAvailable", data.isFreeShippingAvailable);
+        formData.append("isOnlySoldInStore", data.isOnlySoldInStore);
+
 
         // formData.append(
         //   "dimensions[0][length][value]",
@@ -815,9 +821,7 @@ function ProductForm() {
                 </label>
               </div>
             </div>
-            <div
-              className="sm:col-span-2 my-6"
-            >
+            <div className="sm:col-span-2 my-6">
               <label
                 htmlFor="availabilityTimefrom"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
@@ -835,9 +839,7 @@ function ProductForm() {
                 </div>
               </div>
             </div>
-            <div
-              className="sm:col-span-2 my-6"
-            >
+            <div className="sm:col-span-2 my-6">
               <label
                 htmlFor="availabilityTimeto"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
@@ -850,6 +852,106 @@ function ProductForm() {
                     type="date"
                     {...register("availabilityTime.to")}
                     id="availabilityTimeto"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+
+            
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor={`isFreeSampleAvailable`}
+                className="block text-sm font-medium leading-6 text-gray-900 "
+              >
+                Free Sample :*
+              </label>
+              <div className="mt-2">
+                <select
+                  {...register(
+                    `isFreeSampleAvailable`,
+                    {
+                      required: "Free Sample is required",
+                    }
+                  )}
+                  id={`isFreeSampleAvailable`}
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                >
+                  {options.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor={`isFreeShippingAvailable`}
+                className="block text-sm font-medium leading-6 text-gray-900 "
+              >
+                Free Shipping :*
+              </label>
+              <div className="mt-2">
+                <select
+                  {...register(
+                    `isFreeShippingAvailable`,
+                    {
+                      required: "Free Sipping is required",
+                    }
+                  )}
+                  id={`isFreeShippingAvailable`}
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                >
+                  {options.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor={`isOnlySoldInStore`}
+                className="block text-sm font-medium leading-6 text-gray-900 "
+              >
+                Only Sold in Store :*
+              </label>
+              <div className="mt-2">
+                <select
+                  {...register(`isOnlySoldInStore`, {
+                    required: "Free Sipping is required",
+                  })}
+                  id={`isOnlySoldInStore`}
+                  className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                >
+                  {options.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor={`expectedDelivery`}
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Expected Delivery (Day)*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="Number"
+                    {...register(`expectedDelivery`, {
+                      required: "expectedDelivery is required",
+                    })}
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
