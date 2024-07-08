@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../../config";
+import axios from "axios";
 
 const RoomDisplay = () => {
   const [roomPageData, setRoomPageData] = useState([]);
@@ -9,19 +10,13 @@ const RoomDisplay = () => {
   useEffect(() => {
     fetch(`${BASE_URL}/api/getAllRoommain`)
       .then((response) => response.json())
-      .then((data) =>  setRoomPageData(data))
+      .then((data) => setRoomPageData(data))
       .catch((error) => console.error("Error fetching images data:", error));
   }, []);
 
-  const handleDelete = (roomPageID) => {
-    fetch(`${BASE_URL}/api/deleteRoommain/${roomPageID}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => setRoomPageData(data))
-      .catch((error) => console.error("Error deleting data:", error));
-      
-    window.location.reload();
+  const handleDelete = async (roomPageID) => {
+    await axios.delete(`${BASE_URL}/api/deleteRoommain/${roomPageID}`)
+    window.location.reload()
   };
 
   return (
@@ -44,27 +39,27 @@ const RoomDisplay = () => {
             >
               <div className="cursor-pointer ">
                 {/* <Link href={`/roomPageData/${item._id}`}> */}
-                  <div className="flex h-full w-full items-center justify-center cursor-pointer  overflow-hidden">
-                    <img
-                      src={item.img}
-                      alt="NA"
-                      height={600}
-                      width={600}
-                      className={"aspect-square w-full object-cover "}
-                    />
-                  </div>
+                <div className="flex h-full w-full items-center justify-center cursor-pointer  overflow-hidden">
+                  <img
+                    src={item.img}
+                    alt="NA"
+                    height={600}
+                    width={600}
+                    className={"aspect-square w-full object-cover "}
+                  />
+                </div>
 
-                  <div className={`bg-zinc-200 p-8 h-[220px] overflow-hidden`}>
-                    <h1 className="text-sm text-gray-500 mb-1">
-                      Room Type : {item.roomType}
-                    </h1>
-                    <div className="text-lg font-semibold hover:underline  text-ellipsis mb-1">
-                      {item.title}
-                    </div>
-                    <div className={`text-sm overflow-hidden text-ellipsis `}>
-                      {item.description}
-                    </div>
+                <div className={`bg-zinc-200 p-8 h-[220px] overflow-hidden`}>
+                  <h1 className="text-sm text-gray-500 mb-1">
+                    Room Type : {item.roomType}
+                  </h1>
+                  <div className="text-lg font-semibold hover:underline  text-ellipsis mb-1">
+                    {item.title}
                   </div>
+                  <div className={`text-sm overflow-hidden text-ellipsis `}>
+                    {item.description}
+                  </div>
+                </div>
                 {/* </Link> */}
               </div>
               <button

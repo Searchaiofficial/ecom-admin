@@ -232,6 +232,14 @@ function RoomPageForm() {
     }
   }, [rooms, selectedRoomOption, allDemandData, allOfferData, allCategoryData]);
 
+  const {
+    fields: circles,
+    append: appendCircle
+  } = useFieldArray({
+    control,
+    name: "circles",
+  });
+
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -252,6 +260,10 @@ function RoomPageForm() {
         });
 
         data.circles.forEach((circle, index) => {
+          formData.append(
+            `circles[${index}].status`,
+            circle.status
+          );
           formData.append(
             `circles[${index}].productTitle`,
             circle.productTitle
@@ -741,6 +753,7 @@ function RoomPageForm() {
               control={control}
               defaultValue={[
                 {
+                  status: "",
                   productTitle: "",
                   productCategory: "",
                   productPrice: 0,
@@ -753,9 +766,33 @@ function RoomPageForm() {
                 <div>
                   {field.value.map((circle, index) => (
                     <div key={index} className="mt-4">
+
+                      <label
+                        htmlFor={`circles[${index}].status`}
+                        className="block text-sm font-medium leading-5 text-gray-700"
+                      >
+                        Child {index + 1} Status
+                      </label>
+                      <Controller
+                        name={`circles[${index}].status`}
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                          <select
+                            {...field}
+                            className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                          >
+                            <option value="">Select Status</option>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="ActiveWithData">Active with Data</option>
+                          </select>
+                        )}
+                      />
+
                       <label
                         htmlFor={`circles[${index}].productTitle`}
-                        className="block text-sm font-medium leading-5 text-gray-700"
+                        className="block text-sm font-medium leading-5 text-gray-700 mt-5"
                       >
                         Child {index + 1} Product Title
                       </label>
@@ -870,20 +907,17 @@ function RoomPageForm() {
                   ))}
                   <button
                     type="button"
-                    onClick={() => {
-                      const newCircles = [
-                        ...field.value,
-                        {
-                          productTitle: "",
-                          productCategory: "",
-                          productPrice: 0,
-                          topPosition: 0,
-                          leftPosition: 0,
-                          productLink: "",
-                        },
-                      ];
-                      field.onChange(newCircles);
-                    }}
+                    onClick={() =>
+                      appendCircle({
+                        status: "",
+                        productTitle: "",
+                        productCategory: "",
+                        productPrice: 0,
+                        topPosition: 0,
+                        leftPosition: 0,
+                        productLink: "",
+                      })
+                    }
                     className="text-indigo-600 hover:text-indigo-900 mt-4"
                   >
                     Add Child

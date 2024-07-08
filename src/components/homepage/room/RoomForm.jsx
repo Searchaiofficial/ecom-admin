@@ -18,9 +18,11 @@ function RoomForm() {
 
   const onSubmit = async (data) => {
     try {
+      // console.log(data)
       setLoading(true)
       const formData = new FormData();
       data.circles.forEach((circle, index) => {
+        formData.append(`circles[${index}].status`, circle.status);
         formData.append(`circles[${index}].productTitle`, circle.productTitle);
         formData.append(
           `circles[${index}].productCategory`,
@@ -58,7 +60,7 @@ function RoomForm() {
       const responseData = await response.json();
       window.alert(responseData.message);
       setLoading(false)
-      // navigate('/homePage');
+      navigate('/homePage');
     } catch (error) {
       console.log(error);
       setLoading(false)
@@ -104,6 +106,7 @@ function RoomForm() {
             control={control}
             defaultValue={[
               {
+                status: "",
                 productTitle: "",
                 productCategory: "",
                 productPrice: 0,
@@ -117,8 +120,30 @@ function RoomForm() {
                 {field.value.map((circle, index) => (
                   <div key={index} className="mt-4">
                     <label
-                      htmlFor={`circles[${index}].productTitle`}
+                      htmlFor={`circles[${index}].status`}
                       className="block text-sm font-medium leading-5 text-gray-700"
+                    >
+                      Child {index + 1} Status
+                    </label>
+                    <Controller
+                      name={`circles[${index}].status`}
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <select
+                          {...field}
+                          className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                        >
+                          <option value="">Select Status</option>
+                          <option value="Active">Active</option>
+                          <option value="Inactive">Inactive</option>
+                          <option value="ActiveWithData">Active with Data</option>
+                        </select>
+                      )}
+                    />
+                    <label
+                      htmlFor={`circles[${index}].productTitle`}
+                      className="block text-sm font-medium leading-5 text-gray-700 mt-5"
                     >
                       Child {index + 1} Product Title
                     </label>
@@ -237,6 +262,7 @@ function RoomForm() {
                     const newCircles = [
                       ...field.value,
                       {
+                        status: "",
                         productTitle: "",
                         productCategory: "",
                         productPrice: 0,
