@@ -39,6 +39,7 @@ function CreateAuthor() {
             email: data.email,
             rating: data.rating,
             experience: data.experience,
+            purchase:data.purchase,
             description: data.description,
             link: data.link,
             awards: allAwards,
@@ -182,6 +183,27 @@ function CreateAuthor() {
                       required: "experience is required",
                     })}
                     id="experience"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="purchase"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Purchase*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="number"
+                    {...register("purchase", {
+                      required: "purchase is required",
+                    })}
+                    id="purchase"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
