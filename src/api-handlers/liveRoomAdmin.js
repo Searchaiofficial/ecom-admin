@@ -12,7 +12,7 @@ export const getLiveRoomAdmins = async () => {
 
 export const deleteLiveRoomAdmin = async (id) => {
   try {
-    await axios.delete(`${baseURL}/api/liveroomadmin/${id}`);
+    await axios.delete(`${BASE_URL}/api/liveroomadmin/${id}`);
     setAdmins((prev) => prev.filter((admin) => admin.id !== id));
   } catch (error) {
     console.log(error.message);

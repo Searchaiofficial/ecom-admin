@@ -6,6 +6,8 @@ import Protected from "./Features/Protected";
 import AdminPanel from "./Pages/AdminPanel";
 
 import AdminProductFormPage from "./Pages/AdminProductFormPage";
+import AdminAuthorFormPage from "./Pages/AdminAuthorFormPage";
+import DisplayAuthor from "./components/author/DisplayAuthor";
 import ImageChangerForm from "./components/homepage/MidInfoSection/ImageChangerForm";
 import HeaderInfoForm from "./components/homepage/HeaderInfoSection/HeaderInfoForm";
 import ImageSectionForm from "./components/homepage/ImagesSection/ImageSectionForm";
@@ -88,6 +90,24 @@ export default function App() {
           element={
             <Protected>
               <AdminProductFormPage />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/create-author"
+          element={
+            <Protected>
+              <AdminAuthorFormPage />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/author-display"
+          element={
+            <Protected>
+              <DisplayAuthor />
             </Protected>
           }
         ></Route>

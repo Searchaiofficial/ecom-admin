@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const navigate = useNavigate();
   const [isProductListExtended, setIsProductListExtended] = useState(false);
+  const [isAuthorListExtended, setIsAuthorListExtended] = useState(false);
   const [isOrderListExtended, setisOrderListExtended] = useState(false)
   const [isRoomListExtended, setIsRoomListExtended] = useState(false)
   const [isCategoryListExtended, setIsCategoryListExtended] = useState(false)
@@ -17,6 +18,10 @@ const Navbar = () => {
 
   const handleProductClick = () => {
     setIsProductListExtended(!isProductListExtended);
+  };
+
+  const handleAuthorClick = () => {
+    setIsAuthorListExtended(!isAuthorListExtended);
   };
 
   const handleRoomClick = () => {
@@ -63,6 +68,26 @@ const Navbar = () => {
                   </li>
                   <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
                     <Link to='/offer'>Offer Type</Link>
+                  </li>
+                </ul>
+              )}
+            </Link>
+          </div>
+        </li>
+
+        <li className='pl-3 pt-1.5 pb-1.5 text-lg  rounded-full'>
+          <img className='inline-block ml-4 float-left' src="/Images/package.png" alt="package" width={20} height={20} />
+
+          <div className="inline-block ml-4 " >
+            <Link to='#' className="inline-block " onClick={handleAuthorClick}>
+              Author
+              {isAuthorListExtended && (
+                <ul>
+                  <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
+                    <Link to='/author-display'>View Author</Link>
+                  </li>
+                  <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
+                    <Link to='/create-author'>Create Author</Link>
                   </li>
                 </ul>
               )}

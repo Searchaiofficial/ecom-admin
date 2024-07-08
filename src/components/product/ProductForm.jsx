@@ -175,7 +175,10 @@ function ProductForm() {
 
   // --
 
-  const options = [ {label : "No" , value : "no"}, {label : "Yes" , value : "yes"}]
+  const options = [
+    { label: "No", value: "no" },
+    { label: "Yes", value: "yes" },
+  ];
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [subCategoryOptions, setSubCategoryOptions] = useState([]);
   const [productType, setProductType] = useState("normal");
@@ -193,6 +196,8 @@ function ProductForm() {
   const [roomMultipleSelector, setRoomMultipleSelector] = useState([]);
   const [demandTypes, setDemandTypes] = useState([]);
   const [productAvailability, setProductAvailability] = useState("in stock");
+  const [authors, setAuthors] = useState([]);
+  const [selectedAuthor, setSelectedAuthor] = useState("");
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
@@ -265,6 +270,31 @@ function ProductForm() {
       console.error("Error fetching demand types:", error);
     }
   };
+
+  const fetchAuthors = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/getAuthors`);
+      const responseData = await response.json();
+      console.log("Response Data:", responseData);
+      const selectAuthorData = [];
+      responseData.forEach((author) => {
+        const authorName = `${author.name}-${author.email}`;
+        const id = author._id;
+        selectAuthorData.push({ authorName, id });
+      });
+      setAuthors(selectAuthorData);
+    } catch (error) {
+      console.error("Error fetching author details:", error);
+    }
+  };
+
+  const handleAuthorChange = (e) => {
+    setSelectedAuthor(e.target.value);
+  };
+
+  useEffect(() => {
+    fetchAuthors();
+  }, []);
 
   useEffect(() => {
     if (demandTypes.length === 0) {
@@ -432,10 +462,12 @@ function ProductForm() {
         formData.append("perUnitPrice", data.perUnitPrice);
         formData.append("expectedDelivery", data.expectedDelivery);
         formData.append("isFreeSampleAvailable", data.isFreeSampleAvailable);
-        formData.append("isFreeShippingAvailable", data.isFreeShippingAvailable);
+        formData.append(
+          "isFreeShippingAvailable",
+          data.isFreeShippingAvailable
+        );
         formData.append("isOnlySoldInStore", data.isOnlySoldInStore);
-
-
+        formData.append("authorId", selectedAuthor);
         // formData.append(
         //   "dimensions[0][length][value]",
         //   parseFloat(data.productDimensions[0].length.value)
@@ -858,8 +890,6 @@ function ProductForm() {
               </div>
             </div>
 
-            
-
             <div className="sm:col-span-2">
               <label
                 htmlFor={`isFreeSampleAvailable`}
@@ -869,12 +899,9 @@ function ProductForm() {
               </label>
               <div className="mt-2">
                 <select
-                  {...register(
-                    `isFreeSampleAvailable`,
-                    {
-                      required: "Free Sample is required",
-                    }
-                  )}
+                  {...register(`isFreeSampleAvailable`, {
+                    required: "Free Sample is required",
+                  })}
                   id={`isFreeSampleAvailable`}
                   className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 >
@@ -896,12 +923,9 @@ function ProductForm() {
               </label>
               <div className="mt-2">
                 <select
-                  {...register(
-                    `isFreeShippingAvailable`,
-                    {
-                      required: "Free Sipping is required",
-                    }
-                  )}
+                  {...register(`isFreeShippingAvailable`, {
+                    required: "Free Sipping is required",
+                  })}
                   id={`isFreeShippingAvailable`}
                   className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 >
@@ -956,6 +980,23 @@ function ProductForm() {
                   />
                 </div>
               </div>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Select Author:
+              </label>
+              <select
+                className="mt-2 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                onChange={handleAuthorChange}
+              >
+                <option value="">Select Author</option>
+                {authors.map((author) => (
+                  <option key={author.id} value={author.id}>
+                    {author.authorName}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
