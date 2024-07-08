@@ -1276,7 +1276,7 @@ function ProductForm() {
               </select>
             </div>
 
-            {productType === "normal" && (
+            {productType !== "requested" && (
               <div className="sm:col-span-2">
                 <label htmlFor="perUnitPrice">Per Unit Price</label>
                 <input
@@ -1332,7 +1332,7 @@ function ProductForm() {
                 </div>
               </div>
             </div>
-            {productType === "normal" && (
+            {productType !== "requested" && (
               <div className="sm:col-span-3 my-6">
                 <label label htmlFor="typeofprice">
                   Price:
@@ -1367,7 +1367,7 @@ function ProductForm() {
               </select>
             </div>
 
-            {productType === "normal" && (
+            {productType !== "requested" && (
               <div className="sm:col-span-2">
                 <label
                   htmlFor="price"
