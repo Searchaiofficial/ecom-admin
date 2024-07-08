@@ -771,6 +771,20 @@ function ProductForm() {
               <div className="flex items-center">
                 <input
                   type="radio"
+                  id="special"
+                  name="requestType"
+                  value="special"
+                  checked={productType === "special"}
+                  onChange={() => setProductType("special")}
+                  className="form-radio h-4 w-4 text-blue-600"
+                />
+                <label htmlFor="special" className="ml-2 text-gray-700">
+                 Special
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
                   id="requested"
                   name="requestType"
                   value="requested"
