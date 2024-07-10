@@ -8,11 +8,12 @@ import { useState } from "react";
 
 function CreateCategory() {
   // form related
-  const options = [ {label : "No" , value : "no"}, {label : "Yes" , value : "yes"}]
+  const options = [{ label: "No", value: "no" }, { label: "Yes", value: "yes" }]
   const categoryType = ["Homedecor", "Walldecor", "Flooring"];
   const { register, handleSubmit, getValues, reset, control } = useForm();
   const [colors, setColors] = useState([{ name: "", hexCode: "" }]);
   const [services, SetServices] = useState([{ name: "", cost: "" }]);
+  const [ratingTypes, SetRatingTypes] = useState([{ name: "", image: null }]);
 
   const addColorInput = () => {
     setColors([...colors, { name: "", hexCode: "" }]);
@@ -21,6 +22,12 @@ function CreateCategory() {
   const addServiceInput = () => [
     SetServices([...services, { name: "", cost: "" }]),
   ];
+
+  const addRatingTypeInput = () => {
+    if (ratingTypes.length < 5) {
+      SetRatingTypes([...ratingTypes, { name: "", image: null }]);
+    }
+  };
 
   const handleColorChange = (index, field, value) => {
     const newColors = [...colors];
@@ -34,8 +41,38 @@ function CreateCategory() {
     SetServices(newService);
   };
 
+  const handleRatingTypeChange = (index, field, value) => {
+    const newRatingType = [...ratingTypes];
+    newRatingType[index][field] = value;
+    SetRatingTypes(newRatingType);
+  };
+
+  // const handleFileChange = (index, file) => {
+  //   const newRatingTypes = [...ratingTypes];
+  //   newRatingTypes[index].image = file;
+  //   SetRatingTypes(newRatingTypes);
+  // };
+
+  const handleFileChange = (index, file) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result;
+      updateRatingTypeImage(index, base64String);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const updateRatingTypeImage = (index, base64String) => {
+    SetRatingTypes((prev) => {
+      const newRatingTypes = [...prev];
+      newRatingTypes[index].image = base64String;
+      return newRatingTypes;
+    });
+  };
+
   console.log(colors);
   console.log(services);
+  console.log(ratingTypes);
 
   const {
     fields: subCategories,
@@ -94,6 +131,20 @@ function CreateCategory() {
           formData.append(`availableServices[${index}][cost]`, service.cost);
         });
 
+        ratingTypes.forEach((ratingType, index) => {
+          formData.append(`availableRatingTypes[${index}][name]`, ratingType.name);
+          // formData.append(`availableRatingTypes[${index}][rating]`, ratingType.rating);
+          formData.append(`availableRatingTypes[${index}][image]`, ratingType.image);
+        });
+
+        // ratingTypes.forEach((_, i) => {
+        //   const ratingIconImg = document.getElementById(
+        //     `RatingTypeIcon${i + 1}`
+        //   );
+        //   const ratingIconFile = ratingIconImg?.files[0];
+        //   formData.append(`availableRatingTypes[${i}][ratingTypeIcon]`, ratingIconFile);
+        // });
+
         subCategoryData.forEach((_, i) => {
           const subCatImage = document.getElementById(
             `subCategoriesImage${i + 1}`
@@ -105,9 +156,9 @@ function CreateCategory() {
         formData.append("type", data.type);
         formData.append("description", data.description);
 
-        // for (const [key, value] of formData.entries()) {
-        //   console.log(`${key}: ${value}`);
-        // }
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`);
+        }
 
         try {
           const response = await fetch(`${BASE_URL}/api/createCategory`, {
@@ -394,6 +445,65 @@ function CreateCategory() {
             </button>
           </div>
 
+          <div>
+            <p className="block text-sm font-medium leading-6 text-gray-900 font-bold mt-10 mb-5">
+              Category Rating Type
+            </p>
+
+            {/* Dynamic rendering of color inputs */}
+            <div className="flex flex-wrap gap-4">
+              {ratingTypes.map((ratingType, index) => (
+                <div key={index} className="flex flex-col items-start gap-2">
+                  <p className="text-sm font-semibold">Rating Type {index + 1}</p>
+                  <input
+                    type="text"
+                    placeholder="Enter color name"
+                    className="p-2 border"
+                    value={ratingType.name}
+                    onChange={(e) =>
+                      handleRatingTypeChange(index, "name", e.target.value)
+                    }
+                  />
+                  {/* <input
+                    type="number"
+                    placeholder="Enter hex code"
+                    className="p-2 border"
+                    value={ratingType.rating}
+                    onChange={(e) =>
+                      handleRatingTypeChange(index, "rating", e.target.value)
+                    }
+                  /> */}
+                  {/* <input
+                    type="file"
+                    {...register(`RatingTypeIcon${index + 1}`, {
+                      required: "Rating type icon is required",
+                    })}
+                    id={`RatingTypeIcon${index + 1}`}
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  /> */}
+                  <input
+                    type="file"
+                    accept="image/*"
+
+                    onChange={(e) =>
+                      handleFileChange(index, e.target.files[0])
+                    }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Button to add another color input */}
+            <button
+              type="button"
+              className="p-2 bg-blue-500 text-white rounded-lg mt-5"
+              onClick={addRatingTypeInput}
+            >
+              Add Another Rating Type
+            </button>
+          </div>
+
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
               Subcategory
@@ -466,7 +576,7 @@ function CreateCategory() {
                 </div>
 
                 <div className="sm:col-span-2">
-                {/* <div className="sm:col-span-2"> */}
+                  {/* <div className="sm:col-span-2"> */}
                   <label className="block text-sm font-medium leading-6 text-gray-900">
                     Subcategory Image {index + 1}*
                   </label>
@@ -580,7 +690,7 @@ function CreateCategory() {
                   </div>
                 </div> */}
 
-                
+
 
                 <button
                   className="bg-red-600  w-20 my-2 px-2 rounded-md"
