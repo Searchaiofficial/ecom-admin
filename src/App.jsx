@@ -54,6 +54,7 @@ import UpdateProduct from "./Pages/update-product";
 import InstagramHashtagSlider from "./components/homepage/InstagramHashtagSlider.jsx";
 import CategoryUpdate from "./Pages/update-category.jsx";
 import EditAdmins from "./Pages/EditAdmins.jsx";
+import ShippingRatePage from "./Pages/ShippingRatePage.jsx";
 
 export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -524,6 +525,15 @@ export default function App() {
           element={
             <Protected>
               <OfferPage />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/shipping-rate"
+          element={
+            <Protected>
+              <ShippingRatePage />
             </Protected>
           }
         ></Route>
