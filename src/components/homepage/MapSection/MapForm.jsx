@@ -1,21 +1,52 @@
-import React,{useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import AdminNavbar from '../../AdminNavbar';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../../../../config';
+import axios from 'axios';
 
 function MapForm() {
-    const { handleSubmit, control, register,reset } = useForm();
+    const { handleSubmit, control, register, reset } = useForm();
     const navigate = useNavigate();
     const [images, setImages] = useState([]);
+
+    const [allcategories, setAllCategories] = useState([])
+    const [categoryMultipleSelector, setCategoryMultipleSelector] = useState([]);
+
+
+    const fetchAllCategories = async () => {
+        try {
+            const responce = await axios.get(`${BASE_URL}/api/categories`)
+            setAllCategories(responce.data)
+            console.log(responce.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchAllCategories()
+    }, [])
+
+    const handleMultipleSelector = (e) => {
+        const { options } = e.target;
+        if (options) {
+            setCategoryMultipleSelector(
+                Array.from(options)
+                    .filter((option) => option.selected)
+                    .map((option) => option.value)
+            );
+        }
+    }
+
 
     const handleImageChange = (e, index) => {
         const file = e.target.files[0];
         if (file) {
-          const imageUrl = URL.createObjectURL(file);
-          setImages(`img${index}`, imageUrl);
+            const imageUrl = URL.createObjectURL(file);
+            setImages(`img${index}`, imageUrl);
         }
-      };
+    };
 
     const onSubmit = async (data) => {
         try {
@@ -27,6 +58,11 @@ function MapForm() {
             formData.append('address', data.address);
             formData.append('phone', data.phone);
             formData.append('thumbnail', data.thumbnail);
+            formData.append("pincode", data.pincode);
+            // formData.append("category", data.category);
+            categoryMultipleSelector.forEach(category => {
+                formData.append('category[]', category);
+            });
 
             // Add images to FormData
             for (let i = 1; i <= 4; i++) {
@@ -36,6 +72,11 @@ function MapForm() {
                     formData.append(`image`, file);
                 }
             }
+
+            for (let pair of formData.entries()) {
+                console.log(`${pair[0]}: ${pair[1]}`);
+            }
+
 
             const response = await fetch(`${BASE_URL}/api/createMapPlaces`, {
                 method: 'POST',
@@ -122,6 +163,22 @@ function MapForm() {
                         )}
                     />
 
+                    <label htmlFor="pincode" className="block text-sm font-medium leading-5 text-gray-700 mt-4">
+                        PinCode
+                    </label>
+                    <Controller
+                        name="pincode"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <input
+                                {...field}
+                                type="text"
+                                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
+                            />
+                        )}
+                    />
+
                     <label htmlFor="phone" className="block text-sm font-medium leading-5 text-gray-700 mt-4">
                         Phone
                     </label>
@@ -137,6 +194,56 @@ function MapForm() {
                             />
                         )}
                     />
+
+                    <div className="sm:col-span-3">
+                        <label
+                            htmlFor="category"
+                            className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                            category
+                        </label>
+                        <select
+                            {...register("category")}
+                            id="category"
+                            className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded"
+                            multiple
+                            onChange={handleMultipleSelector}
+                        >
+                            {allcategories?.map((room, index) => (
+                                <option key={index} value={room.name}>
+                                    {room.name}
+                                </option>
+                            ))}
+                        </select>
+                        {categoryMultipleSelector.length > 0 && (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    gap: "7px",
+                                    alignItems: "center",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                {categoryMultipleSelector.map((room, index) => {
+                                    return (
+                                        <button
+                                            // onClick={() =>
+                                            //   navigate(`/homePage/create-room-section/${room}`)
+                                            // }
+                                            style={{
+                                                border: "1px solid black",
+                                                padding: "2px",
+                                                borderRadius: "3px",
+                                            }}
+                                            key={index}
+                                        >
+                                            {room}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
 
                     <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                         <div className="sm:col-span-3">
