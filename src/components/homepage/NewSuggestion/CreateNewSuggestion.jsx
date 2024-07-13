@@ -18,14 +18,14 @@ function CreateNewSuggestion() {
   //   name: "factors",
   // });
 
-  const {
-    fields: subHeadings,
-    append: appendSubHeading,
-    remove: removeSubHeading,
-  } = useFieldArray({
-    control,
-    name: "subHeadings",
-  });
+  // const {
+  //   fields: subHeadings,
+  //   append: appendSubHeadidng,
+  //   remove: removeSubHeading,
+  // } = useFieldArray({
+  //   control,
+  //   name: "subHeadings",
+  // });
 
   const navigate = useNavigate();
 
@@ -150,7 +150,7 @@ function CreateNewSuggestion() {
       setForthSlider({ ...forthSlider, subType });
     } else if (number === 5) {
       setFifthSlider({ ...fifthSlider, subType });
-    } 
+    }
   };
 
   const handleImageChange = (e, fieldName) => {
@@ -287,20 +287,20 @@ function CreateNewSuggestion() {
         setLoading(true);
         const formData = new FormData();
         console.log("Form-Data:", data);
-        const subHeadingData = getValues("subHeadings");
-        console.log("SubHeading-Data:", subHeadingData);
+        // const subHeadingData = getValues("subHeadings");
+        // console.log("SubHeading-Data:", subHeadingData);
         // const factorsData = getValues("factors");
         // console.log("factorData:", factorsData);
 
-        subHeadingData.forEach((subHeading, index) => {
-          formData.append(`subHeading[${index}][title]`, subHeading?.title);
-          formData.append(`subHeading[${index}][room1]`, subHeading?.room1);
-          formData.append(`subHeading[${index}][room2]`, subHeading?.room2);
-          formData.append(
-            `subHeading[${index}][description]`,
-            subHeading?.description
-          );
-        });
+        // subHeadingData.forEach((subHeading, index) => {
+        //   formData.append(`subHeading[${index}][title]`, subHeading?.title);
+        //   formData.append(`subHeading[${index}][room1]`, subHeading?.room1);
+        //   formData.append(`subHeading[${index}][room2]`, subHeading?.room2);
+        //   formData.append(
+        //     `subHeading[${index}][description]`,
+        //     subHeading?.description
+        //   );
+        // });
 
         // factorsData?.forEach((factor, index) => {
         //   formData.append(`factors[items][${index}][label]`, factor?.label);
@@ -355,13 +355,18 @@ function CreateNewSuggestion() {
         //   formData.append(`roomData[${index}][productId]`, room.productId);
         // });
 
-        formData.append(`fiveRooms[${0}]`, data.roomData[0]);
-        formData.append(`fiveRooms[${1}]`, data.roomData[1]);
-        formData.append(`fiveRooms[${2}]`, data.roomData[2]);
-        formData.append(`fiveRooms[${3}]`, data.roomData[3]);
-        formData.append(`fiveRooms[${4}]`, data.roomData[4]);
+        formData.append(`fiveRooms[${0}]`, data.fiveRooms[0]);
+        formData.append(`fiveRooms[${1}]`, data.fiveRooms[1]);
+        formData.append(`fiveRooms[${2}]`, data.fiveRooms[2]);
+        formData.append(`fiveRooms[${3}]`, data.fiveRooms[3]);
+        formData.append(`fiveRooms[${4}]`, data.fiveRooms[4]);
         formData.append("fiveGridHeader", data.fiveGridHeader);
         formData.append("fiveGridDescription", data.fiveGridDescription);
+
+        formData.append("twoGridHeader", data.twoGridHeader);
+        formData.append("twoGridDescription", data.twoGridDescription);
+        formData.append(`twoRooms[${0}]`, data.twoRooms[0]);
+        formData.append(`twoRooms[${1}]`, data.twoRooms[1]);
 
         // formData.append("roomType", selectedRoomOption);
 
@@ -636,7 +641,7 @@ function CreateNewSuggestion() {
             </button>
           </div> */}
 
-          <div className="my-10">
+          {/* <div className="my-10">
             <label className="block text-2xl font-medium leading-5 text-gray-700 mt-4">
               SubHeadings
             </label>
@@ -694,9 +699,6 @@ function CreateNewSuggestion() {
                           required: "Sub Heading is required",
                         })}
                         id={`subHeadings${index + 1}Room1`}
-                        // onChange={(e) =>
-                        //   handleImageChange(e, "subHeadingImage1")
-                        // }
                         placeholder="Enter Room ID"
                         className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       />
@@ -716,9 +718,6 @@ function CreateNewSuggestion() {
                         })}
                         id={`subHeadings${index + 1}Room2`}
                         placeholder="Enter room ID"
-                        // onChange={(e) =>
-                        //   handleImageChange(e, "subHeadingImage2")
-                        // }
                         className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -742,7 +741,7 @@ function CreateNewSuggestion() {
             >
               Add SubHeading
             </button>
-          </div>
+          </div> */}
 
           <h1 className="mt-10 text-2xl font-bold">Rooms</h1>
           <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-5">
@@ -759,9 +758,6 @@ function CreateNewSuggestion() {
                     })}
                     id={`fiveGridHeader`}
                     placeholder="Enter Header"
-                    // onChange={(e) =>
-                    //   handleImageChange(e, "subHeadingImage2")
-                    // }
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -779,10 +775,7 @@ function CreateNewSuggestion() {
                       required: "Sub Heading is required",
                     })}
                     id={`fiveGridDescription`}
-                    placeholder="Enter Header"
-                    // onChange={(e) =>
-                    //   handleImageChange(e, "subHeadingImage2")
-                    // }
+                    placeholder="Enter Description"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -811,10 +804,10 @@ function CreateNewSuggestion() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register(`roomData[0]`, {
+                    {...register(`fiveRooms[0]`, {
                       required: "Sub Heading is required",
                     })}
-                    id={`roomData[0]`}
+                    id={`fiveRooms[0]`}
                     placeholder="Enter room ID"
                     // onChange={(e) =>
                     //   handleImageChange(e, "subHeadingImage2")
@@ -832,10 +825,10 @@ function CreateNewSuggestion() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register(`roomData[1]`, {
+                    {...register(`fiveRooms[1]`, {
                       required: "Sub Heading is required",
                     })}
-                    id={`roomData[1]`}
+                    id={`fiveRooms[1]`}
                     placeholder="Enter room ID"
                     // onChange={(e) =>
                     //   handleImageChange(e, "subHeadingImage2")
@@ -853,10 +846,10 @@ function CreateNewSuggestion() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register(`roomData[2]`, {
+                    {...register(`fiveRooms[2]`, {
                       required: "Sub Heading is required",
                     })}
-                    id={`roomData[2]`}
+                    id={`fiveRooms[2]`}
                     placeholder="Enter room ID"
                     // onChange={(e) =>
                     //   handleImageChange(e, "subHeadingImage2")
@@ -874,10 +867,10 @@ function CreateNewSuggestion() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register(`roomData[3]`, {
+                    {...register(`fiveRooms[3]`, {
                       required: "Sub Heading is required",
                     })}
-                    id={`roomData[3]`}
+                    id={`fiveRooms[3]`}
                     placeholder="Enter room ID"
                     // onChange={(e) =>
                     //   handleImageChange(e, "subHeadingImage2")
@@ -895,10 +888,10 @@ function CreateNewSuggestion() {
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
                     type="text"
-                    {...register(`roomData[4]`, {
+                    {...register(`fiveRooms[4]`, {
                       required: "Sub Heading is required",
                     })}
-                    id={`roomData[4]`}
+                    id={`fiveRooms[4]`}
                     placeholder="Enter room ID"
                     // onChange={(e) =>
                     //   handleImageChange(e, "subHeadingImage2")
@@ -908,6 +901,88 @@ function CreateNewSuggestion() {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mt-16 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-5">
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                2 Grid Room Heading*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`twoGridHeader`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`fiveGridHeader`}
+                    placeholder="Enter Header"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-3">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                2 Grid Room Description*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`twoGridDescription`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`twoGridDescription`}
+                    placeholder="Enter Description"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-1">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Room 1*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`twoRooms[0]`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`twoRooms[0]`}
+                    placeholder="Enter room ID"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-1">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Room 2*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`twoRooms[1]`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`twoRooms[1]`}
+                    placeholder="Enter room ID"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
