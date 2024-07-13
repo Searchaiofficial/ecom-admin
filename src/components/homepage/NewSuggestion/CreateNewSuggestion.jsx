@@ -9,14 +9,14 @@ import { BASE_URL } from "../../../../config";
 function CreateNewSuggestion() {
   // form related
   const { register, handleSubmit, getValues, reset, control } = useForm();
-  const {
-    fields: factors,
-    append: appendFactors,
-    remove: removeFactors,
-  } = useFieldArray({
-    control,
-    name: "factors",
-  });
+  // const {
+  //   fields: factors,
+  //   append: appendFactors,
+  //   remove: removeFactors,
+  // } = useFieldArray({
+  //   control,
+  //   name: "factors",
+  // });
 
   const {
     fields: subHeadings,
@@ -42,6 +42,14 @@ function CreateNewSuggestion() {
     type: "",
     subType: "",
   });
+  const [forthSlider, setForthSlider] = useState({
+    type: "",
+    subType: "",
+  });
+  const [fifthSlider, setFifthSlider] = useState({
+    type: "",
+    subType: "",
+  });
 
   const [allOfferData, setAllOfferData] = useState([]);
   const [allDemandData, setAllDemandData] = useState([]);
@@ -52,15 +60,17 @@ function CreateNewSuggestion() {
 
   const [rooms, setRooms] = useState([]);
   const [selectedRoomOption, setSelectedRoomOption] = useState([]);
-  const [selectedRoomData1, setSelectedRoomData1] = useState("");
-  const [selectedRoomData2, setSelectedRoomData2] = useState("");
-  const [selectedRoomData3, setSelectedRoomData3] = useState("");
-  const [selectedRoomData4, setSelectedRoomData4] = useState("");
-  const [optionRoomData, setOptionRoomData] = useState([]);
+  // const [selectedRoomData1, setSelectedRoomData1] = useState("");
+  // const [selectedRoomData2, setSelectedRoomData2] = useState("");
+  // const [selectedRoomData3, setSelectedRoomData3] = useState("");
+  // const [selectedRoomData4, setSelectedRoomData4] = useState("");
+  // const [optionRoomData, setOptionRoomData] = useState([]);
 
   const [firstSliderSubData, setFirstSliderSubData] = useState([]);
   const [secondSliderSubData, setSecondSliderSubData] = useState([]);
   const [thirdSliderSubData, setThirdSliderSubData] = useState([]);
+  const [forthSliderSubData, setForthSliderSubData] = useState([]);
+  const [fifthSliderSubData, setFifthSliderSubData] = useState([]);
 
   const sliderOption = ["Demand Type", "Offer", "Category"];
 
@@ -74,6 +84,12 @@ function CreateNewSuggestion() {
       handleTypeAndSubTypeChange(type, number);
     } else if (number === 3) {
       setThirdSlider({ ...thirdSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    } else if (number === 4) {
+      setForthSlider({ ...forthSlider, type });
+      handleTypeAndSubTypeChange(type, number);
+    } else if (number === 5) {
+      setFifthSlider({ ...fifthSlider, type });
       handleTypeAndSubTypeChange(type, number);
     }
   };
@@ -103,6 +119,22 @@ function CreateNewSuggestion() {
       } else if (type === "Category") {
         setThirdSliderSubData(allCategoryData);
       }
+    } else if (number === 4) {
+      if (type === "Demand Type") {
+        setForthSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setForthSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setForthSliderSubData(allCategoryData);
+      }
+    } else if (number === 5) {
+      if (type === "Demand Type") {
+        setFifthSliderSubData(allDemandData);
+      } else if (type === "Offer") {
+        setFifthSliderSubData(allOfferData);
+      } else if (type === "Category") {
+        setFifthSliderSubData(allCategoryData);
+      }
     }
   };
 
@@ -114,7 +146,11 @@ function CreateNewSuggestion() {
       setSecondSlider({ ...secondSlider, subType });
     } else if (number === 3) {
       setThirdSlider({ ...thirdSlider, subType });
-    }
+    } else if (number === 4) {
+      setForthSlider({ ...forthSlider, subType });
+    } else if (number === 5) {
+      setFifthSlider({ ...fifthSlider, subType });
+    } 
   };
 
   const handleImageChange = (e, fieldName) => {
@@ -162,23 +198,23 @@ function CreateNewSuggestion() {
     }
   };
 
-  const handleRoomChange = (e) => {
-    const room = e.target.value;
-    setSelectedRoomOption(room);
-  };
+  // const handleRoomChange = (e) => {
+  //   const room = e.target.value;
+  //   setSelectedRoomOption(room);
+  // };
 
-  const handleRoomDataChange = (e, number) => {
-    const room = e.target.value;
-    if (number === 1) {
-      setSelectedRoomData1(room);
-    } else if (number === 2) {
-      setSelectedRoomData2(room);
-    } else if (number === 3) {
-      setSelectedRoomData3(room);
-    } else if (number === 4) {
-      setSelectedRoomData4(room);
-    }
-  };
+  // const handleRoomDataChange = (e, number) => {
+  //   const room = e.target.value;
+  //   if (number === 1) {
+  //     setSelectedRoomData1(room);
+  //   } else if (number === 2) {
+  //     setSelectedRoomData2(room);
+  //   } else if (number === 3) {
+  //     setSelectedRoomData3(room);
+  //   } else if (number === 4) {
+  //     setSelectedRoomData4(room);
+  //   }
+  // };
 
   const fetchAllRooms = async () => {
     try {
@@ -199,7 +235,7 @@ function CreateNewSuggestion() {
         (room) => `${room.roomType}-${room.productId}`
       );
       console.log("Select Room Data:", selectRoomOptionData);
-      setOptionRoomData(selectRoomOptionData);
+      // setOptionRoomData(selectRoomOptionData);
     } catch (error) {
       console.error("Error fetching room details:", error);
     }
@@ -252,72 +288,82 @@ function CreateNewSuggestion() {
         const formData = new FormData();
         console.log("Form-Data:", data);
         const subHeadingData = getValues("subHeadings");
-        const factorsData = getValues("factors");
         console.log("SubHeading-Data:", subHeadingData);
-        console.log("factorData:", factorsData);
+        // const factorsData = getValues("factors");
+        // console.log("factorData:", factorsData);
 
         subHeadingData.forEach((subHeading, index) => {
           formData.append(`subHeading[${index}][title]`, subHeading?.title);
+          formData.append(`subHeading[${index}][room1]`, subHeading?.room1);
+          formData.append(`subHeading[${index}][room2]`, subHeading?.room2);
           formData.append(
             `subHeading[${index}][description]`,
             subHeading?.description
           );
         });
 
-        factorsData?.forEach((factor, index) => {
-          formData.append(`factors[items][${index}][label]`, factor?.label);
-        });
+        // factorsData?.forEach((factor, index) => {
+        //   formData.append(`factors[items][${index}][label]`, factor?.label);
+        // });
 
-        formData.append(`factors[title]`, data.factors.title);
+        // formData.append(`factors[title]`, data.factors.title);
 
-        for (let i = 1; i <= subHeadings.length; i++) {
-          const fileInput1 = document.getElementById(`subHeadings${i}Image1`);
-          const fileInput2 = document.getElementById(`subHeadings${i}Image2`);
-          const file1 = fileInput1?.files[0];
-          const file2 = fileInput2?.files[0];
-          if (file1) {
-            formData.append(`subHeadingImage1`, file1);
-          }
-          if (file2) {
-            formData.append(`subHeadingImage2`, file2);
-          }
-        }
+        // for (let i = 1; i <= subHeadings.length; i++) {
+        //   const fileInput1 = document.getElementById(`subHeadings${i}Image1`);
+        //   const fileInput2 = document.getElementById(`subHeadings${i}Image2`);
+        //   const file1 = fileInput1?.files[0];
+        //   const file2 = fileInput2?.files[0];
+        //   if (file1) {
+        //     formData.append(`subHeadingImage1`, file1);
+        //   }
+        //   if (file2) {
+        //     formData.append(`subHeadingImage2`, file2);
+        //   }
+        // }
 
-        for (let i = 1; i <= factors.length; i++) {
-          const fileInput = document.getElementById(`factors${i}Image`);
-          const file = fileInput?.files[0];
-          if (file) {
-            formData.append(`factorsImage`, file);
-          }
-        }
+        // for (let i = 1; i <= factors.length; i++) {
+        //   const fileInput = document.getElementById(`factors${i}Image`);
+        //   const file = fileInput?.files[0];
+        //   if (file) {
+        //     formData.append(`factorsImage`, file);
+        //   }
+        // }
 
-        formData.append("mainImage", images.mainImage);
-        formData.append("suggestionCardImage", images.suggestionCardImage);
+        formData.append("mainImage", data.mainImage);
+        // formData.append("suggestionCardImage", images.suggestionCardImage);
         formData.append("category", selectedCategory);
         formData.append("heading", data.heading);
         formData.append("summary", data.summary);
         formData.append("shortSummary", data.shortSummary);
         formData.append("metadataTitle", data.metadataTitle);
 
-        const [roomType1, productId1] = selectedRoomData1.split("-");
-        const [roomType2, productId2] = selectedRoomData2.split("-");
-        const [roomType3, productId3] = selectedRoomData3.split("-");
-        const [roomType4, productId4] = selectedRoomData4.split("-");
+        // const [roomType1, productId1] = selectedRoomData1.split("-");
+        // const [roomType2, productId2] = selectedRoomData2.split("-");
+        // const [roomType3, productId3] = selectedRoomData3.split("-");
+        // const [roomType4, productId4] = selectedRoomData4.split("-");
 
-        const roomData = [
-          { roomType: roomType1, productId: productId1 },
-          { roomType: roomType2, productId: productId2 },
-          { roomType: roomType3, productId: productId3 },
-          { roomType: roomType4, productId: productId4 },
-        ];
+        // const roomData = [
+        //   { roomType: roomType1, productId: productId1 },
+        //   { roomType: roomType2, productId: productId2 },
+        //   { roomType: roomType3, productId: productId3 },
+        //   { roomType: roomType4, productId: productId4 },
+        // ];
 
         // Loop through each object in roomData and append its properties to formData
-        roomData.forEach((room, index) => {
-          formData.append(`roomData[${index}][roomType]`, room.roomType);
-          formData.append(`roomData[${index}][productId]`, room.productId);
-        });
+        // roomData.forEach((room, index) => {
+        //   formData.append(`roomData[${index}][roomType]`, room.roomType);
+        //   formData.append(`roomData[${index}][productId]`, room.productId);
+        // });
 
-        formData.append("roomType", selectedRoomOption);
+        formData.append(`fiveRooms[${0}]`, data.roomData[0]);
+        formData.append(`fiveRooms[${1}]`, data.roomData[1]);
+        formData.append(`fiveRooms[${2}]`, data.roomData[2]);
+        formData.append(`fiveRooms[${3}]`, data.roomData[3]);
+        formData.append(`fiveRooms[${4}]`, data.roomData[4]);
+        formData.append("fiveGridHeader", data.fiveGridHeader);
+        formData.append("fiveGridDescription", data.fiveGridDescription);
+
+        // formData.append("roomType", selectedRoomOption);
 
         formData.append("firstSlider[type]", firstSlider.type);
         formData.append("firstSlider[subType]", firstSlider.subType);
@@ -328,15 +374,18 @@ function CreateNewSuggestion() {
         formData.append("thirdSlider[type]", thirdSlider.type);
         formData.append("thirdSlider[subType]", thirdSlider.subType);
 
+        formData.append("forthSlider[type]", forthSlider.type);
+        formData.append("forthSlider[subType]", forthSlider.subType);
+
+        formData.append("fifthSlider[type]", fifthSlider.type);
+        formData.append("fifthSlider[subType]", fifthSlider.subType);
+
         // --------- 💥 api call 💥 -------
         try {
-          const response = await fetch(
-            `${BASE_URL}/api/createSuggestion`,
-            {
-              method: "POST",
-              body: formData,
-            }
-          );
+          const response = await fetch(`${BASE_URL}/api/createSuggestion`, {
+            method: "POST",
+            body: formData,
+          });
           const responseData = await response.json();
           window.alert(responseData.message);
           setLoading(false);
@@ -354,7 +403,7 @@ function CreateNewSuggestion() {
       <div className="space-y-12 bg-white p-6 md:p-12">
         <div className="border-b border-gray-500 pb-12">
           <h2 className="text-2xl font-bold leading-7 text-gray-900 text-center">
-            Add New Suggestion
+            Add New Blog
           </h2>
 
           <h2 className="text-lg mt-6 font-bold leading-7 text-gray-900">
@@ -445,7 +494,7 @@ function CreateNewSuggestion() {
               </div>
             </div>
 
-            <div className="sm:col-span-3">
+            {/* <div className="sm:col-span-3">
               <label
                 htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
@@ -465,7 +514,7 @@ function CreateNewSuggestion() {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -474,15 +523,16 @@ function CreateNewSuggestion() {
                 htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Suggestion Main Image*
+                Suggestion Main Room*
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
-                    type="file"
+                    type="text"
                     {...register("mainImage", {
                       required: "Sub Heading is required",
                     })}
+                    placeholder="Enter room ID"
                     id="mainImage"
                     onChange={(e) => handleImageChange(e, "mainImage")}
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
@@ -491,7 +541,7 @@ function CreateNewSuggestion() {
               </div>
             </div>
 
-            <div className="sm:col-span-3">
+            {/* <div className="sm:col-span-3">
               <label
                 htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-900"
@@ -501,7 +551,7 @@ function CreateNewSuggestion() {
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
-                    type="file"
+                    type="text"
                     {...register("suggestionCardImage", {
                       required: "Sub Heading is required",
                     })}
@@ -513,10 +563,10 @@ function CreateNewSuggestion() {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6  border-b-2">
+          {/* <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6  border-b-2">
             <div className="sm:col-span-6">
               <label
                 htmlFor="title"
@@ -584,7 +634,7 @@ function CreateNewSuggestion() {
             >
               Add Factors
             </button>
-          </div>
+          </div> */}
 
           <div className="my-10">
             <label className="block text-2xl font-medium leading-5 text-gray-700 mt-4">
@@ -634,19 +684,20 @@ function CreateNewSuggestion() {
 
                 <div className="sm:col-span-3">
                   <label className="block text-sm font-medium leading-6 text-gray-900">
-                    SubHeading Image 1*
+                    SubHeading Room 1*
                   </label>
                   <div className="mt-2">
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                       <input
-                        type="file"
-                        {...register(`subHeadings${index + 1}Image1`, {
+                        type="text"
+                        {...register(`subHeadings[${index}].room1`, {
                           required: "Sub Heading is required",
                         })}
-                        id={`subHeadings${index + 1}Image1`}
-                        onChange={(e) =>
-                          handleImageChange(e, "subHeadingImage1")
-                        }
+                        id={`subHeadings${index + 1}Room1`}
+                        // onChange={(e) =>
+                        //   handleImageChange(e, "subHeadingImage1")
+                        // }
+                        placeholder="Enter Room ID"
                         className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -654,16 +705,17 @@ function CreateNewSuggestion() {
                 </div>
                 <div className="sm:col-span-3">
                   <label className="block text-sm font-medium leading-6 text-gray-900">
-                    SubHeading Image 2*
+                    SubHeading Room 2*
                   </label>
                   <div className="mt-2">
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                       <input
-                        type="file"
-                        {...register(`subHeadings${index + 1}Image2`, {
+                        type="text"
+                        {...register(`subHeadings[${index}].room2`, {
                           required: "Sub Heading is required",
                         })}
-                        id={`subHeadings${index + 1}Image2`}
+                        id={`subHeadings${index + 1}Room2`}
+                        placeholder="Enter room ID"
                         // onChange={(e) =>
                         //   handleImageChange(e, "subHeadingImage2")
                         // }
@@ -692,8 +744,51 @@ function CreateNewSuggestion() {
             </button>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-1 my-6">
+          <h1 className="mt-10 text-2xl font-bold">Rooms</h1>
+          <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-5">
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                5 Grid Room Heading*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`fiveGridHeader`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`fiveGridHeader`}
+                    placeholder="Enter Header"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-3">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                5 Grid Room Description*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`fiveGridDescription`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`fiveGridDescription`}
+                    placeholder="Enter Header"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+            {/* <div className="sm:col-span-1">
               <label htmlFor="room">Choose Room</label>
               <select
                 id="room"
@@ -707,72 +802,111 @@ function CreateNewSuggestion() {
                   </option>
                 ))}
               </select>
+            </div> */}
+            <div className="sm:col-span-1">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Room 1*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`roomData[0]`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`roomData[0]`}
+                    placeholder="Enter room ID"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
             </div>
-
-            <div className="sm:col-span-1 my-6">
-              <label htmlFor="room">RoomData 1:</label>
-              <select
-                id="room"
-                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                onChange={(e) => handleRoomDataChange(e, 1)} // Pass 1 for room 1
-                value={selectedRoomData1}
-              >
-                <option value="">-- Select Room Data--</option>
-                {optionRoomData.map((room, index) => (
-                  <option key={index} value={room}>
-                    {room}
-                  </option>
-                ))}
-              </select>
+            <div className="sm:col-span-1">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Room 2*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`roomData[1]`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`roomData[1]`}
+                    placeholder="Enter room ID"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="sm:col-span-1 my-6">
-              <label htmlFor="room">RoomData 2:</label>
-              <select
-                id="room"
-                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                onChange={(e) => handleRoomDataChange(e, 2)} // Pass 2 for room 2
-                value={selectedRoomData2}
-              >
-                <option value="">-- Select Room Data--</option>
-                {optionRoomData.map((room, index) => (
-                  <option key={index} value={room}>
-                    {room}
-                  </option>
-                ))}
-              </select>
+            <div className="sm:col-span-1">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Room 3*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`roomData[2]`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`roomData[2]`}
+                    placeholder="Enter room ID"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
             </div>
-
-            <div className="sm:col-span-1 my-6">
-              <label htmlFor="room">RoomData 3:</label>
-              <select
-                id="room"
-                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                onChange={(e) => handleRoomDataChange(e, 3)} // Pass 1 for room 1
-                value={selectedRoomData3}
-              >
-                <option value="">-- Select Room Data--</option>
-                {optionRoomData.map((room, index) => (
-                  <option key={index} value={room}>
-                    {room}
-                  </option>
-                ))}
-              </select>
+            <div className="sm:col-span-1">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Room 4*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`roomData[3]`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`roomData[3]`}
+                    placeholder="Enter room ID"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="sm:col-span-1 my-6">
-              <label htmlFor="room">RoomData 4:</label>
-              <select
-                id="room"
-                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                onChange={(e) => handleRoomDataChange(e, 4)} // Pass 2 for room 2
-                value={selectedRoomData4}
-              >
-                <option value="">-- Select Room Data--</option>
-                {optionRoomData.map((room, index) => (
-                  <option key={index} value={room}>
-                    {room}
-                  </option>
-                ))}
-              </select>
+            <div className="sm:col-span-1">
+              <label className="block text-sm font-medium leading-6 text-gray-900">
+                Room 5*
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="text"
+                    {...register(`roomData[4]`, {
+                      required: "Sub Heading is required",
+                    })}
+                    id={`roomData[4]`}
+                    placeholder="Enter room ID"
+                    // onChange={(e) =>
+                    //   handleImageChange(e, "subHeadingImage2")
+                    // }
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -872,6 +1006,74 @@ function CreateNewSuggestion() {
               >
                 <option value="">-- Select Sub Type--</option>
                 {thirdSliderSubData.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 4:</label>
+              <select
+                id="slider1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSliderChange(e, 4)} // Pass 1 for room 1
+                value={forthSlider.type}
+              >
+                <option value="">-- Select type--</option>
+                {sliderOption.map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 4 : SubData</label>
+              <select
+                id="subData1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSubTypeChange(e, 4)} // Pass 2 for room 2
+                value={forthSlider.subType}
+              >
+                <option value="">-- Select Sub Type--</option>
+                {forthSliderSubData.map((data, index) => (
+                  <option key={index} value={data}>
+                    {data}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 5:</label>
+              <select
+                id="slider1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSliderChange(e, 5)} // Pass 1 for room 1
+                value={fifthSlider.type}
+              >
+                <option value="">-- Select type--</option>
+                {sliderOption.map((option, index) => (
+                  <option key={index} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="sm:col-span-3 my-6">
+              <label htmlFor="room">Slider 5 : SubData</label>
+              <select
+                id="subData1"
+                className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                onChange={(e) => handleSubTypeChange(e, 5)} // Pass 2 for room 2
+                value={fifthSlider.subType}
+              >
+                <option value="">-- Select Sub Type--</option>
+                {fifthSliderSubData.map((data, index) => (
                   <option key={index} value={data}>
                     {data}
                   </option>

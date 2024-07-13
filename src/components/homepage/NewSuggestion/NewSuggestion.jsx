@@ -28,7 +28,7 @@ const NewSuggestion = () => {
   return (
     <div className="mt-4 border-t border-red-400 py-4 mx-4">
       <div className="text-center mb-6">
-        <h1 className="font-bold ">New Suggestion</h1>
+        <h1 className="font-bold ">New Blog</h1>
         <span
           className="text-red-400  mt-1 hover:cursor-pointer"
           onClick={() =>
