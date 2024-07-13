@@ -6,6 +6,19 @@ import { useState, useEffect } from "react";
 import { Button } from "@material-tailwind/react";
 import { BASE_URL } from "../../../config";
 
+
+const positions = [
+  "heading",
+  "mainImage",
+  "twoGrid",
+  "fiveGrid",
+  "firstSlider",
+  "secondSlider",
+  "thirdSlider",
+  "forthSlider",
+  "fifthSlider",
+]
+
 function RoomPageForm() {
   // form related
   const { register, handleSubmit, getValues, reset, control } = useForm();
@@ -237,9 +250,42 @@ function RoomPageForm() {
   }, [rooms, selectedRoomOption, allDemandData, allOfferData, allCategoryData]);
 
   const handleRoomType = (e) => {
-    setSelectedRoomType(e.target.value);  
+    setSelectedRoomType(e.target.value);
   };
 
+  const [categoryMultipleSelector, setCategoryMultipleSelector] = useState([]);
+  const [selectionOrder, setSelectionOrder] = useState([]);
+
+  console.log("Category Multiple Selector:", categoryMultipleSelector);
+
+  console.log("Selection Order:", selectionOrder);
+
+  const handleMultipleSelector = (e) => {
+    const { options } = e.target;
+    if (options) {
+      const selectedValues = Array.from(options)
+        .filter((option) => option.selected)
+        .map((option) => option.value);
+
+      setCategoryMultipleSelector(selectedValues);
+
+      // Update the selection order
+      const newSelectionOrder = [...selectionOrder];
+      selectedValues.forEach((value) => {
+        if (!newSelectionOrder.includes(value)) {
+          newSelectionOrder.push(value);
+        }
+      });
+
+      // Filter out unselected values from the order array
+      const filteredOrder = newSelectionOrder.filter((value) =>
+        selectedValues.includes(value)
+      );
+
+      setSelectionOrder(filteredOrder);
+    }
+  };
+  console.log("Selection Order:", selectionOrder);
   const [loading, setLoading] = useState(false);
   return (
     <form
@@ -282,6 +328,10 @@ function RoomPageForm() {
 
         formData.append("fifthSlider[type]", fifthSlider.type);
         formData.append("fifthSlider[subType]", fifthSlider.subType);
+        // formData.append("position", selectionOrder);
+        selectionOrder.forEach((position, index) => {
+          formData.append(`position[${index}]`, position);
+        });
 
         // --------- 💥 api call 💥 -------
         try {
@@ -419,7 +469,7 @@ function RoomPageForm() {
                 htmlFor="title"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                 Main Room Image*
+                Main Room Image*
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
@@ -832,6 +882,51 @@ function RoomPageForm() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="sm:col-span-3 px-10">
+        <label
+          htmlFor="position"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Position
+        </label>
+        <select
+          id="position"
+          {...register("position")}
+          className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded"
+          multiple
+          onChange={handleMultipleSelector}
+        >
+          {positions.map((room, index) => (
+            <option key={index} value={room}>
+              {room}
+            </option>
+          ))}
+        </select>
+        {selectionOrder.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              gap: "7px",
+              alignItems: "center",
+              marginTop: "10px",
+            }}
+          >
+            {selectionOrder.map((room, index) => (
+              <button
+                // onClick={() => navigate(`/homePage/create-room-section/${room}`)}
+                style={{
+                  border: "1px solid black",
+                  padding: "2px",
+                  borderRadius: "3px",
+                }}
+                key={index}
+              >
+                {index + 1} {room}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mb-24 flex items-center justify-center md:justify-end gap-x-6 mr-10">
