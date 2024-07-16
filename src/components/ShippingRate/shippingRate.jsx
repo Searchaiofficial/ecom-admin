@@ -39,23 +39,23 @@ const ShippingRates = () => {
   };
 
   return (
-    <div className="max-w-md  mt-12 mx-auto px-4">
+    <div className=" mt-12 mx-auto px-4">
       <h2 className="text-2xl font-bold mb-4">Shipping Rates</h2>
       <ShippingRateForm onSubmit={handleFormSubmit} editRate={editRate} />
       <ul className="mt-6  space-y-4">
       {shippingRates?.map((rate) => (
           <li key={rate._id} className="p-4 bg-white shadow-md rounded-md flex justify-between items-center">
-            <span className='text-xl'>({rate.minDistance} - {rate.maxDistance}) km: Rs {rate.charge}</span>
+            <span className='text-xl'>({rate.minDistance} - {rate.maxDistance}) km: Rs {rate.charge} - Estimate Delivery in {rate.estimatedDelivery} days</span>
             <div>
               <button 
                 onClick={() => handleEdit(rate)} 
-                className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                className="bg-blue-500 text-white px-2 py-2 rounded-md mr-2"
               >
                 Edit
               </button>
               <button 
                 onClick={() => handleDelete(rate._id)} 
-                className="bg-red-500 text-white px-4 py-2 rounded-md"
+                className="bg-red-500 text-white  px-2 py-2 rounded-md"
               >
                 Delete
               </button>

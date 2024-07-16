@@ -6,6 +6,7 @@ const ShippingRateForm = ({ onSubmit, editRate }) => {
   const [minDistance, setMinDistance] = useState('');
   const [maxDistance, setMaxDistance] = useState('');
   const [charge, setCharge] = useState('');
+  const [estimatedDelivery, setEstimatedDelivery] = useState('');
   const [id, setId] = useState(null);
 
   useEffect(() => {
@@ -13,6 +14,7 @@ const ShippingRateForm = ({ onSubmit, editRate }) => {
       setMinDistance(editRate.minDistance);
       setMaxDistance(editRate.maxDistance);
       setCharge(editRate.charge);
+      setEstimatedDelivery(editRate.estimatedDelivery);
       setId(editRate._id);
     } else {
       setMinDistance('');
@@ -26,12 +28,13 @@ const ShippingRateForm = ({ onSubmit, editRate }) => {
     e.preventDefault();
     try {
       if (id) {
-        await axios.patch(`${BASE_URL}/api/shippingRate/${id}`, { minDistance, maxDistance, charge });
+        await axios.patch(`${BASE_URL}/api/shippingRate/${id}`, { minDistance, maxDistance, charge, estimatedDelivery });
       } else {
-        await axios.post(`${BASE_URL}/api/shippingRate`, { minDistance, maxDistance, charge });
+        await axios.post(`${BASE_URL}/api/shippingRate`, { minDistance, maxDistance, charge,estimatedDelivery });
       }
       setMinDistance('');
       setMaxDistance('');
+      setEstimatedDelivery('');
       setCharge('');
       setId(null);
       onSubmit();
@@ -68,6 +71,16 @@ const ShippingRateForm = ({ onSubmit, editRate }) => {
           type="number" 
           value={charge} 
           onChange={(e) => setCharge(e.target.value)} 
+          required 
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 text-sm font-bold mb-2">Estimated Delivery (Day)</label>
+        <input 
+          type="number" 
+          value={estimatedDelivery} 
+          onChange={(e) => setEstimatedDelivery(e.target.value)} 
           required 
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
