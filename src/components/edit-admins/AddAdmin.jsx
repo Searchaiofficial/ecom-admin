@@ -14,6 +14,7 @@ const AddAdmin = ({ refreshAdmins }) => {
     e.preventDefault();
 
     const { email, name } = formData;
+    console.log(email, name, selectedCategory);
 
     if (!email) return;
 

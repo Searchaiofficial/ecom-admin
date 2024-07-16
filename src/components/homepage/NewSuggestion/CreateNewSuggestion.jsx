@@ -1209,7 +1209,7 @@ function CreateNewSuggestion() {
           </div>
         </div>
       </div>
-      <div className="sm:col-span-3 px-10">
+      <div className=" px-10">
         <label
           htmlFor="position"
           className="block text-sm font-medium leading-6 text-gray-900"
@@ -1219,12 +1219,12 @@ function CreateNewSuggestion() {
         <select
           id="position"
           {...register("position")}
-          className="block w-full mt-1 border bg-transparent p-2 border-gray-400 rounded"
+          className="block w-full max-w-sm mt-1 h-[40vh] border bg-transparent p-2 border-gray-400 rounded"
           multiple
           onChange={handleMultipleSelector}
         >
           {positions.map((room, index) => (
-            <option key={index} value={room}>
+            <option className="p-1" key={index} value={room}>
               {room}
             </option>
           ))}
@@ -1239,7 +1239,7 @@ function CreateNewSuggestion() {
             }}
           >
             {selectionOrder.map((room, index) => (
-              <button
+              <div
                 // onClick={() => navigate(`/homePage/create-room-section/${room}`)}
                 style={{
                   border: "1px solid black",
@@ -1249,7 +1249,7 @@ function CreateNewSuggestion() {
                 key={index}
               >
                 {index + 1} {room}
-              </button>
+              </div>
             ))}
           </div>
         )}

@@ -21,7 +21,7 @@ export const deleteLiveRoomAdmin = async (id) => {
 
 export const addLiveRoomAdmin = async ({ name, email, topic }) => {
   try {
-    const response = await axios.post(`${baseURL}/api/liveroomadmin`, {
+    const response = await axios.post(`${BASE_URL}/api/liveroomadmin`, {
       name,
       email,
       topic,
