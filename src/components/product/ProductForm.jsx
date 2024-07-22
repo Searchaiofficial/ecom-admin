@@ -214,6 +214,8 @@ function ProductForm() {
     const price = e.target.value;
     setPrice(price);
     setPrice("");
+    setProductDiscountedPrice(null)
+    
   };
   const handleSubcategoryChange = (e) => {
     const subcategory = e.target.value;
@@ -405,12 +407,40 @@ function ProductForm() {
 
   const [loading, setLoading] = useState(false);
 
+  const [offerTypes, setOfferTypes] = useState([]);
+  const [selectedOffer, setSelectedOffer] = useState("");
+
+  const fetchOfferTypes = async () => {
+    try {
+      const responce = await axios.get(`${BASE_URL}/api/getAllOffers`);
+      setOfferTypes(responce.data);
+    } catch (error) {
+      console.log("FETCH OFFER TYPES ERROR :", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOfferTypes();
+  }, []);
+
+  const [productPrice, setProductPrice] = useState(null);
+  const [productDiscountedPrice, setProductDiscountedPrice] = useState(null);
+  const handleOfferTypeChange = (e) => {
+    const selectedValue = e.target.value;
+    const parsedValue = selectedValue && JSON.parse(selectedValue);
+    setSelectedOffer(parsedValue);
+    setProductDiscountedPrice(
+      productPrice - (productPrice * parsedValue.percentageOff) / 100
+    );
+  };
+
   return (
     <form
       noValidate
       // submit method of the form 💥
       onSubmit={handleSubmit(async (data) => {
         setLoading(true);
+        console.log(data);
         const formData = new FormData();
         // console.log("Form-Data:", data);
         const coreValuesData = getValues("coreValues");
@@ -444,7 +474,7 @@ function ProductForm() {
         formData.append("units", data.units);
         formData.append("unitType", data.unitType);
         // formData.append("totalPricePerUnit", data.totalPricePerUnit);
-        formData.append("discountedprice", data.discountedprice);
+        formData.append("discountedprice", productDiscountedPrice);
         formData.append("perUnitType", data.perUnitType);
         formData.append("material", data.material);
         if (data.specialprice) {
@@ -468,49 +498,8 @@ function ProductForm() {
         );
         formData.append("isOnlySoldInStore", data.isOnlySoldInStore);
         formData.append("authorId", selectedAuthor);
-        // formData.append(
-        //   "dimensions[0][length][value]",
-        //   parseFloat(data.productDimensions[0].length.value)
-        // );
-        // formData.append(
-        //   "dimensions[0][length][unit]",
-        //   data.productDimensions[0].length.unit
-        // );
-        // formData.append(
-        //   "dimensions[0][width][value]",
-        //   parseFloat(data.productDimensions[0].width.value)
-        // );
-        // formData.append(
-        //   "dimensions[0][width][unit]",
-        //   data.productDimensions[0].width.unit
-        // );
-        // formData.append(
-        //   "dimensions[0][thickness][value]",
-        //   parseFloat(data.productDimensions[0].thickness.value)
-        // );
-        // formData.append(
-        //   "dimensions[0][thickness][unit]",
-        //   data.productDimensions[0].thickness.unit
-        // );
 
-        // formData.append(
-        //   "dimensions[length][value]",
-        //   parseFloat(dimensions.length.value)
-        // );
-        // formData.append("dimensions[length][unit]", dimensions.length.unit);
-        // formData.append(
-        //   "dimensions[width][value]",
-        //   parseFloat(dimensions.width.value)
-        // );
-        // formData.append("dimensions[width][unit]", dimensions.width.unit);
-        // formData.append(
-        //   "dimensions[thickness][value]",
-        //   parseFloat(dimensions.thickness.value)
-        // );
-        // formData.append(
-        //   "dimensions[thickness][unit]",
-        //   dimensions.thickness.unit
-        // );
+        formData.append("offer", selectedOffer.type);
 
         // Add images to FormData
         for (let i = 1; i <= 4; i++) {
@@ -779,7 +768,7 @@ function ProductForm() {
                   className="form-radio h-4 w-4 text-blue-600"
                 />
                 <label htmlFor="special" className="ml-2 text-gray-700">
-                 Special
+                  Special
                 </label>
               </div>
               <div className="flex items-center">
@@ -1235,11 +1224,13 @@ function ProductForm() {
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
               >
                 <option value="">--Select Unit Type--</option>
-                {[ "m", "roll", "sqft", "kg", "box", "pcs"].map((type, index) => (
-                  <option key={index} value={type}>
-                    {type}
-                  </option>
-                ))}
+                {["m", "roll", "sqft", "kg", "box", "pcs"].map(
+                  (type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  )
+                )}
               </select>
             </div>
 
@@ -1255,10 +1246,8 @@ function ProductForm() {
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
               />
             </div>
-          </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-4">
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-3">
               <label htmlFor="perUnitType">Per Unit Type</label>
               <select
                 id="perUnitType"
@@ -1268,16 +1257,18 @@ function ProductForm() {
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
               >
                 <option value="">--Select Per Unit Type--</option>
-                {[ "m", "roll", "sqft", "kg", "box", "pcs"].map((type, index) => (
-                  <option key={index} value={type}>
-                    {type}
-                  </option>
-                ))}
+                {["m", "roll", "sqft", "kg", "box", "pcs"].map(
+                  (type, index) => (
+                    <option key={index} value={type}>
+                      {type}
+                    </option>
+                  )
+                )}
               </select>
             </div>
 
             {productType !== "requested" && (
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-3">
                 <label htmlFor="perUnitPrice">Per Unit Price</label>
                 <input
                   type="number"
@@ -1286,11 +1277,159 @@ function ProductForm() {
                     required: "Per Unit Price is required",
                     min: 0,
                   })}
+                  value={productPrice}
+                  onChange={(e) => setProductPrice(e.target.value)}
                   className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
                 />
               </div>
             )}
           </div>
+
+          {productType !== "requested" && productPrice && (
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="sm:col-span-2 my-6">
+                <label label htmlFor="typeofprice">
+                  Price:
+                </label>
+                <select
+                  id="typeofprice"
+                  className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                  onChange={handlePriceChange}
+                >
+                  <option value="">-- Type of Price --</option>
+                  {typeofprice.map((priceType, index) => (
+                    <option key={index} value={priceType}>
+                      {priceType}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div
+                className="sm:col-span-2 my-6"
+                style={{
+                  display: priceType === "Discounted Price" ? "block" : "none",
+                }}
+              >
+                <label htmlFor="offer">Offer:</label>
+                <select
+                  id="offer"
+                  {...register("offer")}
+                  className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
+                  onChange={handleOfferTypeChange}
+                >
+                  <option value="">-- Select Offer Type--</option>
+                  {offerTypes.map((offer, index) => (
+                    <option key={index} value={JSON.stringify(offer)}>
+                      {offer.type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div
+                className="sm:col-span-2"
+                style={{
+                  display: priceType === "Discounted Price" ? "block" : "none",
+                }}
+              >
+                <label
+                  htmlFor="discountedprice"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Discounted Price
+                </label>
+
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <input
+                      type="number"
+                      // {...register("discountedprice",  {
+                      //   min: 1,
+                      //   max: 10000,
+                      //   value : productDiscountedPrice
+                      // })}
+                      value={productDiscountedPrice}
+                      onChange={(e) =>
+                        setProductDiscountedPrice(e.target.value)
+                      }
+                      id="discountedprice"
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                className="sm:col-span-2"
+                style={{
+                  display: priceType === "Special Price" ? "block" : "none",
+                }}
+              >
+                <label
+                  htmlFor="specialprice"
+                  className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+                >
+                  Special Price*
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <input
+                      type="text"
+                      {...register("specialprice.price")}
+                      id="specialprice"
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="sm:col-span-1"
+                style={{
+                  display: priceType === "Special Price" ? "block" : "none",
+                }}
+              >
+                <label
+                  htmlFor="specialstartdate"
+                  className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+                >
+                  Special Price Start Date*
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <input
+                      type="date"
+                      {...register("specialprice.startDate")}
+                      id="specialstartdate"
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="sm:col-span-1"
+                style={{
+                  display: priceType === "Special Price" ? "block" : "none",
+                }}
+              >
+                <label
+                  htmlFor="specialenddate"
+                  className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+                >
+                  Special Price End Date*
+                </label>
+                <div className="mt-2">
+                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                    <input
+                      type="date"
+                      {...register("specialprice.endDate")}
+                      id="specialenddate"
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
               <label
@@ -1332,25 +1471,7 @@ function ProductForm() {
                 </div>
               </div>
             </div>
-            {productType !== "requested" && (
-              <div className="sm:col-span-3 my-6">
-                <label label htmlFor="typeofprice">
-                  Price:
-                </label>
-                <select
-                  id="typeofprice"
-                  className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-                  onChange={handlePriceChange}
-                >
-                  <option value="">-- Type of Price --</option>
-                  {typeofprice.map((priceType, index) => (
-                    <option key={index} value={priceType}>
-                      {priceType}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
+
             <div className="sm:col-span-3 my-6">
               <label htmlFor="demandtype">Demand Type:</label>
               <select
@@ -1392,102 +1513,6 @@ function ProductForm() {
                 </div>
               </div>
             )} */}
-            <div
-              className="sm:col-span-2"
-              style={{
-                display: priceType === "Discounted Price" ? "block" : "none",
-              }}
-            >
-              <label
-                htmlFor="discountedprice"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Discounted Price
-              </label>
-
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="number"
-                    {...register("discountedprice", {
-                      min: 1,
-                      max: 10000,
-                    })}
-                    id="discountedprice"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="sm:col-span-2"
-              style={{
-                display: priceType === "Special Price" ? "block" : "none",
-              }}
-            >
-              <label
-                htmlFor="specialprice"
-                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
-              >
-                Special Price*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="text"
-                    {...register("specialprice.price")}
-                    id="specialprice"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="sm:col-span-2"
-              style={{
-                display: priceType === "Special Price" ? "block" : "none",
-              }}
-            >
-              <label
-                htmlFor="specialstartdate"
-                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
-              >
-                Special Price Start Date*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="date"
-                    {...register("specialprice.startDate")}
-                    id="specialstartdate"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              className="sm:col-span-2"
-              style={{
-                display: priceType === "Special Price" ? "block" : "none",
-              }}
-            >
-              <label
-                htmlFor="specialenddate"
-                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
-              >
-                Special Price End Date*
-              </label>
-              <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="date"
-                    {...register("specialprice.endDate")}
-                    id="specialenddate"
-                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
 
           <select
