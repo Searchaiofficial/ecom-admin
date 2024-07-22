@@ -136,9 +136,6 @@ const ProductDisplay = () => {
                           <b>Price per Unit:</b> ${product.perUnitPrice}
                         </p>
                         <p>
-                          <b>Total Price: </b>${product.totalPrice}
-                        </p>
-                        <p>
                           <b>purchaseMode:</b> {product.purchaseMode.join(", ")}
                         </p>
                         <p>

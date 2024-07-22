@@ -278,7 +278,7 @@ function ProductForm() {
       console.log("Response Data:", responseData);
       const selectAuthorData = [];
       responseData.forEach((author) => {
-        const authorName = `${author.name}-${author.email}`;
+        const authorName = `${author.displayName}-${author.email}`;
         const id = author._id;
         selectAuthorData.push({ authorName, id });
       });
@@ -443,7 +443,7 @@ function ProductForm() {
         formData.append("color", color);
         formData.append("units", data.units);
         formData.append("unitType", data.unitType);
-        formData.append("totalPricePerUnit", data.totalPricePerUnit);
+        // formData.append("totalPricePerUnit", data.totalPricePerUnit);
         formData.append("discountedprice", data.discountedprice);
         formData.append("perUnitType", data.perUnitType);
         formData.append("material", data.material);
@@ -614,7 +614,7 @@ function ProductForm() {
           setLoading(false);
           // navigate("/admin");
         } catch (error) {
-          console.error("Error uploading images:", error);
+          console.error("Error creating products:", error);
           setLoading(false);
         }
 
@@ -1235,7 +1235,7 @@ function ProductForm() {
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
               >
                 <option value="">--Select Unit Type--</option>
-                {["sqft", "box", "pcs", "mtr"].map((type, index) => (
+                {[ "m", "roll", "sqft", "kg", "box", "pcs"].map((type, index) => (
                   <option key={index} value={type}>
                     {type}
                   </option>
@@ -1268,7 +1268,7 @@ function ProductForm() {
                 className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
               >
                 <option value="">--Select Per Unit Type--</option>
-                {["sqft", "box", "pcs", "mtr"].map((type, index) => (
+                {[ "m", "roll", "sqft", "kg", "box", "pcs"].map((type, index) => (
                   <option key={index} value={type}>
                     {type}
                   </option>
@@ -1367,7 +1367,7 @@ function ProductForm() {
               </select>
             </div>
 
-            {productType !== "requested" && (
+            {/* {productType !== "requested" && (
               <div className="sm:col-span-2">
                 <label
                   htmlFor="price"
@@ -1391,7 +1391,7 @@ function ProductForm() {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
             <div
               className="sm:col-span-2"
               style={{
