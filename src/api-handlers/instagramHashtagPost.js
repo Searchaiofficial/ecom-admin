@@ -1,7 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "../../config";
 
-
 export const getInstagramHashtagPosts = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/api/hashtagpost`);
@@ -33,7 +32,7 @@ export const createInstagramHashtagPost = async ({
   username,
 }) => {
   try {
-    const response = await axios.post(`${baseURL}/api/hashtagpost`, {
+    const response = await axios.post(`${BASE_URL}/api/hashtagpost`, {
       id,
       mediaUrl,
       products,
@@ -50,7 +49,7 @@ export const createInstagramHashtagPost = async ({
 
 export const deleteInstagramHashtagPost = async (id) => {
   try {
-    const response = await axios.delete(`${baseURL}/api/hashtagpost/${id}`);
+    const response = await axios.delete(`${BASE_URL}/api/hashtagpost/${id}`);
     return response.data;
   } catch (error) {
     console.log(error.message);
@@ -64,7 +63,7 @@ export const updateInstagramHashtagPost = async ({
   username,
 }) => {
   try {
-    const response = await axios.patch(`${baseURL}/api/hashtagpost/${id}`, {
+    const response = await axios.patch(`${BASE_URL}/api/hashtagpost/${id}`, {
       products,
       categoryId,
       username,
