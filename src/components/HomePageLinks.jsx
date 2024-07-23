@@ -15,8 +15,8 @@ const HomePageLinks = () => {
     "Category Description",
     "Image Changer (Multiple Images)",
     "Special Reviews",
-    "New Product",
-    "Banner",
+    "Five Grid",
+    "Two Grid",
     "New Suggestion",
     "Instagram Hashtag Slider"
   ];

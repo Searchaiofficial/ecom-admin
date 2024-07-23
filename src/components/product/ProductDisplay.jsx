@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 const ProductDisplay = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
-
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
@@ -16,13 +15,12 @@ const ProductDisplay = () => {
   const handleUpdate = (productId) => () => {
     setProductID(productId);
     // toggleModal();
-    window.location.replace(`/update/${productId}`)
-
+    window.location.replace(`/update/${productId}`);
   };
 
   const [productData, setProductData] = useState([]);
   const [expandedProduct, setExpandedProduct] = useState(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const limit = 100;
@@ -44,16 +42,55 @@ const ProductDisplay = () => {
   };
 
   const handleRoom = (room, id, productObjectId) => {
-    console.log(id)
-    console.log(productObjectId)
-    navigate(`/homePage/create-room-section/${room}?productId=${id}&productObjectId=${productObjectId}`);
+    console.log(id);
+    console.log(productObjectId);
+    navigate(
+      `/homePage/create-room-section/${room}?productId=${id}&productObjectId=${productObjectId}`
+    );
   };
 
-  const handleToggleReadMore = (productId) => {
-    console.log(productId)
+  // const handleToggleReadMore = (productId) => {
+  //   console.log(productId)
+  //   setExpandedProduct((prev) => (prev === productId ? null : productId));
+  // };
+
+  const getRoomId = async (productId, roomType) => {
+    try {
+      const apiUrl = `${BASE_URL}/api/getRoomID?productId=${productId}&roomType=${roomType}`;
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching room details:", error);
+    }
+  };
+
+  const [roomDetails, setRoomDetails] = useState([]);
+
+  const handleToggleReadMore = async (productId) => {
+    setRoomDetails([]);
     setExpandedProduct((prev) => (prev === productId ? null : productId));
+    if (expandedProduct !== productId) {
+      const product = productData.find((product) => product._id === productId);
+      if (product && product.roomCategory.length > 0) {
+        const details = await Promise.all(
+          product.roomCategory.map(async (room) => {
+            const roomId = await getRoomId(product.productId, room);
+            console.log("check", roomId);
+            return { roomType: room, roomId: roomId };
+          })
+        );
+        setRoomDetails(details);
+      }
+    }
   };
 
+  const [copiedRoomId, setCopiedRoomId] = useState(null);
+  const handleCopy = (roomId) => {
+    navigator.clipboard.writeText(roomId);
+    setCopiedRoomId(roomId); 
+    setTimeout(() => setCopiedRoomId(null), 5000);
+  };
   console.log(productData);
   return (
     <>
@@ -63,7 +100,6 @@ const ProductDisplay = () => {
         </div>
         <div className="flex-grow w-4/5 border-l-2 border-gray-300">
           <div className="mx-6 mb-8">
-            {/* <h2 className='pl-4 pt-4 font-bold text-2xl'>Welcome to AYATRIO</h2> */}
             <h2 className="pb-6 pt-1 font-bold text-center text-xl">
               Product Information
             </h2>
@@ -103,17 +139,47 @@ const ProductDisplay = () => {
                       <>
                         <p>
                           <b>Room Category:</b>
-                          {product.roomCategory.map((category, index) => (
-                            <button
-                              key={index}
-                              onClick={() =>
-                                handleRoom(category, product.productId, product._id)
-                              }
-                              className="m-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                            >
-                              {category}
-                            </button>
-                          ))}
+                          <div className="flex flex-col justify-around w-full gap-4 ">
+                            {roomDetails.map((room, index) => (
+                              <div key={index}>
+                                <button
+                                  onClick={() =>
+                                    handleRoom(
+                                      room.roomType,
+                                      product.productId,
+                                      product._id
+                                    )
+                                  }
+                                  className=" bg-blue-500 w-full hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                                >
+                                  {room.roomType}
+                                </button>
+                                {room.roomId && (
+                                  <div className="flex  justify-between gap-2 items-center">
+                                    <span className="text-sm">ID: <code className=" cursor-pointer">
+                                      {room.roomId}
+                                    </code></span>
+                                    
+                                    
+
+                                    
+                                    {
+                                      copiedRoomId === room.roomId ? (
+                                        <span className="text-xs text-green-500">Copied!</span>
+                                      ) : (
+                                        <button
+                                          onClick={() => handleCopy(room.roomId)}
+                                          className="text-xs text-blue-500"
+                                        >
+                                          Copy
+                                        </button>
+                                      )
+                                    }
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
                         </p>
                         <p>
                           <b>Style:</b> {product.style}
@@ -199,10 +265,7 @@ const ProductDisplay = () => {
         </div>
       </div>
       {modalOpen && (
-        <UpdateProduct
-          toggleModal={toggleModal}
-          productId={productID}
-        />
+        <UpdateProduct toggleModal={toggleModal} productId={productID} />
       )}
     </>
   );

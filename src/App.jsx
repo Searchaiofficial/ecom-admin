@@ -206,7 +206,7 @@ export default function App() {
 
         <Route
           exact
-          path="/update-home-page/new-product"
+          path="/update-home-page/five-grid"
           element={
             <Protected>
               <NewProduct />
@@ -235,7 +235,7 @@ export default function App() {
 
         <Route
           exact
-          path="/update-home-page/banner"
+          path="/update-home-page/two-grid"
           element={
             <Protected>
               <Banner />
