@@ -754,7 +754,7 @@ function ProductForm() {
                   className="form-radio h-4 w-4 text-blue-600"
                 />
                 <label htmlFor="normal" className="ml-2 text-gray-700">
-                  Normal
+                  Normal 
                 </label>
               </div>
               <div className="flex items-center">
@@ -768,7 +768,7 @@ function ProductForm() {
                   className="form-radio h-4 w-4 text-blue-600"
                 />
                 <label htmlFor="special" className="ml-2 text-gray-700">
-                  Special
+                  Special (Ayatrio Family Member)
                 </label>
               </div>
               <div className="flex items-center">
@@ -782,7 +782,7 @@ function ProductForm() {
                   className="form-radio h-4 w-4 text-blue-600"
                 />
                 <label htmlFor="requested" className="ml-2 text-gray-700">
-                  Requested
+                  Requested (Luxurious)
                 </label>
               </div>
             </div>
