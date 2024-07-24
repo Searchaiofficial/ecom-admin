@@ -14,6 +14,7 @@ function CreateCategory() {
   const [colors, setColors] = useState([{ name: "", hexCode: "" }]);
   const [services, SetServices] = useState([{ name: "", cost: "" }]);
   const [ratingTypes, SetRatingTypes] = useState([{ name: "", image: null }]);
+  const [showCalculator, setShowCalculator] = useState(false)
 
   const addColorInput = () => {
     setColors([...colors, { name: "", hexCode: "" }]);
@@ -97,13 +98,10 @@ function CreateCategory() {
           formData.append(`subcategories[${index}][name]`, subCategory?.name);
           formData.append(`subcategories[${index}][description]`, subCategory?.description);
           formData.append(`subcategories[${index}][metadataTitle]`, subCategory?.metadataTitle);
-          formData.append(`subcategories[${index}][expectedDelivery]`, subCategory?.expectedDelivery);
-          formData.append(`subcategories[${index}][isFreeShippingAvailable]`, subCategory?.isFreeShippingAvailable);
-          formData.append(`subcategories[${index}][isFreeSampleAvailable]`, subCategory?.isFreeSampleAvailable);
-          formData.append(`subcategories[${index}][isOnlySoldInStore]`, subCategory?.isOnlySoldInStore);
         });
-
+        
         formData.append("name", data.name);
+        formData.append(`showCalculator`, showCalculator);
 
         const metadataTitle = document.getElementById("metadataTitle");
         formData.append("metadataTitle", metadataTitle?.value);
@@ -228,37 +226,37 @@ function CreateCategory() {
               </div>
             </div>
 
-            {/* <div className="sm:col-span-2 ">
-              <label>Free Sample :</label>
+            <div className="sm:col-span-2 ">
+              <label>Show Calculator</label>
               <div className="flex items-center">
                 <input
                   type="radio"
-                  id="normal"
-                  name="requestType"
-                  value="no"
-                  checked={!isFreeSampleAvailable }
-                  onChange={() => setIsFreeSampleAvailable(false)}
+                  id="no"
+                  name="no"
+                  value={false}
+                  checked={!showCalculator }
+                  onChange={() => setShowCalculator(false)}
                   className="form-radio h-4 w-4 text-blue-600"
                 />
-                <label htmlFor="normal" className="ml-2 text-gray-700">
-                  Not Available
+                <label htmlFor="no" className="ml-2 text-gray-700">
+                  No
                 </label>
               </div>
               <div className="flex items-center">
                 <input
                   type="radio"
-                  id="requested"
-                  name="requestType"
-                  value="requested"
-                  checked={isFreeSampleAvailable}
-                  onChange={() => setIsFreeSampleAvailable(true)}
+                  id="yes"
+                  name="yes"
+                  value={true}
+                  checked={showCalculator}
+                  onChange={() => setShowCalculator(true)}
                   className="form-radio h-4 w-4 text-blue-600"
                 />
-                <label htmlFor="requested" className="ml-2 text-gray-700">
-                  Available
+                <label htmlFor="yes" className="ml-2 text-gray-700">
+                  Yes
                 </label>
               </div>
-            </div> */}
+            </div>
 
             <div className="sm:col-span-2">
               <label
