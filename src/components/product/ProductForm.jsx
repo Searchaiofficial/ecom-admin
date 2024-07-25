@@ -214,8 +214,7 @@ function ProductForm() {
     const price = e.target.value;
     setPrice(price);
     setPrice("");
-    setProductDiscountedPrice(null)
-    
+    setProductDiscountedPrice(null);
   };
   const handleSubcategoryChange = (e) => {
     const subcategory = e.target.value;
@@ -429,9 +428,14 @@ function ProductForm() {
     const selectedValue = e.target.value;
     const parsedValue = selectedValue && JSON.parse(selectedValue);
     setSelectedOffer(parsedValue);
-    setProductDiscountedPrice(
-      productPrice - (productPrice * parsedValue.percentageOff) / 100
-    );
+    if (parsedValue) {
+      setProductDiscountedPrice(
+        productPrice - (productPrice * parsedValue.percentageOff) / 100
+      );
+    } else {
+      setProductDiscountedPrice('')
+    }
+
   };
 
   return (
@@ -754,7 +758,7 @@ function ProductForm() {
                   className="form-radio h-4 w-4 text-blue-600"
                 />
                 <label htmlFor="normal" className="ml-2 text-gray-700">
-                  Normal 
+                  Normal
                 </label>
               </div>
               <div className="flex items-center">
