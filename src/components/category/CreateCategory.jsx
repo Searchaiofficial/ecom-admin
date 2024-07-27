@@ -8,13 +8,16 @@ import { useState } from "react";
 
 function CreateCategory() {
   // form related
-  const options = [{ label: "No", value: "no" }, { label: "Yes", value: "yes" }]
+  const options = [
+    { label: "No", value: "no" },
+    { label: "Yes", value: "yes" },
+  ];
   const categoryType = ["Homedecor", "Walldecor", "Flooring"];
   const { register, handleSubmit, getValues, reset, control } = useForm();
   const [colors, setColors] = useState([{ name: "", hexCode: "" }]);
   const [services, SetServices] = useState([{ name: "", cost: "" }]);
   const [ratingTypes, SetRatingTypes] = useState([{ name: "", image: null }]);
-  const [showCalculator, setShowCalculator] = useState(false)
+  const [showCalculator, setShowCalculator] = useState(false);
 
   const addColorInput = () => {
     setColors([...colors, { name: "", hexCode: "" }]);
@@ -84,6 +87,15 @@ function CreateCategory() {
     name: "subCategories",
   });
 
+  const {
+    fields: maintenanceDetails,
+    append: appendMaintenanceDetails,
+    remove: removeMaintenanceDetails,
+  } = useFieldArray({
+    control,
+    name: "maintenanceDetails",
+  });
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -96,10 +108,21 @@ function CreateCategory() {
         const subCategoryData = getValues("subCategories");
         subCategoryData.forEach((subCategory, index) => {
           formData.append(`subcategories[${index}][name]`, subCategory?.name);
-          formData.append(`subcategories[${index}][description]`, subCategory?.description);
-          formData.append(`subcategories[${index}][metadataTitle]`, subCategory?.metadataTitle);
+          formData.append(
+            `subcategories[${index}][description]`,
+            subCategory?.description
+          );
+          formData.append(
+            `subcategories[${index}][metadataTitle]`,
+            subCategory?.metadataTitle
+          );
         });
-        
+
+        const maintenanceDetailsData = getValues("maintenanceDetails");
+        maintenanceDetailsData.forEach((point, index) => {
+          formData.append(`maintenanceDetails[${index}]`, point.name);
+        });
+
         formData.append("name", data.name);
         formData.append(`showCalculator`, showCalculator);
 
@@ -110,10 +133,10 @@ function CreateCategory() {
         const file = fileInput?.files[0];
         formData.append("image", file);
 
-        const maintenanceDetails =
-          document.getElementById("maintenanceDetails");
-        const maintenanceDetailsFile = maintenanceDetails?.files[0];
-        formData.append("maintenanceDetails", maintenanceDetailsFile);
+        // const maintenanceDetails =
+        //   document.getElementById("maintenanceDetails");
+        // const maintenanceDetailsFile = maintenanceDetails?.files[0];
+        // formData.append("maintenanceDetails", maintenanceDetailsFile);
 
         const certification = document.getElementById("certification");
         const certificationFile = certification?.files[0];
@@ -130,9 +153,15 @@ function CreateCategory() {
         });
 
         ratingTypes.forEach((ratingType, index) => {
-          formData.append(`availableRatingTypes[${index}][name]`, ratingType.name);
+          formData.append(
+            `availableRatingTypes[${index}][name]`,
+            ratingType.name
+          );
           // formData.append(`availableRatingTypes[${index}][rating]`, ratingType.rating);
-          formData.append(`availableRatingTypes[${index}][image]`, ratingType.image);
+          formData.append(
+            `availableRatingTypes[${index}][image]`,
+            ratingType.image
+          );
         });
 
         // ratingTypes.forEach((_, i) => {
@@ -234,7 +263,7 @@ function CreateCategory() {
                   id="no"
                   name="no"
                   value={false}
-                  checked={!showCalculator }
+                  checked={!showCalculator}
                   onChange={() => setShowCalculator(false)}
                   className="form-radio h-4 w-4 text-blue-600"
                 />
@@ -322,7 +351,7 @@ function CreateCategory() {
           </div>
 
           <div className="mt-12 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-2">
+            {/* <div className="sm:col-span-2">
               <label
                 htmlFor="maintenanceDetails"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
@@ -339,7 +368,7 @@ function CreateCategory() {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="sm:col-span-2">
               <label
@@ -359,6 +388,57 @@ function CreateCategory() {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="mt-10">
+            <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
+            Maintenance Details
+            </label>
+            {maintenanceDetails.map((point, index) => (
+              <div
+                className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-500 pb-2 "
+                key={point.id}
+              >
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor={`maintenanceDetails[${index}]`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Point {index + 1}*
+                  </label>
+                  <div className="mt-2">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                      <input
+                        type="text"
+                        {...register(`maintenanceDetails[${index}].name`, {
+                          required: "maintenanceDetails is required",
+                        })}
+                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                  className="bg-red-600  w-20 my-2 px-2 rounded-md"
+                  type="button"
+                  onClick={() => removeMaintenanceDetails(index)}
+                >
+                  Remove
+                </button>
+                </div>
+
+               
+
+                
+              </div>
+            ))}
+
+            <button
+              className="bg-blue-600 h-[2rem] w-[8rem] mt-2 rounded-md"
+              type="button"
+              onClick={() => appendMaintenanceDetails({})}
+            >
+              Add Point
+            </button>
           </div>
           <div>
             <p className="block text-sm font-medium leading-6 text-gray-900 font-bold mt-10 mb-5">
@@ -452,7 +532,9 @@ function CreateCategory() {
             <div className="flex flex-wrap gap-4">
               {ratingTypes.map((ratingType, index) => (
                 <div key={index} className="flex flex-col items-start gap-2">
-                  <p className="text-sm font-semibold">Rating Type {index + 1}</p>
+                  <p className="text-sm font-semibold">
+                    Rating Type {index + 1}
+                  </p>
                   <input
                     type="text"
                     placeholder="Enter color name"
@@ -482,10 +564,7 @@ function CreateCategory() {
                   <input
                     type="file"
                     accept="image/*"
-
-                    onChange={(e) =>
-                      handleFileChange(index, e.target.files[0])
-                    }
+                    onChange={(e) => handleFileChange(index, e.target.files[0])}
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -688,8 +767,6 @@ function CreateCategory() {
                   </div>
                 </div> */}
 
-
-
                 <button
                   className="bg-red-600  w-20 my-2 px-2 rounded-md"
                   type="button"
@@ -708,6 +785,7 @@ function CreateCategory() {
               Add Subcategory
             </button>
           </div>
+          
         </div>
       </div>
 

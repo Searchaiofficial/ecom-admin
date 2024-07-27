@@ -182,7 +182,7 @@ const ProductDisplay = () => {
                           </div>
                         </p>
                         <p>
-                          <b>Style:</b> {product.style}
+                          <b>Type:</b> {product.type}
                         </p>
                         {/* <p>
                           <b>Dimensions:</b> {product.dimensions.length.value}{" "}

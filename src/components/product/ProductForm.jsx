@@ -1440,7 +1440,7 @@ function ProductForm() {
                 htmlFor="designStyle"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
               >
-                Design Style*
+                Type*
               </label>
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
