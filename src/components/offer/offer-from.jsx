@@ -6,16 +6,12 @@ const OfferForm = () => {
   const [offerName, setOfferName] = useState("");
   const [percentageOff, setPercentageOff] = useState(0);
   const [offerTypes, setOffertypes] = useState([]);
-  const [AllProducts, setAllProducts] = useState([]);
   const [selectedOfferType, setSelectedOfferType] = useState();
   const [selectedProduct, setSelectedProduct] = useState();
-  const [Deletedtype, setDeletedtype] = useState();
-  const [DeletedProduct, setDeletedProduct] = useState();
   const [deleteOfferType, setDeleteOffertype] = useState();
   const [allCategory, setAllCategory] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState();
-  const [deletedCategory, setDeletedCategory] = useState();
-  const [deletedOfferForCategory, setdeletedOfferForCategory] = useState();
+  const [description, setDescription] = useState("");
+  const [metadataTitle, setMetadataTitle] = useState("");
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -69,6 +65,8 @@ const OfferForm = () => {
         percentageOff: percentageOff,
         startDate: startDate,
         endDate: endDate,
+        description,
+        metadataTitle,
       });
       console.log(responce.data.message);
       window.alert(responce.data.message);
@@ -102,19 +100,6 @@ const OfferForm = () => {
     }
   };
 
-  const handleDeleteProduct = async () => {
-    try {
-      const responce = await axios.patch(
-        `${BASE_URL}/api/removeProductFromOffer`,
-        { type: Deletedtype, productId: DeletedProduct }
-      );
-      window.alert(responce.data.message);
-    } catch (error) {
-      console.log("DELETE PRODUCT FROM DEMAND TYPE :", error);
-      window.alert("Some error occured try again");
-    }
-  };
-
   const handleDeleteOfferType = async () => {
     try {
       console.log(deleteOfferType);
@@ -129,34 +114,34 @@ const OfferForm = () => {
     }
   };
 
-  const handleChangeProductsOnOffer = async (e) => {
-    setDeletedtype(e.target.value);
-  };
+  // const handleChangeProductsOnOffer = async (e) => {
+  //   setDeletedtype(e.target.value);
+  // };
 
-  const handleAddCategoryToOffer = async () => {
-    try {
-      const responce = await axios.post(`${BASE_URL}/api/addCategoryToOffer/`, {
-        type: selectedOfferType,
-        categoryType: selectedCategory,
-      });
-      window.alert(responce.data.message);
-    } catch (error) {
-      console.log("DELETE OFFER :", error);
-      window.alert("Some error occured try again");
-    }
-  };
+  // const handleAddCategoryToOffer = async () => {
+  //   try {
+  //     const responce = await axios.post(`${BASE_URL}/api/addCategoryToOffer/`, {
+  //       type: selectedOfferType,
+  //       categoryType: selectedCategory,
+  //     });
+  //     window.alert(responce.data.message);
+  //   } catch (error) {
+  //     console.log("DELETE OFFER :", error);
+  //     window.alert("Some error occured try again");
+  //   }
+  // };
 
-  const handleRemoveCategory = async () => {
-    try {
-      const responce = await axios.patch(
-        `${BASE_URL}/api/removeCategoryFromOffer/`,
-        { type: deletedOfferForCategory, categoryType: deletedCategory }
-      );
-      window.alert(responce.data.message);
-    } catch (error) {
-      console.log("ERROR WHILE REMOVING CATEGORY FROM OFFER :", error);
-    }
-  };
+  // const handleRemoveCategory = async () => {
+  //   try {
+  //     const responce = await axios.patch(
+  //       `${BASE_URL}/api/removeCategoryFromOffer/`,
+  //       { type: deletedOfferForCategory, categoryType: deletedCategory }
+  //     );
+  //     window.alert(responce.data.message);
+  //   } catch (error) {
+  //     console.log("ERROR WHILE REMOVING CATEGORY FROM OFFER :", error);
+  //   }
+  // };
 
   return (
     <div>
@@ -164,7 +149,7 @@ const OfferForm = () => {
         <h2 className="text-2xl font-bold leading-7 text-gray-900 text-center">
           Create Offer
         </h2>
-        <div className="border-gray-500 border-b pb-12 w-full flex items-center justify-center gap-10">
+        <div className="border-gray-500 border-b pb-12 w-full flex flex-wrap items-center justify-center gap-10">
           <div className="w-[400px]">
             <div className="sm:col-span-2">
               <label
@@ -209,6 +194,50 @@ const OfferForm = () => {
               </div>
             </div>
           </div>
+          <div className="w-[400px]">
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium  text-gray-900"
+              >
+                Description
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    value={description}
+                    required
+                    onChange={(e) => setDescription(e.target.value)}
+                    id="description"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-[400px]">
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="metadataTitle"
+                className="block text-sm font-medium  text-gray-900"
+              >
+                Metadata Title
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    value={metadataTitle}
+                    required
+                    onChange={(e) => setMetadataTitle(e.target.value)}
+                    id="metadataTitle"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="w-[400px]">
             <div className="sm:col-span-2">
               <label
