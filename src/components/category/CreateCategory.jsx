@@ -120,7 +120,14 @@ function CreateCategory() {
 
         const maintenanceDetailsData = getValues("maintenanceDetails");
         maintenanceDetailsData.forEach((point, index) => {
-          formData.append(`maintenanceDetails[${index}]`, point.name);
+          formData.append(
+            `maintenanceDetails[${index}][heading]`,
+            point.heading
+          );
+          formData.append(
+            `maintenanceDetails[${index}][description]`,
+            point.description
+          );
         });
 
         formData.append("name", data.name);
@@ -391,7 +398,7 @@ function CreateCategory() {
           </div>
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
-            Maintenance Details
+              Maintenance Details
             </label>
             {maintenanceDetails.map((point, index) => (
               <div
@@ -400,35 +407,52 @@ function CreateCategory() {
               >
                 <div className="sm:col-span-3">
                   <label
-                    htmlFor={`maintenanceDetails[${index}]`}
+                    htmlFor={`maintenanceDetails[${index}].heading`}
                     className="block text-sm font-medium leading-6 text-gray-900"
                   >
-                    Point {index + 1}*
+                    Heading {index + 1}*
                   </label>
                   <div className="mt-2">
                     <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                       <input
                         type="text"
-                        {...register(`maintenanceDetails[${index}].name`, {
+                        {...register(`maintenanceDetails[${index}].heading`, {
                           required: "maintenanceDetails is required",
                         })}
                         className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       />
                     </div>
                   </div>
-
-                  <button
+                </div>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor={`maintenanceDetails[${index}].description`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Description {index + 1}*
+                  </label>
+                  <div className="mt-2">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                      <input
+                        type="text"
+                        {...register(
+                          `maintenanceDetails[${index}].description`,
+                          {
+                            required: "maintenanceDetails is required",
+                          }
+                        )}
+                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <button
                   className="bg-red-600  w-20 my-2 px-2 rounded-md"
                   type="button"
                   onClick={() => removeMaintenanceDetails(index)}
                 >
                   Remove
                 </button>
-                </div>
-
-               
-
-                
               </div>
             ))}
 
@@ -785,7 +809,6 @@ function CreateCategory() {
               Add Subcategory
             </button>
           </div>
-          
         </div>
       </div>
 
