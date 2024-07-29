@@ -96,6 +96,15 @@ function CreateCategory() {
     name: "maintenanceDetails",
   });
 
+  const {
+    fields: installationDetails,
+    append: appendInstallationDetails,
+    remove: removeInstallationDetails,
+  } = useFieldArray({
+    control,
+    name: "installationDetails",
+  });
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -130,6 +139,18 @@ function CreateCategory() {
           );
         });
 
+        const installationDetailsData = getValues("installationDetails");
+        installationDetailsData.forEach((point, index) => {
+          formData.append(
+            `installationDetails[${index}][heading]`,
+            point.heading
+          );
+          formData.append(
+            `installationDetails[${index}][description]`,
+            point.description
+          );
+        });
+
         formData.append("name", data.name);
         formData.append(`showCalculator`, showCalculator);
 
@@ -145,9 +166,9 @@ function CreateCategory() {
         // const maintenanceDetailsFile = maintenanceDetails?.files[0];
         // formData.append("maintenanceDetails", maintenanceDetailsFile);
 
-        const certification = document.getElementById("certification");
-        const certificationFile = certification?.files[0];
-        formData.append("certification", certificationFile);
+        // const certification = document.getElementById("certification");
+        // const certificationFile = certification?.files[0];
+        // formData.append("certification", certificationFile);
 
         colors.forEach((color, index) => {
           formData.append(`availableColors[${index}][name]`, color.name);
@@ -377,7 +398,7 @@ function CreateCategory() {
               </div>
             </div> */}
 
-            <div className="sm:col-span-2">
+            {/* <div className="sm:col-span-2">
               <label
                 htmlFor="certification"
                 className="block text-sm font-medium leading-6 text-gray-900 font-bold"
@@ -394,7 +415,7 @@ function CreateCategory() {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
@@ -457,16 +478,84 @@ function CreateCategory() {
             ))}
 
             <button
-              className="bg-blue-600 h-[2rem] w-[8rem] mt-2 rounded-md"
+              className="bg-blue-600 h-[2rem] text-white w-[8rem] mt-2 rounded-md"
               type="button"
               onClick={() => appendMaintenanceDetails({})}
             >
               Add Point
             </button>
           </div>
+          <div className="mt-10">
+            <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
+            Installation Details
+            </label>
+            {installationDetails.map((point, index) => (
+              <div
+                className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 border-b border-gray-500 pb-2 "
+                key={point.id}
+              >
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor={`installationDetails[${index}].heading`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Heading {index + 1}*
+                  </label>
+                  <div className="mt-2">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                      <input
+                        type="text"
+                        {...register(`installationDetails[${index}].heading`, {
+                          required: "installationDetails is required",
+                        })}
+                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="sm:col-span-3">
+                  <label
+                    htmlFor={`installationDetails[${index}].description`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Description {index + 1}*
+                  </label>
+                  <div className="mt-2">
+                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                      <input
+                        type="text"
+                        {...register(
+                          `installationDetails[${index}].description`,
+                          {
+                            required: "installationDetails is required",
+                          }
+                        )}
+                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <button
+                  className="bg-red-600  w-20 my-2 px-2 rounded-md"
+                  type="button"
+                  onClick={() => removeInstallationDetails(index)}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+
+            <button
+              className="bg-blue-600 h-[2rem] text-white w-[8rem] mt-2 rounded-md"
+              type="button"
+              onClick={() => appendInstallationDetails({})}
+            >
+              Add Point
+            </button>
+          </div>
           <div>
             <p className="block text-sm font-medium leading-6 text-gray-900 font-bold mt-10 mb-5">
-              Catregory Services
+              Category Services
             </p>
 
             {/* Dynamic rendering of color inputs */}
@@ -802,7 +891,7 @@ function CreateCategory() {
             ))}
 
             <button
-              className="bg-blue-600 h-[2rem] w-[8rem] mt-2 rounded-md"
+              className="bg-blue-600 h-[2rem] text-white w-[8rem] mt-2 rounded-md"
               type="button"
               onClick={() => appendSubCategory({})}
             >
