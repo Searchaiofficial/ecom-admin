@@ -66,6 +66,9 @@ const Navbar = () => {
                     <Link to='/offer'>Offer Type</Link>
                   </li>
                   <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
+                    <Link to='/urgency'>Urgency</Link>
+                  </li>
+                  <li className='pl-3 pt-1.5 pb-1.5 text-lg hover:bg-gray-200 rounded-full'>
                     <Link to='/shipping-rate'>Shipping Rate</Link>
                   </li>
                 </ul>

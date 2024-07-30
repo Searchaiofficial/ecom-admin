@@ -53,6 +53,7 @@ import InstagramHashtagSlider from "./components/homepage/InstagramHashtagSlider
 import CategoryUpdate from "./Pages/update-category.jsx";
 import EditAdmins from "./Pages/EditAdmins.jsx";
 import ShippingRatePage from "./Pages/ShippingRatePage.jsx";
+import UrgencyPage from "./Pages/Urgency-page.jsx";
 
 export default function App() {
   const [width, setWidth] = useState(window.innerWidth);
@@ -496,6 +497,15 @@ export default function App() {
           element={
             <Protected>
               <DemandPage />
+            </Protected>
+          }
+        ></Route>
+        <Route
+          exact
+          path="/urgency"
+          element={
+            <Protected>
+              <UrgencyPage />
             </Protected>
           }
         ></Route>
