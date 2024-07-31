@@ -15,6 +15,7 @@ const OfferForm = () => {
 
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [chunkSize, setChunkSize] = useState(null);
 
   const limit = 100;
   console.log(allCategory);
@@ -67,6 +68,7 @@ const OfferForm = () => {
         endDate: endDate,
         description,
         metadataTitle,
+        chunkSize
       });
       console.log(responce.data.message);
       window.alert(responce.data.message);
@@ -272,6 +274,26 @@ const OfferForm = () => {
                     type="date"
                     onChange={(e) => setEndDate(e.target.value)}
                     id="specialstartdate"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="w-[400px]">
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="chunkSize"
+                className="block text-sm font-medium  text-gray-900"
+              >
+                Offer Breakout(days)
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    type="number"
+                    onChange={(e) => setChunkSize(e.target.value)}
+                    id="chunkSize"
                     className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                   />
                 </div>
