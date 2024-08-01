@@ -7,45 +7,6 @@ import { Button } from "@material-tailwind/react";
 import { BASE_URL } from "../../../config";
 import axios from "axios";
 
-const DimensionInput = ({ label, value, unit, onChange }) => {
-  return (
-    <div className="sm:col-span-2">
-      <label>{label}:</label>
-      <input
-        type="number"
-        value={value}
-        onChange={(e) => onChange({ value: e.target.value, unit })}
-        className="ml-2 border bg-transparent p-2 border-gray-400 rounded"
-      />
-      <select
-        value={unit}
-        onChange={(e) => onChange({ value, unit: e.target.value })}
-      >
-        <option value="mm">mm</option>
-        <option value="cm">cm</option>
-        <option value="m">m</option>
-        <option value="in">in</option>
-        <option value="ft">ft</option>
-      </select>
-    </div>
-  );
-};
-
-const ColorCheckbox = ({ color, isChecked, onChange }) => {
-  return (
-    <label key={color} className="inline-flex items-center mt-1">
-      <input
-        type="checkbox"
-        value={color}
-        checked={isChecked}
-        onChange={onChange}
-        className="form-checkbox h-5 w-5 text-orange-600"
-      />
-      <span className="ml-1 text-gray-700 mr-4">{color}</span>
-    </label>
-  );
-};
-
 const PurchaseModeCheckBox = ({ purchaseMode, isChecked, onChange }) => {
   return (
     <label key={purchaseMode} className="inline-flex items-center mt-1">
@@ -222,23 +183,6 @@ function ProductForm() {
     const subcategory = e.target.value;
     setSelectedSubcategory(subcategory);
   };
-
-  // --
-
-  const [dimensions, setDimensions] = useState({
-    length: { value: "", unit: "mm" },
-    width: { value: "", unit: "mm" },
-    thickness: { value: "", unit: "mm" },
-  });
-
-  const handleDimensionChange = (dimension, newValue) => {
-    setDimensions((prevDimensions) => ({
-      ...prevDimensions,
-      [dimension]: newValue,
-    }));
-  };
-
-  // --
 
   const fetchSubCategories = async () => {
     try {
@@ -568,6 +512,8 @@ function ProductForm() {
             feature?.heading || ""
           );
         });
+
+        // return console.log({ formData });
 
         productDimensionsData.forEach((productDimension, index) => {
           // formData.append(
