@@ -88,7 +88,7 @@ const ProductDisplay = () => {
   const [copiedRoomId, setCopiedRoomId] = useState(null);
   const handleCopy = (roomId) => {
     navigator.clipboard.writeText(roomId);
-    setCopiedRoomId(roomId); 
+    setCopiedRoomId(roomId);
     setTimeout(() => setCopiedRoomId(null), 5000);
   };
   console.log(productData);
@@ -113,7 +113,10 @@ const ProductDisplay = () => {
                   >
                     <img
                       key={product._id}
-                      src={product.images[0]}
+                      src={
+                        product.productImages?.[0]?.images?.[0] ||
+                        product.images[0]
+                      }
                       alt={`Product Image`}
                       className="mb-6 w-[282px]"
                     />
@@ -156,25 +159,25 @@ const ProductDisplay = () => {
                                 </button>
                                 {room.roomId && (
                                   <div className="flex  justify-between gap-2 items-center">
-                                    <span className="text-sm">ID: <code className=" cursor-pointer">
-                                      {room.roomId}
-                                    </code></span>
-                                    
-                                    
+                                    <span className="text-sm">
+                                      ID:{" "}
+                                      <code className=" cursor-pointer">
+                                        {room.roomId}
+                                      </code>
+                                    </span>
 
-                                    
-                                    {
-                                      copiedRoomId === room.roomId ? (
-                                        <span className="text-xs text-green-500">Copied!</span>
-                                      ) : (
-                                        <button
-                                          onClick={() => handleCopy(room.roomId)}
-                                          className="text-xs text-blue-500"
-                                        >
-                                          Copy
-                                        </button>
-                                      )
-                                    }
+                                    {copiedRoomId === room.roomId ? (
+                                      <span className="text-xs text-green-500">
+                                        Copied!
+                                      </span>
+                                    ) : (
+                                      <button
+                                        onClick={() => handleCopy(room.roomId)}
+                                        className="text-xs text-blue-500"
+                                      >
+                                        Copy
+                                      </button>
+                                    )}
                                   </div>
                                 )}
                               </div>
