@@ -190,10 +190,10 @@ const CategoryUpdate = () => {
   };
 
   const handleCreateGrid = async () => {
-    console.log("test")
+    console.log("test");
     // formData.append("image", "abc");
-    console.log(firstImage)
-    console.log(secondImage)
+    console.log(firstImage);
+    console.log(secondImage);
     try {
       const formData = new FormData();
       formData.append("firstGrid[title]", firstGrid.title);
@@ -202,8 +202,8 @@ const CategoryUpdate = () => {
       formData.append("secondGrid[title]", secondGrid.title);
       formData.append("secondGrid[description]", secondGrid.description);
       formData.append("secondGrid[link]", secondGrid.link);
-      formData.append("firstImage", firstImage)
-      formData.append("secondImage", secondImage)
+      formData.append("firstImage", firstImage);
+      formData.append("secondImage", secondImage);
       const response = await axios.post(
         `${BASE_URL}/api/updateCategoryGrid/${categoryDetails._id}`,
         formData,
@@ -214,9 +214,22 @@ const CategoryUpdate = () => {
         }
       );
       window.alert(response.data.message);
-      console.log(response.data.message)
+      console.log(response.data.message);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleDeleteGrid = async () => {
+    setMessage("");
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/api/deleteCategoryGrid/${categoryDetails._id}`
+      );
+      window.alert(response.data.message);
+    } catch (error) {
+      console.error("Error deleting subcategory:", error);
+      setMessage("Error deleting subcategory");
     }
   };
 
@@ -364,6 +377,7 @@ const CategoryUpdate = () => {
       </div>
       <div className="p-10">
         <h1 className="mt-8 text-2xl font-semibold text-center">Grid</h1>
+        <button onClick={handleDeleteGrid} className="bg-red-500 text-white py-2 px-4 rounded-md mt-6">Remove Grid</button>
         <h1 className="text-xl">First Grid</h1>
         <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8 ">
           <div className="sm:col-span-2">
