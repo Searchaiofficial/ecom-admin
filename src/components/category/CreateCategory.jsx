@@ -108,6 +108,13 @@ function CreateCategory() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  const [firstImage, setFirstImage] = useState(null);
+  const [secondImage, setSecondImage] = useState(null);
+  const handleImageUpload = (e, setImage) => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
+
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
@@ -210,6 +217,33 @@ function CreateCategory() {
 
         formData.append("type", data.type);
         formData.append("description", data.description);
+
+        if (
+          data.firstGrid.title ||
+          data.firstGrid.link ||
+          data.firstGrid.description ||
+          firstImage
+        ) {
+          formData.append("firstGrid[title]", data.firstGrid.title);
+          formData.append("firstGrid[link]", data.firstGrid.link);
+          formData.append("firstGrid[description]", data.firstGrid.description);
+          formData.append("firstImage", firstImage);
+        }
+
+        if (
+          data.secondGrid.title ||
+          data.secondGrid.link ||
+          data.secondGrid.description ||
+          secondImage
+        ) {
+          formData.append("secondGrid[title]", data.secondGrid.title);
+          formData.append(
+            "secondGrid[description]",
+            data.secondGrid.description
+          );
+          formData.append("secondGrid[link]", data.secondGrid.link);
+          formData.append("secondImage", secondImage);
+        }
 
         for (const [key, value] of formData.entries()) {
           console.log(`${key}: ${value}`);
@@ -487,7 +521,7 @@ function CreateCategory() {
           </div>
           <div className="mt-10">
             <label className="block text-lg font-medium leading-5 text-gray-700 mt-4">
-            Installation Details
+              Installation Details
             </label>
             {installationDetails.map((point, index) => (
               <div
@@ -787,99 +821,6 @@ function CreateCategory() {
                   </div>
                 </div>
 
-                {/* <div className="sm:col-span-2">
-                  <label
-                    htmlFor={`subCategories[${index}].expectedDelivery`}
-                    className="block text-sm font-medium leading-6 text-gray-900"
-                  >
-                    Expected Delivery (Day)*
-                  </label>
-                  <div className="mt-2">
-                    <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                      <input
-                        type="Number"
-                        {...register(`subCategories[${index}].expectedDelivery`, {
-                          required: "expectedDelivery is required",
-                        })}
-                        className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor={`subCategories[${index}].isFreeSampleAvailable`}
-                    className="block text-sm font-medium leading-6 text-gray-900 "
-                  >
-                    Free Sample :*
-                  </label>
-                  <div className="mt-2">
-                    <select
-                      {...register(`subCategories[${index}].isFreeSampleAvailable`, {
-                        required: "Free Sample is required",
-                      })}
-                      id={`subCategories[${index}].isFreeSampleAvailable`}
-                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    >
-                      {options.map((type) => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor={`subCategories[${index}].isFreeShippingAvailable`}
-                    className="block text-sm font-medium leading-6 text-gray-900 "
-                  >
-                    Free Shipping :*
-                  </label>
-                  <div className="mt-2">
-                    <select
-                      {...register(`subCategories[${index}].isFreeShippingAvailable`, {
-                        required: "Free Sipping is required",
-                      })}
-                      id={`subCategories[${index}].isFreeShippingAvailable`}
-                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    >
-                      {options.map((type) => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label
-                    htmlFor={`subCategories[${index}].isOnlySoldInStore`}
-                    className="block text-sm font-medium leading-6 text-gray-900 "
-                  >
-                    Only Sold in Store :*
-                  </label>
-                  <div className="mt-2">
-                    <select
-                      {...register(`subCategories[${index}].isOnlySoldInStore`, {
-                        required: "Free Sipping is required",
-                      })}
-                      id={`subCategories[${index}].isOnlySoldInStore`}
-                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    >
-                      {options.map((type) => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div> */}
-
                 <button
                   className="bg-red-600  w-20 my-2 px-2 rounded-md"
                   type="button"
@@ -897,6 +838,169 @@ function CreateCategory() {
             >
               Add Subcategory
             </button>
+          </div>
+
+          <h1 className="text-lg font-bold leading-7 text-gray-900  mt-12">
+            First Grid
+          </h1>
+          <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8 ">
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Title
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    {...register(`firstGrid.title`)}
+                    type="text"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Description
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    {...register(`firstGrid.description`)}
+                    type="text"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Link
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    {...register(`firstGrid.link`)}
+                    type="text"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Image
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    onChange={(e) => handleImageUpload(e, setFirstImage)}
+                    type="file"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <h1 className="text-lg font-bold leading-7 text-gray-900  mt-12">
+            Second Grid
+          </h1>
+          <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8 ">
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Title
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    {...register(`secondGrid.title`)}
+                    type="text"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Description
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    {...register(`secondGrid.description`)}
+                    type="text"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Link
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    {...register(`secondGrid.link`)}
+                    type="text"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="sm:col-span-2">
+              <label
+                htmlFor="img4"
+                className="block text-sm font-medium leading-6 text-gray-900 font-bold"
+              >
+                Image
+              </label>
+              <div className="mt-2">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
+                  <input
+                    onChange={(e) => handleImageUpload(e, setSecondImage)}
+                    type="file"
+                    id="img4"
+                    className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -189,23 +189,15 @@ const CategoryUpdate = () => {
     }
   };
 
-  const handleCreateGrid = async () => {
-    console.log("test");
-    // formData.append("image", "abc");
-    console.log(firstImage);
-    console.log(secondImage);
+  const handleUpdateCategoryFirstGrid = async () => {
     try {
       const formData = new FormData();
       formData.append("firstGrid[title]", firstGrid.title);
       formData.append("firstGrid[link]", firstGrid.link);
       formData.append("firstGrid[description]", firstGrid.description);
-      formData.append("secondGrid[title]", secondGrid.title);
-      formData.append("secondGrid[description]", secondGrid.description);
-      formData.append("secondGrid[link]", secondGrid.link);
       formData.append("firstImage", firstImage);
-      formData.append("secondImage", secondImage);
       const response = await axios.post(
-        `${BASE_URL}/api/updateCategoryGrid/${categoryDetails._id}`,
+        `${BASE_URL}/api/updateCategoryFirstGrid/${categoryDetails._id}`,
         formData,
         {
           headers: {
@@ -214,22 +206,60 @@ const CategoryUpdate = () => {
         }
       );
       window.alert(response.data.message);
+      window.location.reload();
       console.log(response.data.message);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDeleteGrid = async () => {
-    setMessage("");
+  const handleUpdateCategorySecondGrid = async () => {
     try {
-      const response = await axios.patch(
-        `${BASE_URL}/api/deleteCategoryGrid/${categoryDetails._id}`
+      const formData = new FormData();
+      formData.append("secondGrid[title]", secondGrid.title);
+      formData.append("secondGrid[description]", secondGrid.description);
+      formData.append("secondGrid[link]", secondGrid.link);
+      formData.append("secondImage", secondImage);
+      const response = await axios.post(
+        `${BASE_URL}/api/updateCategorySecondGrid/${categoryDetails._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       window.alert(response.data.message);
+      window.location.reload();
+      console.log(response.data.message);
     } catch (error) {
-      console.error("Error deleting subcategory:", error);
-      setMessage("Error deleting subcategory");
+      console.log(error);
+    }
+  };
+
+  const handleDeleteCategoryFirstGrid = async () => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/api/deleteCategoryFirstGrid/${categoryDetails._id}`
+      );
+      window.alert(response.data.message);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting FirstGrid:", error);
+      setMessage("Error deleting FirstGrid");
+    }
+  };
+
+  const handleDeleteCategorySecondGrid = async () => {
+    try {
+      const response = await axios.patch(
+        `${BASE_URL}/api/deleteCategorySecondGrid/${categoryDetails._id}`
+      );
+      window.alert(response.data.message);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error deleting FirstGrid:", error);
+      setMessage("Error deleting SecondGrid");
     }
   };
 
@@ -377,8 +407,41 @@ const CategoryUpdate = () => {
       </div>
       <div className="p-10">
         <h1 className="mt-8 text-2xl font-semibold text-center">Grid</h1>
-        <button onClick={handleDeleteGrid} className="bg-red-500 text-white py-2 px-4 rounded-md mt-6">Remove Grid</button>
-        <h1 className="text-xl">First Grid</h1>
+        <h1 className="text-xl my-4">First Grid</h1>
+        {categoryDetails?.firstGrid && (
+          <>
+            <div className="flex flex-row gap-8  items-center">
+              <img
+                src={categoryDetails?.firstGrid?.image}
+                alt="first grid"
+                width={100}
+                height={100}
+              />
+              <div>
+                <p>
+                  <span className="text-blue-900 font-semibold">Title : </span>
+                  <span>{categoryDetails?.firstGrid?.title}</span>
+                </p>
+                <p>
+                  <span className="text-blue-900 font-semibold">
+                    Description :{" "}
+                  </span>
+                  <span>{categoryDetails?.firstGrid?.description}</span>
+                </p>
+                <p>
+                  <span className="text-blue-900 font-semibold">Link : </span>
+                  <span>{categoryDetails?.firstGrid?.link}</span>
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleDeleteCategoryFirstGrid}
+              className="bg-red-500 text-white py-2 px-4 rounded-md mt-6 w-fit"
+            >
+              Remove Grid
+            </button>
+          </>
+        )}
         <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8 ">
           <div className="sm:col-span-2">
             <label
@@ -466,7 +529,48 @@ const CategoryUpdate = () => {
             </div>
           </div>
         </div>
-        <h1 className="text-xl mt-6">Second Grid</h1>
+        <button
+          onClick={handleUpdateCategoryFirstGrid}
+          className="bg-blue-500 text-white py-2 px-4 rounded-md my-6"
+        >
+          Update First Grid
+        </button>
+        <hr />
+        <h1 className="text-xl my-6">Second Grid</h1>
+        {categoryDetails?.secondGrid && (
+          <>
+            <div className="flex flex-row gap-8  items-center">
+              <img
+                src={categoryDetails?.secondGrid?.image}
+                alt="first grid"
+                width={100}
+                height={100}
+              />
+              <div>
+                <p>
+                  <span className="text-blue-900 font-semibold">Title : </span>
+                  <span>{categoryDetails?.secondGrid?.title}</span>
+                </p>
+                <p>
+                  <span className="text-blue-900 font-semibold">
+                    Description :{" "}
+                  </span>
+                  <span>{categoryDetails?.secondGrid?.description}</span>
+                </p>
+                <p>
+                  <span className="text-blue-900 font-semibold">Link : </span>
+                  <span>{categoryDetails?.secondGrid?.link}</span>
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleDeleteCategorySecondGrid}
+              className="bg-red-500 text-white py-2 px-4 rounded-md mt-6 w-fit"
+            >
+              Remove Grid
+            </button>
+          </>
+        )}
         <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-8 ">
           <div className="sm:col-span-2">
             <label
@@ -558,10 +662,10 @@ const CategoryUpdate = () => {
           </div>
         </div>
         <button
-          onClick={handleCreateGrid}
+          onClick={handleUpdateCategorySecondGrid}
           className="bg-blue-500 text-white py-2 px-4 rounded-md mt-6"
         >
-          Create Grid
+          Update Second Grid
         </button>
       </div>
     </>
