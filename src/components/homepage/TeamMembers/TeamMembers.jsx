@@ -10,7 +10,10 @@ const TeamMembers = () => {
     // Fetch data from your API endpoint
     fetch(`${BASE_URL}/api/profileContent`)
       .then((response) => response.json())
-      .then((data) => setTeamData(data))
+      .then((data) => {
+        console.log(data)
+        setTeamData(data);
+      })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
@@ -43,13 +46,12 @@ const TeamMembers = () => {
               className="flex flex-col mt-4  border p-2"
             >
               <img
-                src={member.image}
-                alt={`${member.name}'s Image`}
+                src={member.user.image}
+                alt={`${member.displayName}'s Image`}
                 style={{ width: "50px", height: "50px", borderRadius: "50%" }}
               />
-              <h3 className="font-bold">{member.name}</h3>
+              <h3 className="font-bold">{member.user.displayName}</h3>
               <p>{member.role}</p>
-              <p>Icon: {member.icon}</p>
               <button
                 type="button"
                 className="mt-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 w-[60px]"

@@ -11,15 +11,8 @@ function TeamMemebersForm() {
   const onSubmit = async (data) => {
     const formData = new FormData();
     try {
-      // image
-      const fileInput = document.getElementById(`image`);
-      const file = fileInput?.files[0];
-      formData.append(`image`, file);
-
-      formData.append(`name`, data.name);
-      formData.append(`icon`, data.icon);
+      formData.append(`email`, data.email);
       formData.append(`role`, data.role);
-      formData.append(`linkedin`, data.linkedin);
 
       const response = await fetch(`${BASE_URL}/api/createProfileContent`, {
         method: "POST",
@@ -30,7 +23,7 @@ function TeamMemebersForm() {
       const res = await response.json();
 
       window.alert(res.message);
-      navigate("/homePage");
+      navigate("/update-home-page/team-memebers");
     } catch (error) {
       console.log(error);
     }
@@ -48,49 +41,10 @@ function TeamMemebersForm() {
             htmlFor={`name`}
             className="block text-sm font-medium leading-5 text-gray-700"
           >
-            Name
+            Email
           </label>
           <Controller
-            name={`name`}
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <input
-                {...field}
-                type="text"
-                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
-              />
-            )}
-          />
-
-          <label
-            htmlFor="image"
-            className="block text-sm font-medium leading-6 text-gray-900"
-          >
-            Image Source
-          </label>
-          <div className="mt-2">
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-              <input
-                type="file"
-                {...register("image", {
-                  required: "name is required",
-                })}
-                id="image"
-                className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                accept="image/*"
-              />
-            </div>
-          </div>
-
-          <label
-            htmlFor={`icon`}
-            className="block text-sm font-medium leading-5 text-gray-700 mt-4"
-          >
-            Icon
-          </label>
-          <Controller
-            name={`icon`}
+            name={`email`}
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -110,25 +64,6 @@ function TeamMemebersForm() {
           </label>
           <Controller
             name={`role`}
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <input
-                {...field}
-                type="text"
-                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
-              />
-            )}
-          />
-
-          <label
-            htmlFor={`linkedin`}
-            className="block text-sm font-medium leading-5 text-gray-700 mt-4"
-          >
-            LinkedIn Profile
-          </label>
-          <Controller
-            name={`linkedin`}
             control={control}
             defaultValue=""
             render={({ field }) => (
