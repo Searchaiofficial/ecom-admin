@@ -51,7 +51,6 @@ const TeamMembers = () => {
                 style={{ width: "50px", height: "50px", borderRadius: "50%" }}
               />
               <h3 className="font-bold">{member.user.displayName}</h3>
-              <p>{member.role}</p>
               <button
                 type="button"
                 className="mt-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 w-[60px]"

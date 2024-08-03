@@ -12,7 +12,6 @@ function TeamMemebersForm() {
     const formData = new FormData();
     try {
       formData.append(`email`, data.email);
-      formData.append(`role`, data.role);
 
       const response = await fetch(`${BASE_URL}/api/createProfileContent`, {
         method: "POST",
@@ -45,25 +44,6 @@ function TeamMemebersForm() {
           </label>
           <Controller
             name={`email`}
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <input
-                {...field}
-                type="text"
-                className="mt-1 p-2 border block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 rounded-md"
-              />
-            )}
-          />
-
-          <label
-            htmlFor={`role`}
-            className="block text-sm font-medium leading-5 text-gray-700 mt-4"
-          >
-            Role
-          </label>
-          <Controller
-            name={`role`}
             control={control}
             defaultValue=""
             render={({ field }) => (
