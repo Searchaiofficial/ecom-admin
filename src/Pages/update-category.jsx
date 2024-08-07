@@ -20,6 +20,7 @@ const CategoryUpdate = () => {
 
   const [subcategoryDescription, setSubcategoryDescription] = useState("");
   const [subcategoryMetadataTitle, setSubcategoryMetadataTitle] = useState("");
+  const [isAccessories, setIsAccessories] = useState(false);
 
   const [firstGrid, setFirstGrid] = useState({
     title: "",
@@ -90,6 +91,7 @@ const CategoryUpdate = () => {
     formData.append("name", newSubCategoryName);
     formData.append("description", subcategoryDescription);
     formData.append("metadataTitle", subcategoryMetadataTitle);
+    formData.append("isAccessories", isAccessories);
 
     try {
       const response = await axios.post(
@@ -340,6 +342,15 @@ const CategoryUpdate = () => {
               value={subcategoryMetadataTitle}
               onChange={(e) => setSubcategoryMetadataTitle(e.target.value)}
             />
+            <label className="flex items-center gap-2 ml-8">
+              <input
+                type="checkbox"
+                checked={isAccessories}
+                onChange={(e) => setIsAccessories(e.target.checked)}
+              />
+              <span>Is Accessories</span>
+            </label>
+            
             <button
               className="ml-20 bg-blue-500 p-2 rounded-lg text-white hover:bg-blue-700"
               onClick={handleCreateSubcategory}

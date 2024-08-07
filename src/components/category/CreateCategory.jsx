@@ -132,6 +132,10 @@ function CreateCategory() {
             `subcategories[${index}][metadataTitle]`,
             subCategory?.metadataTitle
           );
+          formData.append(
+            `subcategories[${index}][isAccessories]`,
+            subCategory?.isAccessories
+          );
         });
 
         const maintenanceDetailsData = getValues("maintenanceDetails");
@@ -818,6 +822,26 @@ function CreateCategory() {
                         className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       />
                     </div>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-1">
+                  <label
+                    htmlFor={`subCategories[${index}].isAccessories`}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                  >
+                    Is Accessories
+                  </label>
+                  <div className="mt-2">
+                    <select
+                      {...register(`subCategories[${index}].isAccessories`)}
+                      defaultValue={false}
+                      id={`subCategories[${index}].isAccessories`}
+                      className="block flex-1 border-0 bg-transparent p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    >
+                      <option value={true}>Yes</option>
+                      <option value={false}>No</option>
+                    </select>
                   </div>
                 </div>
 

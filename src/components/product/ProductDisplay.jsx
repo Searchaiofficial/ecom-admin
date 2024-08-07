@@ -121,7 +121,7 @@ const ProductDisplay = () => {
                       className="mb-6 w-[282px]"
                     />
                     <h3 className="font-bold text-orange-500">
-                      {product.productTitle}
+                      {product.productTitle} {product.isAccessories && "(Accessory)"}
                     </h3>
                     <p>
                       <b>Product ID:</b> {product.productId}
